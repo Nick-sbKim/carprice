@@ -180,11 +180,11 @@
             appearance: none;
             min-width: 0;
             
-            /* ✅ 모든 입력 필드 텍스트를 가운데 정렬 */
+            /* 모든 입력 필드 텍스트를 가운데 정렬 */
             text-align: center;
         }
 
-        /* ✅ 이름과 전화번호는 왼쪽 정렬 유지 */
+        /* 이름과 전화번호는 왼쪽 정렬 유지 */
         #name, #phone {
              text-align: left;
         }
@@ -201,7 +201,7 @@
         }
         
         /* ------------------------------------------- */
-        /* ✅ 단위 고정 박스 스타일 (차량번호, 출고 연월, 운행거리) */
+        /* 단위 고정 박스 스타일 (차량번호, 출고 연월, 운행거리) */
         .unit-box {
             padding: var(--input-padding-vertical) 15px; 
             height: 48px; 
@@ -552,12 +552,12 @@
         const consentHidden = document.getElementById('consentHidden');
 
         consentCheckbox.addEventListener('change', function() {
-            // Google Forms의 옵션에 맞춰 '예' 텍스트를 전송하도록 설정
+            // Google Forms의 옵션에 맞춰 '예' 텍스트를 전송하도록 설정 (Entry ID: 901599408)
             consentHidden.value = this.checked ? '예' : '';
         });
         
         // -----------------------------------------------------------
-        // 2. 폼 제출 및 유효성 검사 JS
+        // 2. 폼 제출 및 유효성 검사 JS (Entry ID에 값 세팅)
         // -----------------------------------------------------------
         document.getElementById('carForm').addEventListener('submit', function(event) {
             
@@ -580,13 +580,13 @@
                  return;
             }
             
-            // 만km를 붙여서 숨겨진 필드(Entry ID: 1507330012)에 전송 (예: 25만km)
+            // 입력된 운행거리 값에 '만km'를 붙여서 Hidden Field (Entry ID: 1507330012)에 최종 세팅
             mileageHidden.value = mileageValue + '만km';
             
             // 폼 제출 완료 메시지
             alert('내 차 시세 확인 신청이 성공적으로 완료되었습니다. 전문가 평가 후 시세를 안내해 드릴게요!');
             
-            // 폼 초기화 (비동기 제출이므로 timeout 사용)
+            // 폼 초기화 (비동기 제출을 위해 페이지 이동 없이 제출 후 입력 필드 초기화)
             setTimeout(() => {
                 this.reset(); 
                 consentHidden.value = ''; // 동의 hidden 필드 초기화
@@ -601,7 +601,7 @@
         phoneInput.addEventListener('input', function(e) {
             let value = e.target.value.replace(/[^0-9]/g, ''); 
             let result = '';
-            // 000-0000-0000 형식
+            // 000-0000-0000 형식으로 자동 포맷팅
             if (value.length < 4) {
                 result = value;
             } else if (value.length < 8) {
