@@ -412,7 +412,7 @@
     <div class="container">
         
         <form id="carForm" 
-              action="https://docs.google.com/forms/d/e/1FAIpQLSeeLVvQCZycTDSjPAGt_6u5M2NkL20UaXFbSijRdAnKopPhyw/formResponse" 
+              action="https://docs.google.com/forms/d/e/1FAIpQLSfjK0-L_H6v-oKq1WpS2d60G8k92o1H0k-e7pS3l-xM3uA/formResponse" 
               method="POST" 
               target="no-target">
             
@@ -569,7 +569,6 @@
 
         // -----------------------------------------------------------
         // 2. 제조사 선택값을 hidden input에 복사
-        //    (차종 동적 업데이트 로직은 모두 제거됨)
         // -----------------------------------------------------------
         const manufacturerSelect = document.getElementById('manufacturerSelect'); 
         const manufacturerInput = document.getElementById('manufacturerInput'); 
@@ -580,15 +579,15 @@
         });
 
         // -----------------------------------------------------------
-        // 3. 개인정보 동의 필드 업데이트 (체크박스 값 -> 텍스트)
+        // 3. 개인정보 동의 필드 업데이트 (체크박스 값 -> '예')
         // -----------------------------------------------------------
         const consentCheckbox = document.getElementById('consent');
         const consentHidden = document.getElementById('consentHidden');
 
         consentCheckbox.addEventListener('change', function() {
             if (this.checked) {
-                // 체크되면 '동의' 텍스트를 전송하도록 설정
-                consentHidden.value = '동의';
+                // Google Forms의 옵션에 맞춰 '예' 텍스트를 전송하도록 설정
+                consentHidden.value = '예';
             } else {
                 // 체크 해제되면 값을 비움
                 consentHidden.value = '';
@@ -597,7 +596,6 @@
         
         // -----------------------------------------------------------
         // 4. 폼 제출 및 전화번호 형식 지정 JS
-        //    (차종 관련 유효성 검사 로직이 제거되어 간결해짐)
         // -----------------------------------------------------------
         document.getElementById('carForm').addEventListener('submit', function(event) {
             
