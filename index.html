@@ -405,14 +405,16 @@
         <form id="carForm" 
               action="https://docs.google.com/forms/d/e/1FAIpQLSfHHHXpLgoUhg1O_DphY_tQ5016MVsKeCHqGYR-GGEfJZrc-w/formResponse" 
               method="POST" 
-              target="_blank"> <input type="hidden" name="fvv" value="1">
+              target="_blank"> 
+            
+            <input type="hidden" name="fvv" value="1">
             <input type="hidden" name="pageHistory" value="0">
-            <input type="hidden" name="fbzx" value="2626337769764454591">
+            <input type="hidden" name="fbzx" value="3762433657792349989"> 
             <input type="hidden" name="submissionTimestamp" value="-1">
             
-            <input type="hidden" id="mileageHidden" name="entry.1507330012" value="">
+            <input type="hidden" id="mileageHidden" name="entry.482899888" value="">
             
-            <input type="hidden" id="consentHidden" name="entry.901599408" value="" required>
+            <input type="hidden" id="consentHidden" name="entry.609838615" value="" required>
             
             <div class="header-content">
                 <h1>내 차 시세 확인하기</h1>
@@ -429,14 +431,14 @@
                     <div class="input-group">
                         <label for="name">성함</label>
                         <div class="input-field-wrapper">
-                            <input type="text" id="name" name="entry.525530126" required placeholder="예시 : 홍길동">
+                            <input type="text" id="name" name="entry.896750204" required placeholder="예시 : 홍길동">
                         </div>
                     </div>
 
                     <div class="input-group">
                         <label for="phone">휴대폰 번호</label>
                         <div class="input-field-wrapper">
-                            <input type="text" id="phone" name="entry.1115145303" required placeholder="숫자만 기입" inputmode="numeric" maxlength="13">
+                            <input type="text" id="phone" name="entry.2095768754" required placeholder="숫자만 기입" inputmode="numeric" maxlength="13">
                         </div>
                     </div>
                     
@@ -454,7 +456,7 @@
                                 <span class="unit-text">서울</span>
                                 <input type="text" 
                                     id="carNumber" 
-                                    name="entry.490623658" 
+                                    name="entry.1494512143" 
                                     required 
                                     placeholder="예시 : 30아1234" 
                                     maxlength="7">
@@ -467,7 +469,7 @@
                         <div class="input-field-wrapper">
                              <input type="text" 
                                 id="carModelInput" 
-                                name="entry.937146" 
+                                name="entry.620874901" 
                                 required 
                                 placeholder="예시 : 쏘나타">
                         </div>
@@ -479,7 +481,7 @@
                             <div class="unit-box">
                                 <input type="text" 
                                     id="yearInput" 
-                                    name="entry.401182548" 
+                                    name="entry.2129889627" 
                                     class="year-input"
                                     required 
                                     placeholder="예시 : 2022"
@@ -491,7 +493,7 @@
                             <div class="unit-box">
                                 <input type="text" 
                                     id="monthInput" 
-                                    name="entry.825399382" 
+                                    name="entry.1395231347" 
                                     class="month-input"
                                     required 
                                     placeholder="예시 : 10"
@@ -549,6 +551,7 @@
 
         // Forms에서 동의를 '예'라고 인식하도록 값을 설정
         consentCheckbox.addEventListener('change', function() {
+            // Forms 원본 코드에서 '예' 라디오 버튼의 data-value가 "예"임을 확인했으므로, 이 값을 그대로 사용합니다.
             consentHidden.value = this.checked ? '예' : ''; 
         });
         
@@ -579,7 +582,6 @@
             // 입력된 운행거리 값에 '만km'를 붙여서 Hidden Field에 최종 세팅
             mileageHidden.value = mileageValue + '만km';
             
-            // 폼 제출 완료 메시지: 제출이 성공적으로 이루어질 경우 새 창이 뜨면서 Forms 응답 페이지가 표시되므로, 별도의 메시지는 불필요.
             // Forms 서버가 데이터 전송을 확실하게 처리하도록 event.preventDefault()를 호출하지 않고 폼을 전송합니다.
         });
 
