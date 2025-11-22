@@ -254,7 +254,7 @@
 
         /* 연월 입력 박스 */
         .input-field-wrapper .unit-box {
-            width: 50%;
+            width: calc(50% - (var(--input-gap) / 2));
             display: flex;
             justify-content: space-between;
         }
@@ -403,7 +403,7 @@
     <div class="container">
         
         <form id="carForm" 
-              action="https://docs.google.com/forms/u/1/d/e/1FAIpQLSfGRDi9pMPs-HlX8HSSJny7DN8cXeaKngKhvUIXm5r4drTkhg/formResponse" 
+              action="https://docs.google.com/forms/d/e/1FAIpQLSfHHHXpLgoUhg1O_DphY_tQ5016MVsKeCHqGYR-GGEfJZrc-w/formResponse" 
               method="POST" 
               target="_blank"> <input type="hidden" name="fvv" value="1">
             <input type="hidden" name="pageHistory" value="0">
@@ -547,13 +547,13 @@
         const consentCheckbox = document.getElementById('consent');
         const consentHidden = document.getElementById('consentHidden');
 
+        // Forms에서 동의를 '예'라고 인식하도록 값을 설정
         consentCheckbox.addEventListener('change', function() {
-            // Google Forms의 옵션에 맞춰 '예' 텍스트를 전송하도록 설정
-            consentHidden.value = this.checked ? '예' : '';
+            consentHidden.value = this.checked ? '예' : ''; 
         });
         
         // -----------------------------------------------------------
-        // 2. 폼 제출 및 유효성 검사 JS (안정성 개선)
+        // 2. 폼 제출 및 유효성 검사 JS 
         // -----------------------------------------------------------
         document.getElementById('carForm').addEventListener('submit', function(event) {
             
@@ -576,14 +576,11 @@
                  return;
             }
             
-            // 입력된 운행거리 값에 '만km'를 붙여서 Hidden Field (Entry ID: 1507330012)에 최종 세팅
+            // 입력된 운행거리 값에 '만km'를 붙여서 Hidden Field에 최종 세팅
             mileageHidden.value = mileageValue + '만km';
             
-            // 폼 제출 완료 메시지 (폼 제출 성공 후 새 탭에서 응답 페이지가 뜨므로, 메시지 방식 변경)
-            // event.preventDefault()를 호출하지 않고 폼이 정상 제출되도록 함.
-            
-            // **주의:** 폼 제출 후 **새 탭**이 열리고, 해당 탭에 Google Forms의 "응답이 기록되었습니다." 페이지가 뜰 것입니다.
-            // 기존 폼 입력값은 남아있도록 (새 탭이 열리므로) this.reset()을 제거합니다.
+            // 폼 제출 완료 메시지: 제출이 성공적으로 이루어질 경우 새 창이 뜨면서 Forms 응답 페이지가 표시되므로, 별도의 메시지는 불필요.
+            // Forms 서버가 데이터 전송을 확실하게 처리하도록 event.preventDefault()를 호출하지 않고 폼을 전송합니다.
         });
 
         // -----------------------------------------------------------
