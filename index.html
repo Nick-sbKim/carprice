@@ -410,137 +410,93 @@
 <body>
     <div class="container">
         
-        <form id="carForm" 
-              action="https://docs.google.com/forms/u/1/d/e/1FAIpQLSeeLVvQCZycTDSjPAGt_6u5M2NkL20UaXFbSijRdAnKopPhyw/formResponse" 
-              method="POST" 
-              target="no-target">
-            
-            <input type="hidden" name="fvv" value="1">
-            <input type="hidden" name="partialResponse" value="[null,null,&quot;-1322271895961030939&quot;]">
-            <input type="hidden" name="pageHistory" value="0">
-            <input type="hidden" name="fbzx" value="-1322271895961030939">
-            <input type="hidden" name="submissionTimestamp" value="-1">
-            
-            <div class="header-content">
-                <h1>내 차량시세 신청</h1>
-                
-                <p class="description">
-                    사장님의 차량정보를 입력하면, 전문가 평가 후 시세를 안내드립니다.
-                </p>
-            </div>
-            
-            <div class="personal-info-bg">
-                <div class="section-wrapper">
-                    <div class="section-title">개인정보 입력</div>
+<form action="https://docs.google.com/forms/u/1/d/e/1FAIpQLSeeLVvQCZycTDSjPAGt_6u5M2NkL20UaXFbSijRdAnKopPhyw/formResponse" target="_self" method="POST" id="carPriceForm">
+    <div class="input-group">
+        <label for="name">성함</label>
+        <input type="text" id="name" name="entry.1557973861" required>
+    </div>
 
-                    <div class="input-group">
-                        <label for="name">성함</label>
-                        <div class="input-field-wrapper">
-                            <input type="text" id="name" name="entry.1557973861" required placeholder="예시 : 홍길동">
-                        </div>
-                    </div>
+    <div class="input-group">
+        <label for="phone">휴대폰 번호</label>
+        <input type="tel" id="phone" name="entry.607391743" required>
+    </div>
 
-                    <div class="input-group">
-                        <label for="phone">휴대폰 번호</label>
-                        <div class="input-field-wrapper">
-                            <input type="text" id="phone" name="entry.607391743" required placeholder="숫자만 기입" inputmode="numeric">
-                        </div>
-                    </div>
-                    
-                </div>
-            </div>
-            
-            <div class="car-info-bg">
-                <div class="section-wrapper">
-                    <div class="section-title">차량정보 입력</div>
-                    
-                    <div class="input-group" id="carNumberGroup">
-                        <label for="carNumber">차량번호</label>
-                        <div class="input-field-wrapper">
-                            <div class="car-number-box">
-                                <span class="city-unit">서울</span>
-                                <input type="text" 
-                                    id="carNumber" 
-                                    name="entry.367681253" 
-                                    required 
-                                    placeholder="예시 : 30아1234" 
-                                    maxlength="7">
-                            </div>
-                        </div>
-                    </div>
+    <div class="input-group">
+        <label for="carNumber">차량번호</label>
+        <input type="text" id="carNumber" name="entry.367681253" placeholder="예: 30아1234" required>
+    </div>
 
-                    <div class="input-group">
-                        <label for="manufacturerSelect">제조사</label>
-                        <div class="input-field-wrapper">
-                            <select id="manufacturerSelect" required>
-                                <option value="" disabled selected>제조사를 선택해주세요</option>
-                                <option value="현대">현대</option>
-                                <option value="기아">기아</option>
-                                <option value="KGM(쌍용)">KGM(쌍용)</option>
-                                <option value="삼성(르노)">삼성(르노)</option>
-                                <option value="기타">기타</option>
-                            </select>
-                            <input type="hidden" id="manufacturerInput" name="entry.864028041" value=""> 
-                        </div>
-                    </div>
-                    
-                    <div class="input-group" id="carModelGroup"> 
-                        <label for="carModelSelect">차종</label>
-                        <div class="input-field-wrapper">
-                             <select id="carModelSelect" required disabled>
-                                <option value="" disabled selected>차종을 선택해주세요</option>
-                            </select>
-                            <input type="hidden" id="carModelInputHidden" name="entry.1656635069" value=""> 
-                             <input type="text" 
-                                id="carModelInputDirect" 
-                                placeholder="차종을 직접 입력해주세요" 
-                                style="display: none;">
-                        </div>
-                    </div>
-                    
-                    <div class="input-group">
-                        <label for="optionSelect">옵션여부</label>
-                        <div class="input-field-wrapper">
-                            <select id="optionSelect" name="entry.895436831" required>
-                                <option value="" disabled selected>옵션 여부를 선택해주세요</option>
-                                <option value="있음">있음</option>
-                                <option value="없음">없음</option>
-                            </select>
-                        </div>
-                    </div>
-                    
-                    <div class="input-group"> 
-                        <label>출고시기</label>
-                        <div class="input-field-wrapper">
-                            <select id="yearSelect" class="year-select" name="entry.1759157550" required>
-                                <option value="" disabled selected>출고 연도</option>
-                                </select>
-                            <select id="monthSelect" class="month-select" name="entry.1723102063" required>
-                                <option value="" disabled selected>출고 월</option>
-                                </select>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <div class="input-group">
+        <label for="manufacturer">제조사</label>
+        <select id="manufacturer" name="entry.864028041" required>
+            <option value="" disabled selected>제조사를 선택해주세요</option>
+            <option value="현대">현대</option>
+            <option value="기아">기아</option>
+            <option value="KGM(쌍용)">KGM(쌍용)</option>
+            <option value="삼성(르노)">삼성(르노)</option>
+            <option value="기타">기타</option>
+        </select>
+    </div>
 
-            <div class="footer-content">
-                <div class="consent-group">
-                    <input type="checkbox" id="consent" required>
-                    <label for="consent" class="consent-label">개인정보 수집 및 이용에 동의합니다.</label>
-                    <input type="hidden" id="consentHidden" name="entry.2024924107" value="" required>
-                </div>
-                
-                <div class="consent-details">
-                    <p><strong>[개인정보 수집 및 이용 동의 상세 내용]</strong></p>
-                    <p>1. 수집 항목: 성함, 휴대폰 번호, 차량번호, **차량제조사, 차량종류, 옵션여부, 차량출고(연/월)**</p>
-                    <p>2. 수집 목적: **차량 시세 확인 및 판매/매입 상담 진행**</p>
-                    <p>3. 보유 및 이용 기간: 동의일로부터 3년 (상담 종료 후 지체 없이 파기)</p>
-                    <p>4. 동의 거부 시 불이익: 상기 개인정보 수집 및 이용에 동의하지 않을 경우, 시세 신청 및 상담이 제한될 수 있습니다.</p>
-                </div>
+    <div class="input-group">
+        <label for="carModel">차종</label>
+        <select id="carModel" name="entry.1656635069" required>
+            <option value="" disabled selected>차종을 선택해주세요</option>
+            <option value="그랜저">그랜저</option>
+            <option value="쏘나타">쏘나타</option>
+            <option value="스타리아">스타리아</option>
+            <option value="G90">G90</option>
+            <option value="G80">G80</option>
+            <option value="아이오닉5">아이오닉5</option>
+            </select>
+    </div>
 
-                <button type="submit" id="submitBtn">내 차량시세 신청하기</button>
-            </div>
-        </form>
+    <div class="input-group">
+        <label for="optionsExist">옵션여부</label>
+        <select id="optionsExist" name="entry.895436831" required>
+            <option value="" disabled selected>옵션 여부를 선택해주세요</option>
+            <option value="있음">있음</option>
+            <option value="없음">없음</option>
+        </select>
+    </div>
+
+    <div class="input-group">
+        <label for="releaseYear">출고 연도</label>
+        <select id="releaseYear" name="entry.1759157550" required>
+            <option value="" disabled selected>출고 연도</option>
+            <option value="2025년">2025년</option>
+            <option value="2024년">2024년</option>
+            <option value="2023년">2023년</option>
+            <option value="2022년">2022년</option>
+            </select>
+    </div>
+
+    <div class="input-group">
+        <label for="releaseMonth">출고 월</label>
+        <select id="releaseMonth" name="entry.1723102063" required>
+            <option value="" disabled selected>출고 월</option>
+            <option value="1월">1월</option>
+            <option value="2월">2월</option>
+            <option value="3월">3월</option>
+            <option value="4월">4월</option>
+            <option value="5월">5월</option>
+            <option value="6월">6월</option>
+            <option value="7월">7월</option>
+            <option value="8월">8월</option>
+            <option value="9월">9월</option>
+            <option value="10월">10월</option>
+            <option value="11월">11월</option>
+            <option value="12월">12월</option>
+        </select>
+    </div>
+
+    <div class="consent-group">
+        <input type="checkbox" id="consent" name="entry.2024924107" value="예" required>
+        <label for="consent">개인정보 수집 및 이용에 동의합니다.</label>
+        </div>
+    
+    <button type="submit" class="submit-button">내 차량시세 신청하기</button>
+</form>
     </div>
 
     <iframe name="no-target" style="display:none;"></iframe>
@@ -711,4 +667,5 @@
 
     </script>
 </body>
+
 </html>
