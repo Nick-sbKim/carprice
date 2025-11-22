@@ -3,41 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
-    <title>내 차량시세 신청</title>
+    <title>내 차 시세 확인하기</title>
     
     <style>
         /* 폰트 임포트: 나눔스퀘어 Bold 폰트 적용 */
         @import url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_two@1.0/NanumSquare.woff'); 
 
         /* ********************************************** */
-        /* ✅ 상수 정의 (Red Color Palette) */
+        /* ✅ 상수 정의 (Green Color Palette) */
         :root {
             --input-gap: 10px;
             --input-padding-vertical: 12px; 
             --mobile-breakpoint: 600px; 
             --align-offset: 120px; 
-            --input-margin-bottom: 25px; /* 모든 항목의 기본 하단 간격 (25px) */
+            --input-margin-bottom: 25px; 
             
-            /* --- 🎨 Main Theme Colors (Red) --- */
-            --main-color: #D32F2F;     
-            --light-border-color: #FFCDD2; 
+            /* --- 🎨 Main Theme Colors (Green) --- */
+            --main-color: #388E3C;     /* Main Green (Darker) */
+            --light-border-color: #C8E6C9; /* Light Green for borders */
             --text-color: #333; 
-            --secondary-text-color: #8D6E63; 
-            --label-color: #BF360C;     
+            --secondary-text-color: #6D4C41; /* Brown/Dark Gray for descriptions */
+            --label-color: #1B5E20;     /* Dark Green for labels */
             
             /* ✅ 가이드 텍스트 색상 */
-            --guide-text-color: #333;      /* 드롭다운의 기본 선택 텍스트 (검정 유지) */
-            --placeholder-color: #9E9E9E;  /* 일반 입력 필드의 가이드 텍스트 (회색 계열) */
+            --guide-text-color: #333;      
+            --placeholder-color: #9E9E9E;  
             
             /* --- 🎨 Section Colors (Background Only) --- */
-            --personal-info-bg: #E1F5FE;  
-            --personal-info-border: #81D4FA;
+            /* 톤온톤 스타일로 변경 */
+            --personal-info-bg: #E8F5E9;  /* Very Light Green */
+            --personal-info-border: #A5D6A7; /* Medium Light Green */
             
-            --car-info-bg: #FFFDE7;     
-            --car-info-border: #FFECB3;
+            --car-info-bg: #F1F8E9;     /* Off-White/Pale Green */
+            --car-info-border: #C5E1A5; /* Pale Greenish Yellow */
             
-            /* 드롭다운 아이콘 (역삼각형) SVG */
-            --dropdown-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23D32F2F'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+            /* 드롭다운 아이콘 (역삼각형) SVG (색상 변경: Green) */
+            --dropdown-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23388E3C'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
         }
         /* ********************************************** */
 
@@ -56,7 +57,7 @@
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
-            background-color: #FFF3E0; 
+            background-color: #EFEBE9; /* 배경 색상 변경 */
             overflow-y: auto; 
         }
 
@@ -278,7 +279,7 @@
             align-items: center;
             margin-top: 25px; 
             margin-bottom: 10px; 
-            background-color: #FBE9E7; 
+            background-color: #F1F8E9; /* Light Green background */
             padding: 10px; 
             border-radius: 8px; 
             border: 1px solid var(--light-border-color);
@@ -294,7 +295,7 @@
         }
         
         .consent-group .consent-label {
-            position: static; /* position: absolute 해제 */
+            position: static; 
             transform: none;
             width: auto;
             margin-left: 10px;
@@ -353,7 +354,7 @@
         #submitBtn {
             width: 100%;
             padding: 18px 20px;
-            background-color: var(--main-color);
+            background-color: var(--main-color); /* Green */
             color: white;
             border: none;
             border-radius: 10px;
@@ -361,11 +362,11 @@
             font-weight: 800;
             cursor: pointer;
             transition: background-color 0.2s;
-            box-shadow: 0 4px 10px rgba(211, 47, 47, 0.4);
+            box-shadow: 0 4px 10px rgba(56, 142, 60, 0.4); /* Green shadow */
         }
         
         #submitBtn:hover {
-            background-color: #C62828;
+            background-color: #2E7D32; /* Darker Green on hover */
         }
 
         /* ********************************************** */
@@ -423,10 +424,10 @@
             <input type="hidden" name="submissionTimestamp" value="-1">
             
             <div class="header-content">
-                <h1>내 차량시세 신청</h1>
+                <h1>내 차 시세 확인하기</h1>
                 
                 <p class="description">
-                    사장님의 차량정보를 입력하면, 전문가 평가 후 시세를 안내드립니다.
+                    차량정보를 입력하시면, 차량평가 후 안내드립니다.
                 </p>
             </div>
             
@@ -536,7 +537,7 @@
                     <p>4. 동의 거부 시 불이익: 상기 개인정보 수집 및 이용에 동의하지 않을 경우, 시세 신청 및 상담이 제한될 수 있습니다.</p>
                 </div>
 
-                <button type="submit" id="submitBtn">내 차량시세 신청하기</button>
+                <button type="submit" id="submitBtn">신청하기</button>
             </div>
         </form>
     </div>
@@ -601,17 +602,17 @@
             
             // 개인정보 동의 체크 여부 확인
             if (!consentCheckbox.checked) {
-                alert('개인정보 수집 및 이용에 동의해야 시세 신청이 가능합니다.');
+                alert('개인정보 수집 및 이용에 동의해야 시세 확인 신청이 가능합니다.');
                 event.preventDefault();
                 return;
             }
             
             // 폼 제출은 iframe으로 처리되어 실제 페이지 이동은 없음
-            alert('내 차량시세 신청이 성공적으로 완료되었습니다. 전문가 평가 후 시세를 안내해 드릴게요!');
+            alert('내 차 시세 확인 신청이 성공적으로 완료되었습니다. 전문가 평가 후 시세를 안내해 드릴게요!');
             setTimeout(() => {
                 this.reset(); 
-                manufacturerInput.value = ''; // 제조사 hidden 필드 초기화
-                consentHidden.value = ''; // 동의 hidden 필드 초기화
+                manufacturerInput.value = ''; 
+                consentHidden.value = ''; 
                 
                 // 드롭다운 기본값으로 재설정
                 document.getElementById('manufacturerSelect').selectedIndex = 0;
