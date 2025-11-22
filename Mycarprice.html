@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <title>내 차량시세 신청</title>
+    
+    <style>
+        /* 폰트 임포트: 나눔스퀘어 Bold 폰트 적용 */
+        @import url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_two@1.0/NanumSquare.woff'); 
+
+        /* ********************************************** */
+        /* ✅ 상수 정의 (Red Color Palette) */
+        :root {
+            --input-gap: 10px;
+            --input-padding-vertical: 12px; 
+            --mobile-breakpoint: 600px; 
+            --align-offset: 120px; 
+            --input-margin-bottom: 25px; /* 모든 항목의 기본 하단 간격 (25px) */
+            
+            /* --- 🎨 Main Theme Colors (Red) --- */
+            --main-color: #D32F2F;        
+            --light-border-color: #FFCDD2; 
+            --text-color: #333; 
+            --secondary-text-color: #8D6E63; 
+            --label-color: #BF360C;        
+            
+            /* ✅ 가이드 텍스트 색상 */
+            --guide-text-color: #333;      /* 드롭다운의 기본 선택 텍스트 (검정 유지) */
+            --placeholder-color: #9E9E9E;  /* 일반 입력 필드의 가이드 텍스트 (회색 계열) */
+            
+            /* --- 🎨 Section Colors (Background Only) --- */
+            --personal-info-bg: #E1F5FE;  
+            --personal-info-border: #81D4FA;
+            
+            --car-info-bg: #FFFDE7;       
+            --car-info-border: #FFECB3;
+            
+            /* 드롭다운 아이콘 (역삼각형) SVG */
+            --dropdown-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23D32F2F'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+        }
+        /* ********************************************** */
+
+        /* 기본 설정 */
+        body {
+            font-family: 'NanumSquare', sans-serif;
+            color: var(--text-color); 
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; 
+            min-height: 100vh; 
+            margin: 0;
+            padding: 15px 10px; 
+            box-sizing: border-box;
+            background-image: url('https://user-images.githubusercontent.com/97545939/291657065-1d4e0e5a-27a3-4a1d-8515-568d4a974b86.png'); 
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-color: #FFF3E0; 
+            overflow-y: auto; 
+        }
+
+        /* 컨테이너 */
+        .container {
+            background-color: rgba(255, 255, 255, 0.95); 
+            padding: 0; 
+            border-radius: 15px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1); 
+            border: 2px solid var(--light-border-color); 
+            overflow: hidden; 
+        }
+
+        /* 제목 및 설명 (가운데 정렬) */
+        .header-content {
+            padding: 25px 20px 10px; 
+        }
+
+        h1 {
+            text-align: center; 
+            margin-bottom: 15px; 
+            font-size: 1.7em; 
+            font-weight: 800; 
+            color: var(--main-color); 
+            line-height: 1.2; 
+        }
+        
+        .description {
+            text-align: center; 
+            font-size: 1.0em; 
+            color: var(--secondary-text-color);
+            margin-bottom: 25px; 
+            padding: 0 5px;
+            font-weight: 500;
+            line-height: 1.6; 
+        }
+
+        /* ********************************************** */
+        /* 섹션 스타일 */
+        .section-wrapper {
+            padding: 0 20px; 
+        }
+        
+        .personal-info-bg {
+            background-color: var(--personal-info-bg);
+            border-top: 1px solid var(--personal-info-border);
+            border-bottom: 1px solid var(--personal-info-border);
+            padding: 20px 0; 
+            margin-bottom: 20px; 
+        }
+
+        .personal-info-bg .input-group:last-of-type {
+            margin-bottom: 0;
+        }
+
+        .car-info-bg {
+            background-color: var(--car-info-bg);
+            border-top: 1px solid var(--car-info-border);
+            border-bottom: 1px solid var(--car-info-border);
+            padding: 20px 0; 
+            margin-bottom: 20px;
+        }
+        
+        .car-info-bg .input-group:last-of-type {
+             margin-bottom: 0;
+        }
+        
+        .section-title {
+            font-size: 1.3em;
+            font-weight: 800;
+            color: var(--label-color);
+            margin-bottom: 15px;
+            padding-bottom: 5px;
+            border-bottom: 2px dashed var(--light-border-color);
+        }
+        /* ********************************************** */
+        
+        /* 모든 필드 그룹 */
+        .input-group {
+            display: flex;
+            flex-wrap: wrap; 
+            margin-bottom: var(--input-margin-bottom); 
+            position: relative; 
+            align-items: center; 
+        }
+        
+        /* 모든 라벨 스타일 */
+        .input-group label {
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%); 
+            
+            width: 110px; 
+            flex-shrink: 0;
+            font-size: 1.25em; 
+            font-weight: 800; 
+            color: var(--label-color); 
+            white-space: nowrap; 
+            line-height: 1.2; 
+        }
+        
+        /* 입력 필드 컨테이너 (정렬 시작점) */
+        .input-field-wrapper {
+            margin-left: var(--align-offset); 
+            width: calc(100% - var(--align-offset)); 
+            
+            position: relative; 
+            display: flex; 
+            gap: var(--input-gap); 
+            align-items: center;
+            flex-grow: 1; 
+        }
+        
+        /* 입력 필드/드롭다운 스타일 */
+        .input-field-wrapper input[type="text"],
+        .input-field-wrapper select {
+            flex-grow: 1;
+            padding: var(--input-padding-vertical) 15px; 
+            height: 48px; 
+            border: 1px solid var(--light-border-color); 
+            border-radius: 8px; 
+            box-sizing: border-box;
+            font-size: 1.1em; 
+            color: var(--text-color);
+            background-color: white; 
+            font-weight: normal; 
+            text-align: left;
+            -webkit-appearance: none; 
+            -moz-appearance: none;
+            appearance: none;
+            cursor: pointer;
+        }
+        
+        /* 일반 입력 필드의 가이드 텍스트 (placeholder) 색상 (회색) */
+        .personal-info-bg input::placeholder,
+        #carNumber::placeholder {
+            color: var(--placeholder-color); 
+            font-weight: 500;
+        }
+        
+        /* 드롭다운의 기본 선택값 (Guide) 스타일 (검정) */
+        .input-field-wrapper select option[disabled] {
+            color: var(--guide-text-color);
+            font-weight: 500;
+        }
+        .input-field-wrapper select {
+            color: var(--guide-text-color); 
+        }
+        .input-field-wrapper select:valid {
+            color: var(--text-color); 
+        }
+        
+        /* 드롭다운 아이콘 */
+        .input-field-wrapper select {
+            background-image: var(--dropdown-icon);
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 18px;
+            padding-right: 40px;
+        }
+
+        /* 출고 연도/월 텍스트 중앙 정렬 */
+        #yearSelect, #monthSelect {
+             text-align: center;
+             text-align-last: center; 
+        }
+
+        /* 차량번호 박스 스타일 */
+        .car-number-box {
+            padding: var(--input-padding-vertical) 15px; 
+            height: 48px; 
+            border: 1px solid var(--light-border-color); 
+            border-radius: 8px; 
+            box-sizing: border-box;
+            background-color: white; 
+            display: flex; 
+            align-items: center; 
+            width: 100%; 
+            flex-grow: 1;
+            min-width: 0; 
+        }
+        
+        /* 차량번호 '서울' 텍스트 안정화 */
+        .car-number-box .city-unit {
+            font-weight: 800; 
+            color: var(--main-color); 
+            white-space: nowrap; 
+            font-size: 1em; 
+            line-height: 1; 
+            padding-right: 10px; 
+            flex-shrink: 0; 
+        }
+        
+        /* 차량번호 입력 필드 스타일 */
+        #carNumber {
+            border: none !important;
+            background: transparent !important;
+            outline: none !important;
+            padding: 0 !important;
+            text-align: left;
+            flex-grow: 1; 
+            font-size: 1.1em; 
+            font-weight: normal; 
+            min-width: 80px; 
+        }
+
+        /* ********************************************** */
+        /* 하단 내용 및 버튼 (footer-content) */
+        .footer-content {
+             padding: 0 20px 25px; 
+        }
+
+        .consent-group {
+            display: flex;
+            align-items: center;
+            margin-top: 25px; 
+            margin-bottom: 10px; 
+            background-color: #FBE9E7; 
+            padding: 10px; 
+            border-radius: 8px; 
+            border: 1px solid var(--light-border-color);
+        }
+        
+        /* 개인정보 동의 체크박스 숨기고 가상으로 라벨을 사용 */
+        #consent {
+            /* 실제 체크박스 숨김 */
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .consent-group .consent-label {
+            position: static; /* position: absolute 해제 */
+            transform: none;
+            width: auto;
+            margin-left: 10px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            color: var(--text-color);
+        }
+        
+        /* 커스텀 체크박스 스타일 */
+        .consent-group .consent-label::before {
+            content: '';
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--main-color);
+            border-radius: 4px;
+            margin-right: 10px;
+            vertical-align: middle;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+        
+        /* 체크되었을 때 스타일 */
+        #consent:checked + .consent-label::before {
+            background-color: var(--main-color);
+            border-color: var(--main-color);
+            content: '✓'; /* 체크 표시 */
+            color: white;
+            text-align: center;
+            line-height: 18px;
+            font-size: 14px;
+            font-weight: 900;
+        }
+
+
+        /* 개인정보 동의 상세 박스 (스크롤 가능) */
+        .consent-details {
+            border: 1px solid var(--light-border-color);
+            background-color: #fcfcfc;
+            padding: 10px;
+            border-radius: 8px;
+            max-height: 120px; 
+            overflow-y: auto; 
+            font-size: 0.85em;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        
+        .consent-details p {
+            margin-top: 0;
+            margin-bottom: 5px;
+            line-height: 1.5;
+        }
+        
+        /* 최종 신청 버튼 */
+        #submitBtn {
+            width: 100%;
+            padding: 18px 20px;
+            background-color: var(--main-color);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.3em;
+            font-weight: 800;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            box-shadow: 0 4px 10px rgba(211, 47, 47, 0.4);
+        }
+        
+        #submitBtn:hover {
+            background-color: #C62828;
+        }
+
+        /* ********************************************** */
+        /* 모바일 반응형 디자인 */
+        @media (max-width: var(--mobile-breakpoint)) {
+            
+            .input-group {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .personal-info-bg .input-group:last-of-type {
+                margin-bottom: var(--input-margin-bottom); 
+            }
+            
+            .input-group label {
+                position: static;
+                width: 100%; 
+                font-size: 1.1em; 
+                margin-bottom: 5px; 
+                line-height: 1.2;
+                transform: none; 
+            }
+            
+            .input-field-wrapper {
+                margin-left: 0;
+                width: 100%;
+            }
+
+            .input-field-wrapper input[type="text"],
+            .input-field-wrapper select,
+            .car-number-box {
+                height: auto;
+            }
+            
+            #submitBtn {
+                padding: 15px 20px;
+                font-size: 1.1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        
+        <form id="carForm" 
+              action="https://docs.google.com/forms/u/1/d/e/1FAIpQLSeeLVvQCZycTDSjPAGt_6u5M2NkL20UaXFbSijRdAnKopPhyw/formResponse" 
+              method="POST" 
+              target="no-target">
+            
+            <input type="hidden" name="fvv" value="1">
+            <input type="hidden" name="partialResponse" value="[null,null,&quot;-1322271895961030939&quot;]">
+            <input type="hidden" name="pageHistory" value="0">
+            <input type="hidden" name="fbzx" value="-1322271895961030939">
+            <input type="hidden" name="submissionTimestamp" value="-1">
+            
+            <div class="header-content">
+                <h1>내 차량시세 신청</h1>
+                
+                <p class="description">
+                    사장님의 차량정보를 입력하면, 전문가 평가 후 시세를 안내드립니다.
+                </p>
+            </div>
+            
+            <div class="personal-info-bg">
+                <div class="section-wrapper">
+                    <div class="section-title">개인정보 입력</div>
+
+                    <div class="input-group">
+                        <label for="name">성함</label>
+                        <div class="input-field-wrapper">
+                            <input type="text" id="name" name="entry.1557973861" required placeholder="예시 : 홍길동">
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="phone">휴대폰 번호</label>
+                        <div class="input-field-wrapper">
+                            <input type="text" id="phone" name="entry.607391743" required placeholder="숫자만 기입" inputmode="numeric">
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <div class="car-info-bg">
+                <div class="section-wrapper">
+                    <div class="section-title">차량정보 입력</div>
+                    
+                    <div class="input-group" id="carNumberGroup">
+                        <label for="carNumber">차량번호</label>
+                        <div class="input-field-wrapper">
+                            <div class="car-number-box">
+                                <span class="city-unit">서울</span>
+                                <input type="text" 
+                                    id="carNumber" 
+                                    name="entry.367681253" 
+                                    required 
+                                    placeholder="예시 : 30아1234" 
+                                    maxlength="7">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="manufacturerSelect">제조사</label>
+                        <div class="input-field-wrapper">
+                            <select id="manufacturerSelect" required>
+                                <option value="" disabled selected>제조사를 선택해주세요</option>
+                                <option value="현대">현대</option>
+                                <option value="기아">기아</option>
+                                <option value="KGM(쌍용)">KGM(쌍용)</option>
+                                <option value="삼성(르노)">삼성(르노)</option>
+                                <option value="기타">기타</option>
+                            </select>
+                            <input type="hidden" id="manufacturerInput" name="entry.864028041" value=""> 
+                        </div>
+                    </div>
+                    
+                    <div class="input-group" id="carModelGroup"> 
+                        <label for="carModelSelect">차종</label>
+                        <div class="input-field-wrapper">
+                             <select id="carModelSelect" required disabled>
+                                <option value="" disabled selected>차종을 선택해주세요</option>
+                            </select>
+                            <input type="hidden" id="carModelInputHidden" name="entry.1656635069" value=""> 
+                             <input type="text" 
+                                id="carModelInputDirect" 
+                                placeholder="차종을 직접 입력해주세요" 
+                                style="display: none;">
+                        </div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="optionSelect">옵션여부</label>
+                        <div class="input-field-wrapper">
+                            <select id="optionSelect" name="entry.895436831" required>
+                                <option value="" disabled selected>옵션 여부를 선택해주세요</option>
+                                <option value="있음">있음</option>
+                                <option value="없음">없음</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="input-group"> 
+                        <label>출고시기</label>
+                        <div class="input-field-wrapper">
+                            <select id="yearSelect" class="year-select" name="entry.1759157550" required>
+                                <option value="" disabled selected>출고 연도</option>
+                                </select>
+                            <select id="monthSelect" class="month-select" name="entry.1723102063" required>
+                                <option value="" disabled selected>출고 월</option>
+                                </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-content">
+                <div class="consent-group">
+                    <input type="checkbox" id="consent" required>
+                    <label for="consent" class="consent-label">개인정보 수집 및 이용에 동의합니다.</label>
+                    <input type="hidden" id="consentHidden" name="entry.2024924107" value="" required>
+                </div>
+                
+                <div class="consent-details">
+                    <p><strong>[개인정보 수집 및 이용 동의 상세 내용]</strong></p>
+                    <p>1. 수집 항목: 성함, 휴대폰 번호, 차량번호, **차량제조사, 차량종류, 옵션여부, 차량출고(연/월)**</p>
+                    <p>2. 수집 목적: **차량 시세 확인 및 판매/매입 상담 진행**</p>
+                    <p>3. 보유 및 이용 기간: 동의일로부터 3년 (상담 종료 후 지체 없이 파기)</p>
+                    <p>4. 동의 거부 시 불이익: 상기 개인정보 수집 및 이용에 동의하지 않을 경우, 시세 신청 및 상담이 제한될 수 있습니다.</p>
+                </div>
+
+                <button type="submit" id="submitBtn">내 차량시세 신청하기</button>
+            </div>
+        </form>
+    </div>
+
+    <iframe name="no-target" style="display:none;"></iframe>
+
+    <script>
+        // -----------------------------------------------------------
+        // 1. 초기 로드 시 연/월 드롭다운 채우기 
+        // -----------------------------------------------------------
+        const yearSelect = document.getElementById('yearSelect');
+        const monthSelect = document.getElementById('monthSelect');
+        const startYear = 2025;
+        const endYear = 2015;
+
+        for (let year = startYear; year >= endYear; year--) {
+            const option = document.createElement('option');
+            option.value = year;
+            option.textContent = year + '년';
+            yearSelect.appendChild(option);
+        }
+
+        for (let month = 1; month <= 12; month++) {
+            const monthText = month.toString().padStart(2, '0');
+            const option = document.createElement('option');
+            option.value = monthText;
+            option.textContent = month + '월';
+            monthSelect.appendChild(option);
+        }
+
+        // -----------------------------------------------------------
+        // 2. 제조사 선택에 따른 차종 드롭다운 동적 업데이트 및 직접 입력 처리
+        // -----------------------------------------------------------
+        const manufacturerSelect = document.getElementById('manufacturerSelect'); 
+        const manufacturerInput = document.getElementById('manufacturerInput'); 
+        const carModelSelect = document.getElementById('carModelSelect');
+        const carModelInputHidden = document.getElementById('carModelInputHidden');
+        const carModelInputDirect = document.getElementById('carModelInputDirect');
+        
+        const carModels = {
+            '현대': ['그랜저', '쏘나타', '스타리아', 'G90', 'G80', '아이오닉5', '아이오닉6'],
+            '기아': ['K8', 'K7', 'K5', '스포티지', '카니발', 'K9', '니로전기차', 'EV6', 'EV4', 'EV3'],
+            'KGM(쌍용)': ['토레스 전기차', '토레스 바이퓨엘', '토레스 LPG'],
+            '삼성(르노)': ['SM6', 'QM6'],
+            '기타': [] 
+        };
+
+        function updateCarModel(manufacturer) {
+            // 차종 필드 초기화
+            carModelSelect.innerHTML = '';
+            carModelSelect.disabled = true;
+            carModelSelect.style.display = 'block'; 
+            carModelInputDirect.style.display = 'none';
+            carModelInputHidden.value = ''; 
+            carModelSelect.required = false;
+            
+            let defaultOption = document.createElement('option');
+            defaultOption.value = '';
+            defaultOption.textContent = (manufacturer === '기타') ? '직접 입력 대기...' : '차종을 선택해주세요';
+            defaultOption.disabled = true;
+            defaultOption.selected = true;
+            carModelSelect.appendChild(defaultOption);
+
+            if (manufacturer === '기타') {
+                // '기타' 선택 시, 텍스트 입력 필드 표시
+                carModelSelect.style.display = 'none';
+                carModelInputDirect.style.display = 'block';
+                
+                // 직접 입력 필드의 값이 변경될 때 hidden 필드에 복사
+                carModelInputDirect.oninput = function() {
+                    carModelInputHidden.value = carModelInputDirect.value;
+                };
+
+            } else if (carModels[manufacturer]) {
+                // 제조사에 따른 차종 드롭다운 채우기
+                carModelSelect.style.display = 'block';
+                carModelSelect.disabled = false;
+                
+                carModels[manufacturer].forEach(model => {
+                    const option = document.createElement('option');
+                    option.value = model;
+                    option.textContent = model;
+                    carModelSelect.appendChild(option);
+                });
+                carModelSelect.required = true;
+            }
+        }
+        
+        // 제조사 드롭다운 변경 이벤트
+        manufacturerSelect.addEventListener('change', function() {
+            const selectedManufacturer = this.value;
+            // 1. 제조사 선택값을 숨겨진 input에 복사 (Google Form 제출용)
+            manufacturerInput.value = selectedManufacturer;
+            
+            // 2. 차종 드롭다운 업데이트
+            updateCarModel(selectedManufacturer);
+        });
+        
+        // 차종 드롭다운 변경 이벤트
+        carModelSelect.addEventListener('change', function() {
+             // 선택된 차종을 숨겨진 input에 복사 (Google Form 제출용)
+            carModelInputHidden.value = this.value;
+        });
+
+        // -----------------------------------------------------------
+        // 3. 개인정보 동의 필드 업데이트 (체크박스 값 -> 텍스트)
+        // -----------------------------------------------------------
+        const consentCheckbox = document.getElementById('consent');
+        const consentHidden = document.getElementById('consentHidden');
+
+        consentCheckbox.addEventListener('change', function() {
+            if (this.checked) {
+                // 체크되면 '동의' 텍스트를 전송하도록 설정
+                consentHidden.value = '동의';
+            } else {
+                // 체크 해제되면 값을 비움
+                consentHidden.value = '';
+            }
+        });
+        
+        // -----------------------------------------------------------
+        // 4. 폼 제출 및 전화번호 형식 지정 JS
+        // -----------------------------------------------------------
+        document.getElementById('carForm').addEventListener('submit', function(event) {
+            const selectedManu = manufacturerSelect.value;
+            
+            // "기타"를 선택했으나 차종 직접 입력이 비어있는 경우 체크
+            if (selectedManu === '기타' && carModelInputDirect.value.trim() === '') {
+                 alert('차종을 직접 입력해주세요.');
+                 event.preventDefault();
+                 carModelInputDirect.focus();
+                 return;
+            }
+            
+            // 개인정보 동의 체크 여부 확인
+            if (!consentCheckbox.checked) {
+                 alert('개인정보 수집 및 이용에 동의해야 시세 신청이 가능합니다.');
+                 event.preventDefault();
+                 return;
+            }
+            
+            // 폼 제출은 iframe으로 처리되어 실제 페이지 이동은 없음
+            alert('내 차량시세 신청이 성공적으로 완료되었습니다. 전문가 평가 후 시세를 안내해 드릴게요!');
+            setTimeout(() => {
+                this.reset(); 
+                updateCarModel(''); // 차종 드롭다운 초기화
+                manufacturerInput.value = ''; // 제조사 hidden 필드 초기화
+                consentHidden.value = ''; // 동의 hidden 필드 초기화
+            }, 100); 
+        });
+
+        const phoneInput = document.getElementById('phone');
+        phoneInput.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/[^0-9]/g, ''); 
+            let result = '';
+            if (value.length < 4) {
+                result = value;
+            } else if (value.length < 8) {
+                result = value.slice(0, 3) + '-' + value.slice(3);
+            } else if (value.length < 11) {
+                result = value.slice(0, 3) + '-' + value.slice(3, 7) + '-' + value.slice(7);
+            } else {
+                result = value.slice(0, 3) + '-' + value.slice(3, 7) + '-' + value.slice(7, 11);
+            }
+            e.target.value = result;
+        });
+
+        // 페이지 로드 시 차종 초기화
+        updateCarModel('');
+
+    </script>
+</body>
+</html>
