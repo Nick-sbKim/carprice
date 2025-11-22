@@ -175,11 +175,18 @@
             color: var(--text-color);
             background-color: white; 
             font-weight: normal; 
-            text-align: left;
             -webkit-appearance: none; 
             -moz-appearance: none;
             appearance: none;
             min-width: 0;
+            
+            /* ✅ 모든 입력 필드 텍스트를 가운데 정렬 */
+            text-align: center;
+        }
+
+        /* ✅ 이름과 전화번호는 왼쪽 정렬 유지 */
+        #name, #phone {
+             text-align: left;
         }
         
         /* 플레이스홀더 스타일 */
@@ -187,7 +194,12 @@
             color: var(--placeholder-color); 
             font-weight: 500;
         }
-
+        
+        /* 차량번호 입력 필드 (단위 박스 내)는 좌측 정렬 유지 */
+        .car-number-box input {
+            text-align: left !important;
+        }
+        
         /* ------------------------------------------- */
         /* ✅ 단위 고정 박스 스타일 (차량번호, 출고 연월, 운행거리) */
         .unit-box {
@@ -221,7 +233,6 @@
             background: transparent !important;
             outline: none !important;
             padding: 0 !important;
-            text-align: left;
             flex-grow: 1; 
             font-size: 1.1em; 
             font-weight: normal; 
@@ -246,10 +257,6 @@
             width: 50%;
             display: flex;
             justify-content: space-between;
-        }
-        /* 연월 입력 필드 중앙 정렬 (가이드 텍스트 포함) */
-        .year-input, .month-input {
-            text-align: center;
         }
         /* ------------------------------------------- */
 
@@ -459,7 +466,7 @@
                                 id="carModelInput" 
                                 name="entry.carModel" 
                                 required 
-                                placeholder="예시 : 그랜저 HG 3.0">
+                                placeholder="예시 : 쏘나타">
                         </div>
                     </div>
                     
@@ -472,7 +479,7 @@
                                     name="entry.year" 
                                     class="year-input"
                                     required 
-                                    placeholder="2022"
+                                    placeholder="예시 : 2022"
                                     inputmode="numeric" 
                                     maxlength="4">
                                 <span class="unit-text">년</span>
@@ -484,7 +491,7 @@
                                     name="entry.month" 
                                     class="month-input"
                                     required 
-                                    placeholder="12"
+                                    placeholder="예시 : 10"
                                     inputmode="numeric"
                                     maxlength="2">
                                 <span class="unit-text">월</span>
@@ -500,7 +507,7 @@
                                     id="mileageInput" 
                                     name="entry.mileage"
                                     required 
-                                    placeholder="20"
+                                    placeholder="예시 : 25"
                                     inputmode="numeric" 
                                     maxlength="4">
                                 <span class="unit-text">만km</span>
@@ -515,7 +522,7 @@
                 <div class="consent-group">
                     <input type="checkbox" id="consent" required>
                     <label for="consent" class="consent-label">개인정보 수집 및 이용에 동의합니다.</label>
-                    </div>
+                </div>
                 
                 <div class="consent-details">
                     <p><strong>[개인정보 수집 및 이용 동의 상세 내용]</strong></p>
