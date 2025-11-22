@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
-    <title>내 차 시세 확인하기</title>
+    <title>내 차 시세 확인하기 (디자인 전용)</title>
     
     <style>
         /* 폰트 임포트: 나눔스퀘어 Bold 폰트 적용 */
@@ -344,6 +344,10 @@
             cursor: pointer;
             transition: background-color 0.2s;
             box-shadow: 0 4px 10px rgba(25, 118, 210, 0.4); /* Blue shadow */
+            
+            /* 제출 비활성화 상태 표시 */
+            opacity: 0.7;
+            pointer-events: none;
         }
         
         #submitBtn:hover {
@@ -396,17 +400,9 @@
     <div class="container">
         
         <form id="carForm" 
-              action="https://docs.google.com/forms/u/1/d/e/1FAIpQLSeeLVvQCZycTDSjPAGt_6u5M2NkL20UaXFbSijRdAnKopPhyw/formResponse" 
-              method="POST" 
-              target="no-target">
-            
-            <input type="hidden" name="fvv" value="1">
-            <input type="hidden" name="partialResponse" value="[null,null,&quot;8606601590764844267&quot;]">
-            <input type="hidden" name="pageHistory" value="0">
-            <input type="hidden" name="fbzx" value="6543746981461146735">
-            <input type="hidden" name="submissionTimestamp" value="-1">
-            
-            <input type="hidden" id="mileageHidden" name="entry.544250438" value="">
+              action="#" 
+              method="GET" 
+              target="_self">
             
             <div class="header-content">
                 <h1>내 차 시세 확인하기</h1>
@@ -423,14 +419,14 @@
                     <div class="input-group">
                         <label for="name">성함</label>
                         <div class="input-field-wrapper">
-                            <input type="text" id="name" name="entry.1557973861" required placeholder="예시 : 홍길동">
+                            <input type="text" id="name" name="entry.name" required placeholder="예시 : 홍길동">
                         </div>
                     </div>
 
                     <div class="input-group">
                         <label for="phone">휴대폰 번호</label>
                         <div class="input-field-wrapper">
-                            <input type="text" id="phone" name="entry.607391743" required placeholder="숫자만 기입" inputmode="numeric" maxlength="13">
+                            <input type="text" id="phone" name="entry.phone" required placeholder="숫자만 기입" inputmode="numeric" maxlength="13">
                         </div>
                     </div>
                     
@@ -448,7 +444,7 @@
                                 <span class="unit-text">서울</span>
                                 <input type="text" 
                                     id="carNumber" 
-                                    name="entry.367681253" 
+                                    name="entry.carNumber" 
                                     required 
                                     placeholder="예시 : 30아1234" 
                                     maxlength="7">
@@ -461,7 +457,7 @@
                         <div class="input-field-wrapper">
                              <input type="text" 
                                 id="carModelInput" 
-                                name="entry.1656635069" 
+                                name="entry.carModel" 
                                 required 
                                 placeholder="예시 : 그랜저 HG 3.0">
                         </div>
@@ -473,7 +469,7 @@
                             <div class="unit-box">
                                 <input type="text" 
                                     id="yearInput" 
-                                    name="entry.1759157550" 
+                                    name="entry.year" 
                                     class="year-input"
                                     required 
                                     placeholder="2022"
@@ -485,7 +481,7 @@
                             <div class="unit-box">
                                 <input type="text" 
                                     id="monthInput" 
-                                    name="entry.1723102063" 
+                                    name="entry.month" 
                                     class="month-input"
                                     required 
                                     placeholder="12"
@@ -502,7 +498,7 @@
                             <div class="unit-box">
                                 <input type="text" 
                                     id="mileageInput" 
-                                    name="mileage_display"
+                                    name="entry.mileage"
                                     required 
                                     placeholder="20"
                                     inputmode="numeric" 
@@ -519,76 +515,25 @@
                 <div class="consent-group">
                     <input type="checkbox" id="consent" required>
                     <label for="consent" class="consent-label">개인정보 수집 및 이용에 동의합니다.</label>
-                    <input type="hidden" id="consentHidden" name="entry.2024924107" value="" required>
-                </div>
+                    </div>
                 
                 <div class="consent-details">
                     <p><strong>[개인정보 수집 및 이용 동의 상세 내용]</strong></p>
-                    <p>1. 수집 항목: 성함, 휴대폰 번호, 차량번호, **차종, 출고 연도, 출고 월, 운행거리**</p>
-                    <p>2. 수집 목적: **차량 시세 확인 및 판매/매입 상담 진행**</p>
+                    <p>1. 수집 항목: 성함, 휴대폰 번호, 차량번호, 차종, 출고 연도, 출고 월, 운행거리</p>
+                    <p>2. 수집 목적: 차량 시세 확인 및 판매/매입 상담 진행</p>
                     <p>3. 보유 및 이용 기간: 동의일로부터 3년 (상담 종료 후 지체 없이 파기)</p>
                     <p>4. 동의 거부 시 불이익: 상기 개인정보 수집 및 이용에 동의하지 않을 경우, 시세 신청 및 상담이 제한될 수 있습니다.</p>
                 </div>
 
-                <button type="submit" id="submitBtn">신청하기</button>
+                <button type="button" id="submitBtn">제출 기능 비활성화됨</button>
+                <p style="text-align: center; color: red; font-weight: bold; margin-top: 10px;">* 현재 폼 제출 기능은 제거되어 작동하지 않습니다. *</p>
             </div>
         </form>
     </div>
 
-    <iframe name="no-target" style="display:none;"></iframe>
-
     <script>
         // -----------------------------------------------------------
-        // 1. 개인정보 동의 필드 업데이트 (체크박스 값 -> '예')
-        // -----------------------------------------------------------
-        const consentCheckbox = document.getElementById('consent');
-        const consentHidden = document.getElementById('consentHidden');
-
-        consentCheckbox.addEventListener('change', function() {
-            // Google Forms의 옵션에 맞춰 '예' 텍스트를 전송하도록 설정
-            consentHidden.value = this.checked ? '예' : '';
-        });
-        
-        // -----------------------------------------------------------
-        // 2. 폼 제출 및 유효성 검사 JS
-        // -----------------------------------------------------------
-        document.getElementById('carForm').addEventListener('submit', function(event) {
-            
-            // 개인정보 동의 체크 여부 확인
-            if (!consentCheckbox.checked) {
-                alert('개인정보 수집 및 이용에 동의해야 시세 확인 신청이 가능합니다.');
-                event.preventDefault();
-                return;
-            }
-            
-            // 운행거리 통합 및 유효성 검사
-            const mileageDisplay = document.getElementById('mileageInput');
-            const mileageValue = mileageDisplay.value.trim();
-            const mileageHidden = document.getElementById('mileageHidden');
-            
-            if (!mileageValue) {
-                 alert('운행거리를 입력해주세요.');
-                 mileageDisplay.focus();
-                 event.preventDefault();
-                 return;
-            }
-            
-            // 만km를 붙여서 숨겨진 필드(Entry ID: 544250438)에 전송 (예: 20만km)
-            mileageHidden.value = mileageValue + '만km';
-            
-            // 폼 제출 완료 메시지
-            alert('내 차 시세 확인 신청이 성공적으로 완료되었습니다. 전문가 평가 후 시세를 안내해 드릴게요!');
-            
-            // 폼 초기화 (비동기 제출이므로 timeout 사용)
-            setTimeout(() => {
-                this.reset(); 
-                consentHidden.value = ''; // 동의 hidden 필드 초기화
-                mileageHidden.value = ''; // 운행거리 hidden 필드 초기화
-            }, 100); 
-        });
-
-        // -----------------------------------------------------------
-        // 3. 전화번호 형식 지정 JS
+        // 1. 전화번호 형식 지정 JS (디자인 확인을 위해 유지)
         // -----------------------------------------------------------
         const phoneInput = document.getElementById('phone');
         phoneInput.addEventListener('input', function(e) {
@@ -605,6 +550,13 @@
                 result = value.slice(0, 3) + '-' + value.slice(3, 7) + '-' + value.slice(7, 11);
             }
             e.target.value = result;
+        });
+
+        // -----------------------------------------------------------
+        // 2. 제출 버튼 비활성화 및 알림 (스크립트 제거)
+        // -----------------------------------------------------------
+        document.getElementById('submitBtn').addEventListener('click', function() {
+            alert('현재 폼 제출 기능은 임시로 제거된 상태입니다. 새로운 Google Forms 연결 후에 작동합니다.');
         });
 
     </script>
