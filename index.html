@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
-    <title>내 차 시세 확인하기 (디자인 전용)</title>
+    <title>내 차 시세 확인하기</title>
     
     <style>
         /* 폰트 임포트: 나눔스퀘어 Bold 폰트 적용 */
@@ -351,10 +351,6 @@
             cursor: pointer;
             transition: background-color 0.2s;
             box-shadow: 0 4px 10px rgba(25, 118, 210, 0.4); /* Blue shadow */
-            
-            /* 제출 비활성화 상태 표시 */
-            opacity: 0.7;
-            pointer-events: none;
         }
         
         #submitBtn:hover {
@@ -407,9 +403,18 @@
     <div class="container">
         
         <form id="carForm" 
-              action="#" 
-              method="GET" 
-              target="_self">
+              action="https://docs.google.com/forms/u/1/d/e/1FAIpQLSfGRDi9pMPs-HlX8HSSJny7DN8cXeaKngKhvUIXm5r4drTkhg/formResponse" 
+              method="POST" 
+              target="no-target">
+            
+            <input type="hidden" name="fvv" value="1">
+            <input type="hidden" name="pageHistory" value="0">
+            <input type="hidden" name="fbzx" value="2626337769764454591">
+            <input type="hidden" name="submissionTimestamp" value="-1">
+            
+            <input type="hidden" id="mileageHidden" name="entry.1507330012" value="">
+            
+            <input type="hidden" id="consentHidden" name="entry.901599408" value="" required>
             
             <div class="header-content">
                 <h1>내 차 시세 확인하기</h1>
@@ -426,14 +431,14 @@
                     <div class="input-group">
                         <label for="name">성함</label>
                         <div class="input-field-wrapper">
-                            <input type="text" id="name" name="entry.name" required placeholder="예시 : 홍길동">
+                            <input type="text" id="name" name="entry.525530126" required placeholder="예시 : 홍길동">
                         </div>
                     </div>
 
                     <div class="input-group">
                         <label for="phone">휴대폰 번호</label>
                         <div class="input-field-wrapper">
-                            <input type="text" id="phone" name="entry.phone" required placeholder="숫자만 기입" inputmode="numeric" maxlength="13">
+                            <input type="text" id="phone" name="entry.1115145303" required placeholder="숫자만 기입" inputmode="numeric" maxlength="13">
                         </div>
                     </div>
                     
@@ -451,7 +456,7 @@
                                 <span class="unit-text">서울</span>
                                 <input type="text" 
                                     id="carNumber" 
-                                    name="entry.carNumber" 
+                                    name="entry.490623658" 
                                     required 
                                     placeholder="예시 : 30아1234" 
                                     maxlength="7">
@@ -464,7 +469,7 @@
                         <div class="input-field-wrapper">
                              <input type="text" 
                                 id="carModelInput" 
-                                name="entry.carModel" 
+                                name="entry.937146" 
                                 required 
                                 placeholder="예시 : 쏘나타">
                         </div>
@@ -476,7 +481,7 @@
                             <div class="unit-box">
                                 <input type="text" 
                                     id="yearInput" 
-                                    name="entry.year" 
+                                    name="entry.401182548" 
                                     class="year-input"
                                     required 
                                     placeholder="예시 : 2022"
@@ -488,7 +493,7 @@
                             <div class="unit-box">
                                 <input type="text" 
                                     id="monthInput" 
-                                    name="entry.month" 
+                                    name="entry.825399382" 
                                     class="month-input"
                                     required 
                                     placeholder="예시 : 10"
@@ -505,7 +510,7 @@
                             <div class="unit-box">
                                 <input type="text" 
                                     id="mileageInput" 
-                                    name="entry.mileage"
+                                    name="mileage_display"
                                     required 
                                     placeholder="예시 : 25"
                                     inputmode="numeric" 
@@ -532,15 +537,65 @@
                     <p>4. 동의 거부 시 불이익: 상기 개인정보 수집 및 이용에 동의하지 않을 경우, 시세 신청 및 상담이 제한될 수 있습니다.</p>
                 </div>
 
-                <button type="button" id="submitBtn">제출 기능 비활성화됨</button>
-                <p style="text-align: center; color: red; font-weight: bold; margin-top: 10px;">* 현재 폼 제출 기능은 제거되어 작동하지 않습니다. *</p>
+                <button type="submit" id="submitBtn">신청하기</button>
             </div>
         </form>
     </div>
 
+    <iframe name="no-target" style="display:none;"></iframe>
+
     <script>
         // -----------------------------------------------------------
-        // 1. 전화번호 형식 지정 JS (디자인 확인을 위해 유지)
+        // 1. 개인정보 동의 필드 업데이트 (체크박스 값 -> '예')
+        // -----------------------------------------------------------
+        const consentCheckbox = document.getElementById('consent');
+        const consentHidden = document.getElementById('consentHidden');
+
+        consentCheckbox.addEventListener('change', function() {
+            // Google Forms의 옵션에 맞춰 '예' 텍스트를 전송하도록 설정
+            consentHidden.value = this.checked ? '예' : '';
+        });
+        
+        // -----------------------------------------------------------
+        // 2. 폼 제출 및 유효성 검사 JS
+        // -----------------------------------------------------------
+        document.getElementById('carForm').addEventListener('submit', function(event) {
+            
+            // 개인정보 동의 체크 여부 확인
+            if (!consentCheckbox.checked) {
+                alert('개인정보 수집 및 이용에 동의해야 시세 확인 신청이 가능합니다.');
+                event.preventDefault();
+                return;
+            }
+            
+            // 운행거리 통합 및 유효성 검사
+            const mileageDisplay = document.getElementById('mileageInput');
+            const mileageValue = mileageDisplay.value.trim();
+            const mileageHidden = document.getElementById('mileageHidden');
+            
+            if (!mileageValue) {
+                 alert('운행거리를 입력해주세요.');
+                 mileageDisplay.focus();
+                 event.preventDefault();
+                 return;
+            }
+            
+            // 만km를 붙여서 숨겨진 필드(Entry ID: 1507330012)에 전송 (예: 25만km)
+            mileageHidden.value = mileageValue + '만km';
+            
+            // 폼 제출 완료 메시지
+            alert('내 차 시세 확인 신청이 성공적으로 완료되었습니다. 전문가 평가 후 시세를 안내해 드릴게요!');
+            
+            // 폼 초기화 (비동기 제출이므로 timeout 사용)
+            setTimeout(() => {
+                this.reset(); 
+                consentHidden.value = ''; // 동의 hidden 필드 초기화
+                mileageHidden.value = ''; // 운행거리 hidden 필드 초기화
+            }, 100); 
+        });
+
+        // -----------------------------------------------------------
+        // 3. 전화번호 형식 지정 JS
         // -----------------------------------------------------------
         const phoneInput = document.getElementById('phone');
         phoneInput.addEventListener('input', function(e) {
@@ -557,13 +612,6 @@
                 result = value.slice(0, 3) + '-' + value.slice(3, 7) + '-' + value.slice(7, 11);
             }
             e.target.value = result;
-        });
-
-        // -----------------------------------------------------------
-        // 2. 제출 버튼 비활성화 및 알림 (스크립트 제거)
-        // -----------------------------------------------------------
-        document.getElementById('submitBtn').addEventListener('click', function() {
-            alert('현재 폼 제출 기능은 임시로 제거된 상태입니다. 새로운 Google Forms 연결 후에 작동합니다.');
         });
 
     </script>
