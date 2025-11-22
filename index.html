@@ -19,11 +19,11 @@
             --input-margin-bottom: 25px; /* 모든 항목의 기본 하단 간격 (25px) */
             
             /* --- 🎨 Main Theme Colors (Red) --- */
-            --main-color: #D32F2F;        
+            --main-color: #D32F2F;     
             --light-border-color: #FFCDD2; 
             --text-color: #333; 
             --secondary-text-color: #8D6E63; 
-            --label-color: #BF360C;         
+            --label-color: #BF360C;     
             
             /* ✅ 가이드 텍스트 색상 */
             --guide-text-color: #333;      /* 드롭다운의 기본 선택 텍스트 (검정 유지) */
@@ -195,7 +195,8 @@
         
         /* 일반 입력 필드의 가이드 텍스트 (placeholder) 색상 (회색) */
         .personal-info-bg input::placeholder,
-        #carNumber::placeholder {
+        #carNumber::placeholder,
+        #carModelInput::placeholder {
             color: var(--placeholder-color); 
             font-weight: 500;
         }
@@ -410,10 +411,16 @@
 <body>
     <div class="container">
         
-<form id="carForm" 
-    action="https://docs.google.com/forms/d/e/1FAIpQLSeeLVvQCZycTDSjPAGt_6u5M2NkL20UaXFbSijRdAnKopPhyw/formResponse" 
-    method="POST" 
-    target="no-target">
+        <form id="carForm" 
+              action="https://docs.google.com/forms/d/e/1FAIpQLSeeLVvQCZycTDSjPAGt_6u5M2NkL20UaXFbSijRdAnKopPhyw/formResponse" 
+              method="POST" 
+              target="no-target">
+            
+            <input type="hidden" name="fvv" value="1">
+            <input type="hidden" name="partialResponse" value="[null,null,&quot;-1322271895961030939&quot;]">
+            <input type="hidden" name="pageHistory" value="0">
+            <input type="hidden" name="fbzx" value="-1322271895961030939">
+            <input type="hidden" name="submissionTimestamp" value="-1">
             
             <div class="header-content">
                 <h1>내 차량시세 신청</h1>
@@ -437,7 +444,7 @@
                     <div class="input-group">
                         <label for="phone">휴대폰 번호</label>
                         <div class="input-field-wrapper">
-                            <input type="text" id="phone" name="entry.607391743" required placeholder="숫자만 기입" inputmode="numeric">
+                            <input type="text" id="phone" name="entry.607391743" required placeholder="숫자만 기입" inputmode="numeric" maxlength="13">
                         </div>
                     </div>
                     
@@ -479,16 +486,13 @@
                     </div>
                     
                     <div class="input-group" id="carModelGroup"> 
-                        <label for="carModelSelect">차종</label>
+                        <label for="carModelInput">차종</label>
                         <div class="input-field-wrapper">
-                            <select id="carModelSelect" required disabled>
-                                 <option value="" disabled selected>차종을 선택해주세요</option>
-                             </select>
-                            <input type="hidden" id="carModelInputHidden" name="entry.1656635069" value=""> 
-                            <input type="text" 
-                                 id="carModelInputDirect" 
-                                 placeholder="차종을 직접 입력해주세요" 
-                                 style="display: none;">
+                             <input type="text" 
+                                id="carModelInput" 
+                                name="entry.1656635069" 
+                                required 
+                                placeholder="차종을 직접 입력해주세요 (예: 그랜저 HG 3.0)">
                         </div>
                     </div>
                     
@@ -550,13 +554,13 @@
 
         for (let year = startYear; year >= endYear; year--) {
             const option = document.createElement('option');
-            option.value = year + '년'; // Google Forms의 Option 값에 맞게 '년' 추가
+            option.value = year;
             option.textContent = year + '년';
             yearSelect.appendChild(option);
         }
 
         for (let month = 1; month <= 12; month++) {
-            const monthText = month + '월'; // Google Forms의 Option 값에 맞게 '월' 추가 (01월 형식은 Google Form에서 직접 설정하지 않는 한 불필요)
+            const monthText = month.toString().padStart(2, '0');
             const option = document.createElement('option');
             option.value = monthText;
             option.textContent = month + '월';
@@ -564,94 +568,27 @@
         }
 
         // -----------------------------------------------------------
-        // 2. 제조사 선택에 따른 차종 드롭다운 동적 업데이트 및 직접 입력 처리
+        // 2. 제조사 선택값을 hidden input에 복사
+        //    (차종 동적 업데이트 로직은 모두 제거됨)
         // -----------------------------------------------------------
         const manufacturerSelect = document.getElementById('manufacturerSelect'); 
         const manufacturerInput = document.getElementById('manufacturerInput'); 
-        const carModelSelect = document.getElementById('carModelSelect');
-        const carModelInputHidden = document.getElementById('carModelInputHidden');
-        const carModelInputDirect = document.getElementById('carModelInputDirect');
-        
-        const carModels = {
-            '현대': ['그랜저', '쏘나타', '스타리아', 'G90', 'G80', '아이오닉5', '아이오닉6'],
-            '기아': ['K8', 'K7', 'K5', '스포티지', '카니발', 'K9', '니로전기차', 'EV6', 'EV4', 'EV3'],
-            'KGM(쌍용)': ['토레스 전기차', '토레스 바이퓨엘', '토레스 LPG'],
-            '삼성(르노)': ['SM6', 'QM6'],
-            '기타': [] 
-        };
 
-        function updateCarModel(manufacturer) {
-            // 차종 필드 초기화
-            carModelSelect.innerHTML = '';
-            carModelSelect.disabled = true;
-            carModelSelect.style.display = 'block'; 
-            carModelInputDirect.style.display = 'none';
-            carModelInputHidden.value = ''; 
-            carModelSelect.required = false;
-            
-            let defaultOption = document.createElement('option');
-            defaultOption.value = '';
-            defaultOption.textContent = (manufacturer === '기타') ? '직접 입력 대기...' : '차종을 선택해주세요';
-            defaultOption.disabled = true;
-            defaultOption.selected = true;
-            carModelSelect.appendChild(defaultOption);
-
-            if (manufacturer === '기타') {
-                // '기타' 선택 시, 텍스트 입력 필드 표시
-                carModelSelect.style.display = 'none';
-                carModelInputDirect.style.display = 'block';
-                carModelInputDirect.required = true;
-                carModelInputHidden.required = true;
-                
-                // 직접 입력 필드의 값이 변경될 때 hidden 필드에 복사
-                carModelInputDirect.oninput = function() {
-                    carModelInputHidden.value = carModelInputDirect.value;
-                };
-
-            } else if (carModels[manufacturer]) {
-                // 제조사에 따른 차종 드롭다운 채우기
-                carModelSelect.style.display = 'block';
-                carModelInputDirect.style.display = 'none';
-                carModelSelect.disabled = false;
-                carModelSelect.required = true;
-                carModelInputDirect.required = false; // 직접 입력 필드의 필수 해제
-                
-                carModels[manufacturer].forEach(model => {
-                    const option = document.createElement('option');
-                    option.value = model;
-                    option.textContent = model;
-                    carModelSelect.appendChild(option);
-                });
-                
-            }
-        }
-        
-        // 제조사 드롭다운 변경 이벤트
         manufacturerSelect.addEventListener('change', function() {
-            const selectedManufacturer = this.value;
-            // 1. 제조사 선택값을 숨겨진 input에 복사 (Google Form 제출용)
-            manufacturerInput.value = selectedManufacturer;
-            
-            // 2. 차종 드롭다운 업데이트
-            updateCarModel(selectedManufacturer);
-        });
-        
-        // 차종 드롭다운 변경 이벤트
-        carModelSelect.addEventListener('change', function() {
-             // 선택된 차종을 숨겨진 input에 복사 (Google Form 제출용)
-            carModelInputHidden.value = this.value;
+            // 제조사 선택값을 숨겨진 input에 복사 (Google Form 제출용)
+            manufacturerInput.value = this.value; 
         });
 
         // -----------------------------------------------------------
-        // 3. 개인정보 동의 필드 업데이트 (체크박스 값 -> 텍스트 '동의')
+        // 3. 개인정보 동의 필드 업데이트 (체크박스 값 -> 텍스트)
         // -----------------------------------------------------------
         const consentCheckbox = document.getElementById('consent');
         const consentHidden = document.getElementById('consentHidden');
 
         consentCheckbox.addEventListener('change', function() {
             if (this.checked) {
-                // Google Forms 옵션에 맞게 '예' 대신 '동의'로 설정 (사장님께서 이전 단계에서 '예' 대신 '동의'를 사용하셨다면 '동의'로 설정하는 것이 안전합니다.)
-                consentHidden.value = '동의'; 
+                // 체크되면 '동의' 텍스트를 전송하도록 설정
+                consentHidden.value = '동의';
             } else {
                 // 체크 해제되면 값을 비움
                 consentHidden.value = '';
@@ -660,42 +597,29 @@
         
         // -----------------------------------------------------------
         // 4. 폼 제출 및 전화번호 형식 지정 JS
+        //    (차종 관련 유효성 검사 로직이 제거되어 간결해짐)
         // -----------------------------------------------------------
         document.getElementById('carForm').addEventListener('submit', function(event) {
-            const selectedManu = manufacturerSelect.value;
-            
-            // "기타"를 선택했으나 차종 직접 입력이 비어있는 경우 체크
-            if (selectedManu === '기타' && carModelInputDirect.value.trim() === '') {
-                 alert('차종을 직접 입력해주세요.');
-                 event.preventDefault();
-                 carModelInputDirect.focus();
-                 return;
-            }
             
             // 개인정보 동의 체크 여부 확인
             if (!consentCheckbox.checked) {
-                 alert('개인정보 수집 및 이용에 동의해야 시세 신청이 가능합니다.');
-                 event.preventDefault();
-                 return;
+                alert('개인정보 수집 및 이용에 동의해야 시세 신청이 가능합니다.');
+                event.preventDefault();
+                return;
             }
             
             // 폼 제출은 iframe으로 처리되어 실제 페이지 이동은 없음
             alert('내 차량시세 신청이 성공적으로 완료되었습니다. 전문가 평가 후 시세를 안내해 드릴게요!');
             setTimeout(() => {
                 this.reset(); 
-                updateCarModel(''); // 차종 드롭다운 초기화
                 manufacturerInput.value = ''; // 제조사 hidden 필드 초기화
                 consentHidden.value = ''; // 동의 hidden 필드 초기화
-                carModelInputDirect.value = ''; // 직접 입력 필드 초기화
                 
-                // 드롭다운 기본값으로 복원
+                // 드롭다운 기본값으로 재설정
                 document.getElementById('manufacturerSelect').selectedIndex = 0;
                 document.getElementById('optionSelect').selectedIndex = 0;
                 document.getElementById('yearSelect').selectedIndex = 0;
                 document.getElementById('monthSelect').selectedIndex = 0;
-
-                // 체크박스 해제 (this.reset()으로 이미 처리되지만 안전을 위해 명시)
-                consentCheckbox.checked = false; 
 
             }, 100); 
         });
@@ -716,10 +640,6 @@
             e.target.value = result;
         });
 
-        // 페이지 로드 시 차종 초기화
-        updateCarModel('');
-
     </script>
 </body>
 </html>
-
