@@ -403,11 +403,9 @@
     <div class="container">
         
         <form id="carForm" 
-              action="https://docs.google.com/forms/d/e/1FAIpQLSfGRDi9pMPs-HlX8HSSJny7DN8cXeaKngKhvUIXm5r4drTkhg/formresponse" 
+              action="https://docs.google.com/forms/u/1/d/e/1FAIpQLSfGRDi9pMPs-HlX8HSSJny7DN8cXeaKngKhvUIXm5r4drTkhg/formResponse" 
               method="POST" 
-              target="no-target">
-            
-            <input type="hidden" name="fvv" value="1">
+              target="_blank"> <input type="hidden" name="fvv" value="1">
             <input type="hidden" name="pageHistory" value="0">
             <input type="hidden" name="fbzx" value="2626337769764454591">
             <input type="hidden" name="submissionTimestamp" value="-1">
@@ -542,8 +540,6 @@
         </form>
     </div>
 
-    <iframe name="no-target" style="display:none;"></iframe>
-
     <script>
         // -----------------------------------------------------------
         // 1. 개인정보 동의 필드 업데이트 (체크박스 값 -> '예')
@@ -552,12 +548,12 @@
         const consentHidden = document.getElementById('consentHidden');
 
         consentCheckbox.addEventListener('change', function() {
-            // Google Forms의 옵션에 맞춰 '예' 텍스트를 전송하도록 설정 (Entry ID: 901599408)
+            // Google Forms의 옵션에 맞춰 '예' 텍스트를 전송하도록 설정
             consentHidden.value = this.checked ? '예' : '';
         });
         
         // -----------------------------------------------------------
-        // 2. 폼 제출 및 유효성 검사 JS (Entry ID에 값 세팅)
+        // 2. 폼 제출 및 유효성 검사 JS (안정성 개선)
         // -----------------------------------------------------------
         document.getElementById('carForm').addEventListener('submit', function(event) {
             
@@ -583,15 +579,11 @@
             // 입력된 운행거리 값에 '만km'를 붙여서 Hidden Field (Entry ID: 1507330012)에 최종 세팅
             mileageHidden.value = mileageValue + '만km';
             
-            // 폼 제출 완료 메시지
-            alert('내 차 시세 확인 신청이 성공적으로 완료되었습니다. 전문가 평가 후 시세를 안내해 드릴게요!');
+            // 폼 제출 완료 메시지 (폼 제출 성공 후 새 탭에서 응답 페이지가 뜨므로, 메시지 방식 변경)
+            // event.preventDefault()를 호출하지 않고 폼이 정상 제출되도록 함.
             
-            // 폼 초기화 (비동기 제출을 위해 페이지 이동 없이 제출 후 입력 필드 초기화)
-            setTimeout(() => {
-                this.reset(); 
-                consentHidden.value = ''; // 동의 hidden 필드 초기화
-                mileageHidden.value = ''; // 운행거리 hidden 필드 초기화
-            }, 100); 
+            // **주의:** 폼 제출 후 **새 탭**이 열리고, 해당 탭에 Google Forms의 "응답이 기록되었습니다." 페이지가 뜰 것입니다.
+            // 기존 폼 입력값은 남아있도록 (새 탭이 열리므로) this.reset()을 제거합니다.
         });
 
         // -----------------------------------------------------------
@@ -617,4 +609,3 @@
     </script>
 </body>
 </html>
-
