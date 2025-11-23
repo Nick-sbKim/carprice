@@ -33,9 +33,9 @@
             --unit-bg-color: white; 
             --unit-text-color: #333; 
             
-            /* 차량번호 '서울'의 배경색 */
+            /* 차량번호/휴대폰 '고정 단위'의 배경색 */
             --car-unit-bg: #42A5F5; 
-            /* 차량번호 '서울'의 텍스트 색상 */
+            /* 차량번호/휴대폰 '고정 단위'의 텍스트 색상 */
             --car-unit-text: #FFFFFF;
             
             /* 통합 박스 테두리 (유지) */
@@ -70,178 +70,198 @@
             overflow: hidden; 
         }
 
-        /* 제목 및 설명 (생략) */
+        /* 제목 및 설명 */
         .header-content { padding: 25px 20px 10px; }
-        h1 { /* ... */ }
-        .description { /* ... */ }
+        h1 {
+            text-align: center; margin-bottom: 15px; font-size: 1.7em; 
+            font-weight: 800; color: var(--main-color); line-height: 1.2; 
+        }
+        .description {
+            text-align: center; font-size: 0.9em; color: var(--secondary-text-color);
+            margin-bottom: 25px; padding: 0 5px; font-weight: 500; line-height: 1.6; 
+        }
 
         /* 단계별 진행바 스타일 (생략) */
-        .progress-bar-container { /* ... */ }
-        .step-indicator { /* ... */ }
-        .step-circle { /* ... */ }
-        .step-text { /* ... */ }
+        .progress-bar-container {
+            padding: 0 20px 20px; display: flex; justify-content: space-between; align-items: flex-start; 
+        }
+        .step-indicator { flex: 1; display: flex; flex-direction: column; align-items: center; position: relative; }
+        .step-indicator:first-child::after { content: ''; position: absolute; top: 16px; left: 50%; width: 100%; height: 4px; background-color: #CFD8DC; z-index: 5; transform: translateY(-50%); }
+        .step-indicator.active:first-child::after, .step-indicator.completed:first-child::after { background-color: var(--main-color); }
+        .step-circle {
+            width: 32px; height: 32px; border-radius: 50%; background-color: #CFD8DC; color: white;
+            display: flex; justify-content: center; align-items: center; font-weight: 700; font-size: 1.1em;
+            z-index: 10; transition: background-color 0.3s; position: relative; 
+        }
+        .step-text { margin-top: 8px; font-size: 0.9em; color: #757575; font-weight: 500; transition: color 0.3s; }
+        .step-indicator.active .step-circle { background-color: var(--main-color); }
+        .step-indicator.completed .step-circle { background-color: var(--main-color); }
+        .step-indicator:nth-child(2).active .step-circle { background-color: #64B5F6; }
+        .step-indicator.active .step-text { color: var(--main-color); font-weight: 800; }
+        .step-indicator.completed .step-text { color: var(--main-color); }
 
-        /* 단계별 섹션 스타일 및 정렬 (생략) */
+        /* 단계별 섹션 스타일 및 정렬 */
         .step { display: none; }
         .step.active { display: block; }
         .step-content { 
-            padding: 20px; 
-            margin: 0 20px 20px 20px; 
-            border-radius: 10px;
-            border: 1px solid var(--input-border);
-            background-color: #F8F8F8;
+            padding: 20px; margin: 0 20px 20px 20px; border-radius: 10px;
+            border: 1px solid var(--input-border); background-color: #F8F8F8;
         }
-        .section-title { /* ... */ }
+        .section-title {
+            font-size: 1.2em; font-weight: 800; color: var(--label-color);
+            margin-bottom: 25px; padding-bottom: 5px; border-bottom: 1px dashed #BDBDBD;
+        }
 
         /* 모든 필드 그룹 */
         .input-group {
-            display: flex;
-            flex-wrap: wrap; 
-            margin-bottom: var(--input-margin-bottom); 
-            position: relative; 
-            align-items: center; 
+            display: flex; flex-wrap: wrap; margin-bottom: var(--input-margin-bottom); 
+            position: relative; align-items: center; 
         }
         
         /* 모든 라벨 스타일 */
         .input-group label {
-            position: absolute;
-            left: 0;
-            top: 50%; 
-            transform: translateY(-50%); 
-            width: calc(var(--align-offset) - 10px); 
-            flex-shrink: 0;
-            font-size: 1.25em; 
-            font-weight: 800; 
-            color: var(--label-color); 
-            white-space: nowrap; 
-            line-height: 1.2; 
+            position: absolute; left: 0; top: 50%; transform: translateY(-50%); 
+            width: calc(var(--align-offset) - 10px); flex-shrink: 0;
+            font-size: 1.25em; font-weight: 800; color: var(--label-color); 
+            white-space: nowrap; line-height: 1.2; 
         }
 
         /* 입력 필드 컨테이너 */
         .input-field-wrapper {
-            margin-left: var(--align-offset); 
-            width: calc(100% - var(--align-offset)); 
-            position: relative; 
-            display: flex; 
-            flex-direction: column; 
-            gap: var(--input-gap); 
-            flex-grow: 1; 
+            margin-left: var(--align-offset); width: calc(100% - var(--align-offset)); 
+            position: relative; display: flex; flex-direction: column; 
+            gap: var(--input-gap); flex-grow: 1; 
         }
         
         /* 일반 입력 필드 및 셀렉트 스타일 */
         .input-field-wrapper input[type="text"],
         .input-field-wrapper select {
-            flex-grow: 1;
-            padding: var(--input-padding-vertical) 15px; 
-            height: 48px; 
-            border: 1px solid var(--input-border); 
-            border-radius: 8px; 
-            box-sizing: border-box;
-            font-size: 1.1em; 
-            color: var(--text-color);
-            background-color: white; 
-            font-weight: normal; 
-            -webkit-appearance: none; 
-            -moz-appearance: none;
-            appearance: none;
-            min-width: 0;
+            flex-grow: 1; padding: var(--input-padding-vertical) 15px; 
+            height: 48px; border: 1px solid var(--input-border); 
+            border-radius: 8px; box-sizing: border-box; font-size: 1.1em; 
+            color: var(--text-color); background-color: white; 
+            font-weight: normal; -webkit-appearance: none; 
+            -moz-appearance: none; appearance: none; min-width: 0;
         }
-
+        
+        /* 1단계 성함 가이드 텍스트 가운데 정렬 */
+        #name { padding-left: 15px !important; padding-right: 15px !important; text-align: center !important; }
+        
+        /* 드롭다운 스타일 (생략) */
+        .select-group .select-box { position: relative; }
+        .select-group select { padding-right: 35px; text-align: center; }
+        .select-group .select-box::after {
+            content: '▼'; position: absolute; top: 50%; right: 15px; transform: translateY(-50%);
+            font-size: 0.8em; color: var(--main-color); pointer-events: none; z-index: 10;
+        }
+        .select-group { display: flex; flex-direction: row; gap: var(--input-gap); width: 100%; }
+        .select-group .select-box { flex: 1; padding: 0; height: auto; border: none; }
+        .select-group .select-box select { width: 100%; }
+        
         /* ------------------------------------------- */
-        /* ✅ 단위 통합 입력 필드 (차량번호, 운행거리) - 디자인 핵심 수정 */
+        /* ✅ 단위 통합 입력 필드 (차량번호, 운행거리, 휴대폰) */
         /* ------------------------------------------- */
         .split-unit-wrapper {
-            display: flex;
-            align-items: center;
-            height: 48px;
-            flex-grow: 1;
-            /* ✅ 통합 박스 테두리 유지 */
+            display: flex; align-items: center; height: 48px; flex-grow: 1;
+            /* 통합 박스 테두리 유지 */
             border: var(--unified-input-border); 
-            border-radius: 8px; 
-            overflow: hidden; 
-            background-color: white; 
-            justify-content: space-between; /* 항목을 양 끝으로 정렬 */
+            border-radius: 8px; overflow: hidden; 
+            background-color: white; justify-content: space-between; 
         }
 
-        /* 고정 텍스트 박스 ('서울', '만 KM') */
+        /* 고정 텍스트 박스 ('서울', '만 KM', '010-') */
         .fixed-unit-box {
-            flex-shrink: 0;
-            line-height: 1;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.1em;
-            font-weight: 800;
-            padding: 0 10px;
+            flex-shrink: 0; line-height: 1; height: 100%; display: flex;
+            align-items: center; justify-content: center; font-size: 1.1em;
+            font-weight: 800; padding: 0 10px;
         }
 
         /* 차량번호 '서울' 스타일 */
         .car-number-unit {
-             width: 45px; 
-             color: var(--car-unit-text); 
-             background-color: var(--car-unit-bg); 
+             width: 45px; color: var(--car-unit-text); background-color: var(--car-unit-bg); 
              padding: 0 5px;
         }
         
         /* 운행거리 '만 KM' 스타일 */
         .mileage-unit-box {
-            width: 80px; 
-            color: var(--unit-text-color); 
-            background-color: var(--unit-bg-color); 
-            font-weight: 800;
-            padding-left: 5px; 
-            padding-right: 10px;
-            /* ✅ 오른쪽 끝에 붙도록 재확인 (flex-shrink: 0으로 확보) */
-            flex-shrink: 0; 
+            width: 80px; color: var(--unit-text-color); background-color: var(--unit-bg-color); 
+            font-weight: 800; padding-left: 5px; padding-right: 10px; flex-shrink: 0; 
+        }
+
+        /* ✅ '010-' 고정 단위 박스 스타일 */
+        .phone-unit-box {
+             width: 55px; color: var(--car-unit-text); background-color: var(--car-unit-bg); 
+             padding: 0 5px; height: 100%; display: flex; align-items: center; 
+             justify-content: center; font-size: 1.1em; font-weight: 800; flex-shrink: 0;
         }
         
-        /* ✅ 분리된 입력 필드 스타일 (통합 박스 내부) */
+        /* ✅ 내부 입력 필드 공통 스타일 (테두리 제거 강화) */
         .split-unit-wrapper input {
-            height: 100%;
-            border: none !important; /* ✅ input 자체의 테두리 완전히 제거 */
-            border-radius: 0; 
-            flex-grow: 1;
-            min-width: 50px; 
-            padding: var(--input-padding-vertical) 10px;
-            background-color: white; 
-            font-weight: 500; 
-            font-size: 1em; 
+            height: 100%; border: none !important; border-radius: 0; flex-grow: 1;
+            min-width: 50px; padding: var(--input-padding-vertical) 10px; background-color: white; 
+            font-weight: 500; font-size: 1em; 
             
-            /* ✅ 테두리 중복 문제 해결: 포커스 시 아웃라인/박스 쉐도우 제거 */
-            outline: none; 
-            box-shadow: none;
+            /* 테두리 중복 문제 해결: 포커스 시 아웃라인/박스 쉐도우 제거 */
+            outline: none; box-shadow: none;
         }
-        
         .split-unit-wrapper input:focus {
-            outline: none;
-            box-shadow: none; 
+            outline: none; box-shadow: none; 
         }
         
         /* 차량번호 입력 필드 */
         .car-number-input {
-            text-align: left; 
-            padding-left: 10px;
-            padding-right: 15px; 
-            color: #757575; 
-            flex-grow: 1; /* 남은 공간 모두 차지 */
+            text-align: left; padding-left: 10px; padding-right: 15px; 
+            color: #757575; flex-grow: 1; 
         }
         
-        /* ✅ 운행거리 입력 필드 - 너비 확장 */
+        /* 운행거리 입력 필드 - 너비 확장 */
         .mileage-input-field {
-            text-align: center; 
-            padding-right: 5px; 
-            flex-grow: 2; /* 너비를 충분히 확장 */
-            min-width: 100px; /* 최소 너비 지정으로 확보 */
+            text-align: center; padding-right: 5px; flex-grow: 2; min-width: 100px; 
+        }
+        
+        /* ✅ 휴대폰 번호 입력 필드 */
+        .phone-input-field {
+            text-align: center; padding-left: 10px; padding-right: 10px;
         }
         
         /* ------------------------------------------- */
         /* 하단 내용 및 버튼 (생략) */
-        /* ------------------------------------------- */
-
+        .footer-content { padding: 0 20px 25px; }
+        .button-group { display: flex; gap: 10px; margin-top: 25px; }
+        .prev-btn {
+            width: 50px; padding: 15px 10px; background-color: #CFD8DC; color: var(--text-color);
+            border: none; border-radius: 10px; font-size: 1.5em; font-weight: 700; cursor: pointer;
+            transition: background-color 0.2s; flex-shrink: 0; display: flex;
+            justify-content: center; align-items: center; line-height: 1;
+        }
+        #nextBtn, #submitBtn {
+            flex-grow: 1; padding: 18px 20px; background-color: var(--main-color); 
+            color: white; border: none; border-radius: 10px; font-size: 1.3em;
+            font-weight: 800; cursor: pointer; transition: background-color 0.2s;
+            box-shadow: 0 4px 10px rgba(25, 118, 210, 0.4); 
+        }
+        /* 동의 관련 스타일 (생략) */
+        .consent-group { display: flex; align-items: center; margin-bottom: 15px; }
+        .consent-group input[type="checkbox"] { margin-right: 10px; width: 20px; height: 20px; flex-shrink: 0; }
+        .consent-label { font-weight: 700; color: var(--text-color); font-size: 1em; cursor: pointer; line-height: 1.4; }
+        .consent-details {
+            border: 1px solid #E0E0E0; background-color: #FAFAFA; padding: 10px 15px;
+            border-radius: 8px; font-size: 0.85em; line-height: 1.6; color: #757575;
+        }
+        .consent-details strong { color: #424242; }
+        .consent-details p { margin: 5px 0; }
+        
         /* ********************************************** */
         /* 모바일 반응형 디자인 (생략) */
-        /* ********************************************** */
+        @media (max-width: var(--mobile-breakpoint)) {
+            .input-group label {
+                position: static; width: 100%; font-size: 1.1em; 
+                margin-bottom: 5px; line-height: 1.2; transform: none; 
+            }
+            .input-field-wrapper { margin-left: 0; width: 100%; flex-wrap: wrap; }
+            .split-unit-wrapper { width: 100%; }
+            .select-group select option:first-child { font-size: 0.9em; }
+        }
     </style>
 </head>
 <body>
@@ -255,13 +275,11 @@
             <div class="header-content">
                 <h1>내 차 시세 확인하기</h1>
                 <p class="description">2단계만 완료하시면 견적 요청이 완료됩니다.</p>
-                
                 <div class="progress-bar-container">
                     <div class="step-indicator active" id="indicator1">
                         <div class="step-circle">1</div>
                         <div class="step-text">연락정보</div>
                     </div>
-                    
                     <div class="step-indicator" id="indicator2">
                         <div class="step-circle">2</div>
                         <div class="step-text">차량정보</div>
@@ -282,6 +300,7 @@
             <div class="step active" id="step1">
                 <div class="step-content">
                     <div class="section-title">1. 연락정보 입력</div>
+
                     <div class="input-group">
                         <label for="name">성함</label>
                         <div class="input-field-wrapper">
@@ -292,13 +311,17 @@
                     <div class="input-group">
                         <label for="phone">휴대폰번호</label>
                         <div class="input-field-wrapper">
-                            <input type="text" 
-                                id="phone" 
-                                name="phone_display"
-                                required 
-                                placeholder="010-0000-0000" 
-                                inputmode="numeric" 
-                                maxlength="13">
+                            <div class="split-unit-wrapper">
+                                <span class="phone-unit-box">010-</span>
+                                <input type="text" 
+                                    id="phone" 
+                                    name="phone_display"
+                                    required 
+                                    placeholder="0000-0000" 
+                                    inputmode="numeric" 
+                                    maxlength="9"
+                                    class="phone-input-field">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -520,7 +543,7 @@
 
 
         // *******************************************************
-        // 3. 폼 제출 및 유효성 검사 JS (생략)
+        // 3. 폼 제출 및 유효성 검사 JS
         // *******************************************************
         
         document.getElementById('carForm').addEventListener('submit', function(event) {
@@ -566,13 +589,14 @@
             
             // 6. 휴대폰 번호 최종 값 세팅
             const phoneValue = phoneInput.value.replace(/[^0-9]/g, '');
-            if (phoneValue.length !== 11) {
-                 alert('휴대폰 번호 11자리를 정확히 입력해주세요. (010 포함)');
+            if (phoneValue.length !== 8) {
+                 alert('휴대폰 번호 뒷 8자리를 정확히 입력해주세요.');
                  phoneInput.focus();
                  event.preventDefault();
                  return;
             }
-            phoneHidden.value = phoneValue.slice(0, 3) + '-' + phoneValue.slice(3, 7) + '-' + phoneValue.slice(7);
+            // Hidden Field에 '010-xxxx-xxxx' 형태로 저장
+            phoneHidden.value = '010-' + phoneValue.slice(0, 4) + '-' + phoneValue.slice(4);
         });
 
         // -----------------------------------------------------------
@@ -620,6 +644,7 @@
 
         function validateStep1() {
             const nameInput = document.getElementById('name');
+            // 휴대폰 번호는 8자리가 모두 입력되었는지 확인
             const phoneValue = phoneInput.value.replace(/[^0-9]/g, '');
 
             if (!nameInput.value.trim()) {
@@ -628,8 +653,9 @@
                 return false;
             }
             
-            if (phoneValue.length !== 11) {
-                 alert('휴대폰 번호 11자리를 정확히 입력해주세요. (010 포함)');
+            // 8자리 숫자가 정확히 입력되었는지 확인 (010-을 제외한 나머지 8자리)
+            if (phoneValue.length !== 8) {
+                 alert('휴대폰 번호 뒷 8자리를 정확히 입력해주세요.');
                  phoneInput.focus();
                  return false;
             }
@@ -639,29 +665,25 @@
 
 
         // -----------------------------------------------------------
-        // 5. 전화번호 형식 지정 JS (010-0000-0000 포맷) 
+        // 5. 전화번호 형식 지정 JS (010- 제외 8자리 포맷) 
         // -----------------------------------------------------------
         
         phoneInput.addEventListener('input', function(e) {
+            // 입력 값에서 숫자만 추출
             let value = e.target.value.replace(/[^0-9]/g, ''); 
             
-            // 010 유지 및 11자리 초과 방지
-            if (!value.startsWith('010') && value.length > 0) {
-                 value = '010' + value.substring(1);
-            }
-            if (value.length > 11) {
-                value = value.slice(0, 11);
+            // 8자리 초과 입력 방지
+            if (value.length > 8) {
+                value = value.slice(0, 8);
             }
             
             let result = '';
             
-            // 3-4-4 포맷 적용
-            if (value.length <= 3) {
+            // 4-4 포맷 적용 (0000-0000)
+            if (value.length <= 4) {
                  result = value;
-            } else if (value.length <= 7) {
-                 result = value.slice(0, 3) + '-' + value.slice(3);
             } else {
-                 result = value.slice(0, 3) + '-' + value.slice(3, 7) + '-' + value.slice(7);
+                 result = value.slice(0, 4) + '-' + value.slice(4);
             }
             
             e.target.value = result;
