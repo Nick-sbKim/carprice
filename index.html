@@ -32,9 +32,7 @@
             
             /* 테두리 색상 */
             --input-border: #90CAF9; 
-            /* ✅ 테두리 흰색 요청 반영 */
-            --white-border: white;
-
+            
             /* 단위 배경색 (운행거리: 흰색) */
             --unit-bg-color: white; 
             --unit-text-color: #333; 
@@ -44,8 +42,8 @@
             /* 차량번호 '서울'의 텍스트 색상 */
             --car-unit-text: #FFFFFF;
             
-            /* 통합 박스 테두리 (제거 요청 반영) */
-            --unified-input-border-none: none; 
+            /* ✅ 통합 박스 테두리 (유지) */
+            --unified-input-border: 1px solid var(--input-border); 
         }
         /* ********************************************** */
 
@@ -325,12 +323,11 @@
             align-items: center;
             height: 48px;
             flex-grow: 1;
-            /* ✅ 전체 통합 박스 테두리 제거 */
-            border: var(--unified-input-border-none); 
+            /* ✅ 통합 박스 테두리 유지 */
+            border: var(--unified-input-border); 
             border-radius: 8px; 
             overflow: hidden; 
-            /* 내부 필드 테두리를 살리기 위해 box-shadow 사용. 테두리 흰색으로 변경 */
-            box-shadow: 0 0 0 1px var(--white-border);
+            background-color: white; 
         }
 
         /* 고정 텍스트 박스 ('서울', '만 KM') */
@@ -364,10 +361,10 @@
             padding-right: 10px;
         }
         
-        /* 분리된 입력 필드 스타일 (통합 박스 내부) */
+        /* ✅ 분리된 입력 필드 스타일 (통합 박스 내부) - 테두리 제거 */
         .split-unit-wrapper input {
             height: 100%;
-            border: none; /* 통합 박스 내부이므로 테두리 제거 */
+            border: none; /* ✅ input 자체의 테두리 제거 */
             border-radius: 0; 
             flex-grow: 1;
             min-width: 50px; 
@@ -599,7 +596,7 @@
                     <div class="input-group">
                         <label for="carNumber">차량번호</label>
                         <div class="input-field-wrapper">
-                            <div class="split-unit-wrapper" style="box-shadow: 0 0 0 1px white;">
+                            <div class="split-unit-wrapper">
                                 <span class="fixed-unit-box car-number-unit">서울</span>
                                 <input type="text" 
                                     id="carNumber" 
@@ -636,7 +633,7 @@
                     <div class="input-group">
                         <label for="mileageInput">운행거리</label>
                         <div class="input-field-wrapper">
-                            <div class="split-unit-wrapper" style="box-shadow: 0 0 0 1px white;">
+                            <div class="split-unit-wrapper">
                                 <input type="text" 
                                     id="mileageInput" 
                                     name="mileage_display"
@@ -765,8 +762,9 @@
         });
         
         function loadYearMonthSelectors() {
-            const currentYear = 2025;
-            for (let y = currentYear; y >= 2015; y--) {
+            const currentYear = new Date().getFullYear();
+            // 올해부터 10년 전까지
+            for (let y = currentYear; y >= currentYear - 10; y--) { 
                 const option = document.createElement('option');
                 option.value = y;
                 option.textContent = y + '년';
@@ -929,8 +927,10 @@
             
             e.target.value = result;
         });
-
-        // 페이지 로드 시 초기화
+        
+        // *******************************************************
+        // 6. 페이지 로드 시 초기화
+        // *******************************************************
         loadManufacturers();
         loadYearMonthSelectors();
         updateStep(1); 
