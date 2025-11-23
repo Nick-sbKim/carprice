@@ -32,6 +32,8 @@
             
             /* 테두리 색상 */
             --input-border: #90CAF9; 
+            /* ✅ 테두리 흰색 요청 반영 */
+            --white-border: white;
 
             /* 단위 배경색 (운행거리: 흰색) */
             --unit-bg-color: white; 
@@ -43,7 +45,6 @@
             --car-unit-text: #FFFFFF;
             
             /* 통합 박스 테두리 (제거 요청 반영) */
-            --unified-input-border: 1px solid var(--input-border); 
             --unified-input-border-none: none; 
         }
         /* ********************************************** */
@@ -328,8 +329,8 @@
             border: var(--unified-input-border-none); 
             border-radius: 8px; 
             overflow: hidden; 
-            /* 내부 필드 테두리를 살리기 위해 box-shadow 사용 */
-            box-shadow: 0 0 0 1px var(--input-border);
+            /* 내부 필드 테두리를 살리기 위해 box-shadow 사용. 테두리 흰색으로 변경 */
+            box-shadow: 0 0 0 1px var(--white-border);
         }
 
         /* 고정 텍스트 박스 ('서울', '만 KM') */
@@ -385,10 +386,11 @@
             color: #757575; /* 플레이스홀더 텍스트 색상 */
         }
         
-        /* 운행거리 입력 필드 */
+        /* ✅ 운행거리 입력 필드 - 너비 확장 */
         .mileage-input-field {
             text-align: center; 
             padding-right: 5px; 
+            flex-grow: 1.5; /* 너비 확장 */
         }
         
         /* ------------------------------------------- */
@@ -597,13 +599,13 @@
                     <div class="input-group">
                         <label for="carNumber">차량번호</label>
                         <div class="input-field-wrapper">
-                            <div class="split-unit-wrapper">
+                            <div class="split-unit-wrapper" style="box-shadow: 0 0 0 1px white;">
                                 <span class="fixed-unit-box car-number-unit">서울</span>
                                 <input type="text" 
                                     id="carNumber" 
                                     name="entry.1494512143" 
                                     required 
-                                    placeholder="차량번호 입력" 
+                                    placeholder="30아1234" 
                                     maxlength="8" 
                                     class="car-number-input">
                             </div>
@@ -634,7 +636,7 @@
                     <div class="input-group">
                         <label for="mileageInput">운행거리</label>
                         <div class="input-field-wrapper">
-                            <div class="split-unit-wrapper">
+                            <div class="split-unit-wrapper" style="box-shadow: 0 0 0 1px white;">
                                 <input type="text" 
                                     id="mileageInput" 
                                     name="mileage_display"
