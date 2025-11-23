@@ -139,34 +139,43 @@
             flex-grow: 1; padding: var(--input-padding-vertical) 15px; 
             height: 48px; border: 1px solid var(--input-border); 
             border-radius: 8px; box-sizing: border-box; 
-            font-size: 1.0em; 
+            /* ✅ 폰트 크기 키움 */
+            font-size: 1.1em; 
             color: var(--text-color); background-color: white; 
             font-weight: normal; -webkit-appearance: none; 
             -moz-appearance: none; appearance: none; min-width: 0;
             
-            /* ✅ 일반/셀렉트 필드의 텍스트 정렬을 왼쪽으로 변경 */
+            /* 일반/셀렉트 필드의 텍스트 정렬을 왼쪽으로 변경 */
             text-align: left; 
         }
         
         /* 1단계 성함은 여전히 가운데 정렬 (예외) */
         #name { padding-left: 15px !important; padding-right: 15px !important; text-align: center !important; }
         
-        /* 드롭다운 스타일 (생략) */
+        /* 드롭다운 스타일 */
         .select-group .select-box { position: relative; }
         .select-group select { 
              padding-right: 35px; 
-             /* ✅ 차종선택 텍스트 정렬을 왼쪽으로 변경 */
              text-align: left; 
+             font-size: 1.1em; 
         }
+        
+        /* 드롭다운 표식 */
         .select-group .select-box::after {
             content: '▼'; position: absolute; top: 50%; right: 15px; transform: translateY(-50%);
             font-size: 0.8em; color: var(--main-color); pointer-events: none; z-index: 10;
         }
+        
+        /* ✅ 선택이 완료되면 드롭다운 표식 숨김 */
+        .select-group .select-box.selected::after {
+            opacity: 0; 
+        }
+        
         .select-group { display: flex; flex-direction: row; gap: var(--input-gap); width: 100%; }
         .select-group .select-box { flex: 1; padding: 0; height: auto; border: none; }
         .select-group .select-box select { 
              width: 100%; 
-             font-size: 1.0em; 
+             font-size: 1.1em; 
              padding: var(--input-padding-vertical) 10px;
         }
         
@@ -175,7 +184,6 @@
         /* ------------------------------------------- */
         .split-unit-wrapper {
             display: flex; align-items: center; height: 48px; flex-grow: 1;
-            /* 통합 박스 테두리 유지 */
             border: var(--unified-input-border); 
             border-radius: 8px; overflow: hidden; 
             background-color: white; justify-content: space-between; 
@@ -200,23 +208,25 @@
             font-weight: 800; padding-left: 5px; padding-right: 10px; flex-shrink: 0; 
         }
 
-        /* '010 -' 고정 단위 박스 스타일 */
+        /* ✅ '010 -' 고정 단위 박스 스타일 (너비 축소) */
         .phone-unit-box {
-             width: 65px; color: var(--car-unit-text); background-color: var(--car-unit-bg); 
+             width: 50px; 
+             color: var(--car-unit-text); background-color: var(--car-unit-bg); 
              padding: 0 5px; height: 100%; display: flex; align-items: center; 
              justify-content: center; font-size: 1.1em; font-weight: 800; flex-shrink: 0;
         }
         
-        /* ✅ 내부 입력 필드 공통 스타일 (테두리 제거 강화 및 텍스트 정렬) */
+        /* ✅ 내부 입력 필드 공통 스타일 (폰트 크기 키움) */
         .split-unit-wrapper input {
             height: 100%; border: none !important; border-radius: 0; flex-grow: 1;
             min-width: 50px; padding: var(--input-padding-vertical) 10px; background-color: white; 
-            font-weight: 500; font-size: 1em; 
+            font-weight: 500; 
+            /* ✅ 폰트 크기 키움 */
+            font-size: 1.1em; 
             
-            /* ✅ 통합 필드 내부 입력란의 텍스트 정렬을 왼쪽으로 변경 */
+            /* 통합 필드 내부 입력란의 텍스트 정렬을 왼쪽으로 변경 */
             text-align: left !important;
             
-            /* 테두리 중복 문제 해결: 포커스 시 아웃라인/박스 쉐도우 제거 */
             outline: none; box-shadow: none;
         }
         .split-unit-wrapper input:focus {
@@ -229,12 +239,12 @@
             color: #757575; flex-grow: 1; 
         }
         
-        /* 운행거리 입력 필드 (좌측 정렬로 변경됨) */
+        /* 운행거리 입력 필드 (좌측 정렬 유지) */
         .mileage-input-field {
             padding-right: 5px; flex-grow: 3; min-width: 120px; 
         }
         
-        /* 휴대폰 번호 입력 필드 (좌측 정렬로 변경됨) */
+        /* 휴대폰 번호 입력 필드 (좌측 정렬 유지) */
         .phone-input-field {
             padding-left: 10px; padding-right: 10px;
         }
@@ -494,6 +504,23 @@
             manufacturerSelect.appendChild(otherOption);
         }
 
+        // *******************************************************
+        // 7. 드롭다운 표식 제어 함수 추가
+        // *******************************************************
+        function toggleSelectArrow(selectElement) {
+            // select-box는 select의 부모 요소입니다.
+            const selectBox = selectElement.parentElement;
+            
+            // 선택된 값이 유효한(기본 disabled selected 옵션이 아닌) 경우
+            if (selectElement.value && !selectElement.options[selectElement.selectedIndex].disabled) {
+                // select-box에 클래스를 추가하여 CSS로 화살표를 숨김
+                selectBox.classList.add('selected');
+            } else {
+                // 선택된 값이 없거나 유효하지 않은 경우 클래스를 제거 (화살표 표시)
+                selectBox.classList.remove('selected');
+            }
+        }
+
         manufacturerSelect.addEventListener('change', function() {
             const selectedManufacturer = this.value;
             carModelSelect.innerHTML = '<option value="" disabled selected>차종</option>'; 
@@ -526,6 +553,10 @@
             if (selectedManufacturer && selectedManufacturer !== '기타') {
                  carModelHidden.value = `${selectedManufacturer}`;
             }
+
+            // ✅ 화살표 제어 추가
+            toggleSelectArrow(this);
+            toggleSelectArrow(carModelSelect); // 차종이 리셋되었을 때 화살표 표시
         });
 
         carModelSelect.addEventListener('change', function() {
@@ -538,6 +569,9 @@
             } else {
                  carModelHidden.value = '';
             }
+
+            // ✅ 화살표 제어 추가
+            toggleSelectArrow(this);
         });
         
         function loadYearMonthSelectors() {
@@ -557,6 +591,16 @@
                 monthSelect.appendChild(option);
             }
         }
+        
+        yearSelect.addEventListener('change', function() {
+            // ✅ 화살표 제어 추가
+            toggleSelectArrow(this);
+        });
+
+        monthSelect.addEventListener('change', function() {
+            // ✅ 화살표 제어 추가
+            toggleSelectArrow(this);
+        });
 
 
         // *******************************************************
