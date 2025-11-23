@@ -16,7 +16,7 @@
             --input-padding-vertical: 12px; 
             --mobile-breakpoint: 600px; 
             --align-offset: 100px; 
-            /* ✅ 간격 확장: 입력 그룹(차종선택, 차량번호 등) 간의 아래쪽 여백을 40px로 늘림 */
+            /* 입력 그룹(차종선택, 차량번호 등) 간의 아래쪽 여백 */
             --input-margin-bottom: 40px; 
             
             /* --- 🎨 Theme Colors (Blue) --- */
@@ -114,19 +114,34 @@
         }
 
         /* 모든 필드 그룹 */
-        /* ✅ 간격 확장 적용 */
         .input-group {
             display: flex; flex-wrap: wrap; margin-bottom: var(--input-margin-bottom); 
-            position: relative; align-items: center; 
+            position: relative; align-items: flex-start; /* 상단 정렬로 변경 */
         }
         
         /* 모든 라벨 스타일 */
+        /* ✅ 차량번호 라벨을 위해 width를 제거하고 세로 공간을 확보합니다. */
         .input-group label {
-            position: absolute; left: 0; top: 50%; transform: translateY(-50%); 
+            position: absolute; left: 0; top: 12px; transform: translateY(0%); 
             width: calc(var(--align-offset) - 10px); flex-shrink: 0;
             font-size: 1.25em; font-weight: 800; color: var(--label-color); 
             white-space: nowrap; line-height: 1.2; 
         }
+        
+        /* ✅ 차량번호 라벨/입력 필드 분리 레이아웃 */
+        .input-group.car-number-vertical label {
+            position: static; 
+            transform: none; 
+            width: 100%; 
+            margin-left: var(--align-offset);
+            margin-bottom: 8px; /* 입력 필드와의 간격 */
+        }
+        .input-group.car-number-vertical .input-field-wrapper {
+             margin-left: var(--align-offset); 
+             width: calc(100% - var(--align-offset)); 
+             flex-grow: 1; 
+        }
+
 
         /* 입력 필드 컨테이너 */
         .input-field-wrapper {
@@ -179,7 +194,7 @@
         }
         
         /* ------------------------------------------- */
-        /* ✅ 차량번호 분할 입력 Wrapper (확장된 너비 유지) */
+        /* 차량번호 분할 입력 Wrapper (확장된 너비 유지) */
         /* ------------------------------------------- */
         .car-number-split-wrapper {
             display: flex; 
@@ -375,6 +390,15 @@
                 height: auto; 
                 max-width: none; 
             }
+            /* 모바일에서 차량번호 라벨은 그대로 상단에 둡니다. */
+            .input-group.car-number-vertical label {
+                margin-left: 0;
+            }
+            .input-group.car-number-vertical .input-field-wrapper {
+                 margin-left: 0; 
+                 width: 100%; 
+            }
+            
             .fixed-unit-button,
             .car-number-split-wrapper input.num-part,
             .car-number-split-wrapper .car-hangul-box {
@@ -476,25 +500,7 @@
                  <div class="step-content">
                     <div class="section-title">2. 차량정보 입력</div>
                     
-                    <div class="input-group">
-                        <label>차종선택</label> 
-                        <div class="input-field-wrapper">
-                            <div class="select-group">
-                                <div class="select-box">
-                                    <select id="manufacturerSelect" required>
-                                        <option value="" disabled selected>제조사</option> 
-                                    </select>
-                                </div>
-                                <div class="select-box">
-                                    <select id="carModelSelect" required disabled>
-                                        <option value="" disabled selected>차종</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="input-group">
+                    <div class="input-group car-number-vertical">
                         <label for="carNumPart1">차량번호</label>
                         <div class="input-field-wrapper">
                             <div class="car-number-split-wrapper">
@@ -531,6 +537,23 @@
                         </div>
                     </div>
 
+                    <div class="input-group">
+                        <label>차종선택</label> 
+                        <div class="input-field-wrapper">
+                            <div class="select-group">
+                                <div class="select-box">
+                                    <select id="manufacturerSelect" required>
+                                        <option value="" disabled selected>제조사</option> 
+                                    </select>
+                                </div>
+                                <div class="select-box">
+                                    <select id="carModelSelect" required disabled>
+                                        <option value="" disabled selected>차종</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     
                     <div class="input-group">
                         <label>출고시기</label>
