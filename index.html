@@ -91,7 +91,7 @@
         }
 
         /* ------------------------------------------- */
-        /* 단계별 진행바 스타일 (복원) */
+        /* 단계별 진행바 스타일 */
         .progress-bar-container {
             padding: 0 20px 20px;
             display: flex;
@@ -154,10 +154,10 @@
             background-color: var(--main-color);
         }
         .step-indicator.completed .step-circle {
-            background-color: var(--main-color); /* 1단계 완료 시 파란색 유지 */
+            background-color: var(--main-color); 
         }
         .step-indicator:nth-child(2).active .step-circle {
-             background-color: #64B5F6; /* 2단계 진행 중 색상 */
+             background-color: #64B5F6; 
         }
 
 
@@ -166,7 +166,7 @@
             font-weight: 800;
         }
         .step-indicator.completed .step-text {
-             color: var(--main-color); /* 1단계 완료 시 파란색 유지 */
+             color: var(--main-color); 
         }
 
         /* ------------------------------------------- */
@@ -190,7 +190,7 @@
             background-color: #F8F8F8;
         }
 
-        /* 섹션 타이틀 (1. 연락정보 입력 / 2. 차량정보 입력) */
+        /* 섹션 타이틀 */
         .section-title {
             font-size: 1.2em;
             font-weight: 800;
@@ -230,7 +230,12 @@
         /* 특수 조정: 차종 선택 및 출고시기 라벨은 첫 번째 입력 박스의 중앙에 맞춤 */
         .input-group:has(.select-group) label {
             /* 48px 높이의 박스 중앙 (24px) + 50% 위치*/
-            top: calc(24px + 50%); 
+            top: 50%; 
+            /* height: 48px; */
+        }
+        .input-group:has(.split-unit-wrapper) label {
+            top: 50%; 
+            /* height: 48px; */
         }
 
         /* 입력 필드 컨테이너 (정렬 시작점) */
@@ -264,13 +269,11 @@
             min-width: 0;
         }
         
-        /* ✅ 1단계 가이드 텍스트 가운데 정렬 적용 */
+        /* 1단계 가이드 텍스트 가운데 정렬 */
         #name, 
         #phone {
-             /* 010-0000-0000 포맷을 수용할 수 있도록 넉넉하게 패딩 조정 */
              padding-left: 15px !important; 
              padding-right: 15px !important;
-             /* ✅ 가이드 텍스트 및 입력값 모두 가운데 정렬 */
              text-align: center !important; 
         }
         
@@ -280,7 +283,7 @@
         }
         
         .select-group select {
-            padding-right: 35px; /* 아이콘 공간 확보 */
+            padding-right: 35px; 
             text-align: center; 
         }
         
@@ -316,14 +319,16 @@
         }
         
         /* ------------------------------------------- */
-        /* 단위 분리 입력 필드 (차량번호, 운행거리) */
+        /* ✅ 단위 통합 입력 필드 (차량번호, 운행거리) - 하나의 박스처럼 보이도록 수정 */
         /* ------------------------------------------- */
         .split-unit-wrapper {
             display: flex;
             align-items: center;
-            gap: 0; 
             height: 48px;
             flex-grow: 1;
+            border: 1px solid var(--input-border); /* 전체 통합 박스 테두리 */
+            border-radius: 8px; /* 전체 통합 박스 둥글게 */
+            overflow: hidden; /* 내부 요소가 경계를 넘지 않도록 */
         }
 
         /* 고정 텍스트 박스 ('서울', '만 KM') */
@@ -336,55 +341,47 @@
             justify-content: center;
             font-size: 1.1em;
             font-weight: 800;
-            color: var(--unit-text-color); 
-            background-color: var(--unit-bg-color); 
-            border: 1px solid var(--input-border);
+            color: white; 
+            background-color: #42A5F5; /* 차량번호: 파란색 배경 */
+            padding: 0 10px;
         }
 
-        /* 차량번호의 '서울' 박스 */
-        .car-number-unit {
-            width: 60px; /* 고정 너비 */
-            border-right: none;
-            border-top-left-radius: 8px;
-            border-bottom-left-radius: 8px;
-            color: #FFF; /* 흰색 글자 */
-            background-color: #42A5F5; /* 파란색 배경 */
-            border-color: #42A5F5;
-        }
-
-        /* 운행거리의 '만 KM' 박스 */
+        /* 운행거리의 '만 KM' 박스 (다시 정의) */
         .mileage-unit-box {
             width: 70px; /* 고정 너비 */
-            border-left: none;
-            border-top-right-radius: 8px;
-            border-bottom-right-radius: 8px;
+            color: var(--unit-text-color); 
+            background-color: var(--unit-bg-color); 
+            font-weight: 700;
         }
         
         /* 분리된 입력 필드 스타일 */
         .split-unit-wrapper input {
             height: 100%;
+            border: none; /* 통합 박스이므로 내부 테두리 제거 */
             border-radius: 0; 
             flex-grow: 1;
             min-width: 50px; 
             padding: var(--input-padding-vertical) 10px;
+            background-color: white; 
         }
-
+        
         /* 차량번호 입력 필드 */
         .car-number-input {
-            border-left: none;
-            border-top-right-radius: 8px;
-            border-bottom-right-radius: 8px;
             text-align: left; 
         }
         
         /* 운행거리 입력 필드 */
         .mileage-input-field {
-            border-right: none;
-            border-top-left-radius: 8px;
-            border-bottom-left-radius: 8px;
             text-align: center; /* 숫자 입력은 가운데 정렬 */
+            padding-right: 5px; /* 단위와의 간격 조정 */
         }
-
+        
+        /* 차량번호의 '서울' 박스 (운행거리와 구분되게 따로 설정) */
+        .car-number-unit {
+             width: 60px;
+             color: #FFF; 
+             background-color: #42A5F5; 
+        }
         /* ------------------------------------------- */
         /* 하단 내용 및 버튼 */
         .footer-content {
@@ -477,7 +474,8 @@
                 transform: none; 
             }
             
-            .input-group:has(.select-group) label {
+            .input-group:has(.select-group) label,
+            .input-group:has(.split-unit-wrapper) label {
                  top: auto;
             }
             
@@ -488,8 +486,12 @@
             }
             
             .car-number-input {
-                /* 모바일에서도 왼쪽 정렬 유지 */
                 text-align: left !important; 
+            }
+            
+            /* 통합된 필드 그룹에서 모바일 너비 조정 */
+            .split-unit-wrapper {
+                width: 100%;
             }
         }
     </style>
@@ -920,7 +922,7 @@
             e.target.value = result;
         });
 
-        // 페이지 로드 시 초기화: ✅ 1단계부터 시작하도록 수정
+        // 페이지 로드 시 초기화
         loadManufacturers();
         loadYearMonthSelectors();
         updateStep(1); 
