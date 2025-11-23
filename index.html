@@ -177,7 +177,7 @@
         }
 
         /* ----------------------------------- */
-        /* ✅ 수정된 부분: 플레이스홀더만 가운데 정렬 */
+        /* 플레이스홀더만 가운데 정렬 */
         /* ----------------------------------- */
         #name::placeholder {
             text-align: center; 
@@ -188,9 +188,10 @@
         }
         /* ----------------------------------- */
 
-        /* 완료/포커스 시 배경색: 흰색 */
+        /* ✅ 완료/포커스 시 배경색: 흰색 (input, select 모두 적용) */
         .data-input-field:focus,
-        .data-input-field.completed { 
+        .data-input-field.completed,
+        .select-field.completed { 
              background-color: var(--input-filled-bg) !important; 
         }
         
@@ -365,7 +366,7 @@
         <form id="carForm" 
               action="https://docs.google.com/forms/d/e/1FAIpQLSeaBxL6RsEyZPNJIq68So4jlbJCwg3OXehMmtn8Da_8N_wrHA/formResponse" 
               method="POST" 
-              target="_blank"> 
+              target="hidden_iframe"> 
             
             <div class="header-content">
                 <h1>내 차 견적 확인하기</h1>
@@ -564,6 +565,11 @@
             </div>
         </form>
     </div>
+    
+    <iframe name="hidden_iframe" id="hidden_iframe" 
+            style="display:none;" 
+            onload="if(submitted) { window.location='YOUR_THANK_YOU_PAGE_URL'; }"></iframe> 
+
 
     <script>
         const carData = {
@@ -575,7 +581,8 @@
 
         let currentStep = 1;
         const totalSteps = 2;
-        
+        let submitted = false; // 제출 상태 플래그
+
         const manufacturerSelect = document.getElementById('manufacturerSelect');
         const carModelSelect = document.getElementById('carModelSelect');
         const carModelHidden = document.getElementById('carModelHidden'); 
@@ -617,7 +624,8 @@
                     isCompleted = element.value.trim() !== '';
                 }
             } else if (element.tagName === 'SELECT') {
-                isCompleted = element.value !== '' && element.options[element.selectedIndex] && !element.options[element.selectedIndex].disabled;
+                // ✅ Select 요소의 완료 검사 로직 강화
+                isCompleted = element.value !== '' && element.options.length > 0 && !element.options[element.selectedIndex].disabled;
             }
 
             if (isCompleted) {
@@ -765,6 +773,7 @@
             const hangulValue = carHangulSelect.value;
             carNumberHidden.value = `서울${part1Value}${hangulValue}${part2Value}`;
 
+            submitted = true; // 제출 시작 플래그 설정
         });
 
         function updateStep(step) {
@@ -894,8 +903,17 @@
         // Select 필드
         const selectFields = document.querySelectorAll('.select-field');
         selectFields.forEach(select => {
+            // ✅ change 이벤트 발생 시 배경색을 업데이트합니다.
             select.addEventListener('change', function() {
-                checkCompletion(this);
+                checkCompletion(this); 
+                toggleSelectArrow(this); // 선택 완료 시 화살표 숨기기
+            });
+            // ✅ focus/blur 시 배경색 업데이트 (UX 개선)
+            select.addEventListener('focus', function() {
+                this.classList.add('completed');
+            });
+             select.addEventListener('blur', function() {
+                checkCompletion(this); 
             });
         });
 
@@ -930,13 +948,13 @@
             loadYearMonthSelectors();
             updateStep(1); 
             
-            toggleSelectArrow(manufacturerSelect);
-            toggleSelectArrow(carModelSelect);
-            toggleSelectArrow(yearSelect);
-            toggleSelectArrow(monthSelect);
-            
             // 초기 로딩 시 모든 필드의 완료 상태를 확인하여 배경색을 설정합니다.
-            document.querySelectorAll('.data-input-field, .select-field').forEach(checkCompletion);
+            document.querySelectorAll('.data-input-field, .select-field').forEach(element => {
+                checkCompletion(element);
+                if (element.tagName === 'SELECT') {
+                    toggleSelectArrow(element); 
+                }
+            });
         });
     </script>
 </body>
