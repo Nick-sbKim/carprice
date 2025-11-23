@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
-    <title>내 차 시세 확인하기 (레이아웃 안정화 완료)</title>
+    <title>내 차 시세 확인하기 (레이아웃 스택형 안정화)</title>
     
     <style>
         /* 폰트 임포트: 나눔스퀘어 Bold 폰트 적용 */
@@ -35,7 +35,7 @@
             --input-filled-bg: white;
             
             --label-height: 40px; 
-            --label-width: 100px; 
+            --label-width: 100px; /* 데스크톱에서 기본 레이아웃 너비 기준 */
             
             /* 항목 이름 폰트 크기 */
             --label-font-size: 1.1em; 
@@ -69,6 +69,8 @@
         .step.active { display: block; }
         .step-content { padding: 20px var(--content-padding) 10px; margin: 0 var(--content-padding) 20px var(--content-padding); border-radius: 10px; border: 1px solid var(--input-border); background-color: #F8F8F8; }
         .section-title { font-size: 1.2em; font-weight: 800; color: var(--label-color); margin-bottom: 25px; padding-bottom: 5px; border-bottom: 1px dashed #BDBDBD; }
+        
+        /* 기본 인풋 그룹 (데스크톱: 라벨-필드 가로 정렬) */
         .input-group { 
             display: flex; 
             flex-wrap: wrap; 
@@ -76,20 +78,6 @@
             position: relative; 
             align-items: center; 
         }
-        
-        /* 단계별 진행바 스타일 (유지) */
-        .progress-bar-container { padding: 0 var(--content-padding) 20px; display: flex; justify-content: space-between; align-items: flex-start; position: relative; }
-        .step-indicator { flex: 1; display: flex; flex-direction: column; align-items: center; position: relative; z-index: 20; }
-        .step-indicator:first-child::after { content: ''; position: absolute; top: 16px; left: calc(50% + 15px); width: calc(100% - 30px); height: 4px; background-color: #CFD8DC; z-index: 5; transform: translateY(-50%); }
-        .step-indicator.active:first-child::after, .step-indicator.completed:first-child::after { background-color: var(--main-color); }
-        .step-circle { width: 32px; height: 32px; border-radius: 50%; background-color: #CFD8DC; color: white; display: flex; justify-content: center; align-items: center; font-weight: 700; font-size: 1.1em; z-index: 10; position: relative; }
-        .step-text { margin-top: 8px; font-size: 0.9em; color: #757575; font-weight: 500; white-space: nowrap; }
-        .step-indicator.completed .step-circle { background-color: var(--main-color); }
-        .step-indicator.completed .step-text { color: var(--main-color); }
-        .step-indicator.active .step-circle { background-color: var(--main-color); }
-        .step-indicator.active .step-text { color: var(--main-color); font-weight: 800; }
-        
-        /* 모든 라벨 스타일 (데스크톱) */
         .input-group label {
             width: var(--label-width); 
             flex-shrink: 0;
@@ -103,14 +91,43 @@
             display: flex;
             align-items: center; 
         }
-        
-        /* 입력 필드 Wrapper (데스크톱) */
         .input-field-wrapper {
             margin-left: 0; 
             width: calc(100% - var(--label-width)); 
             flex-grow: 1; 
         }
         
+        /* ✅ 스택형 라벨 그룹 (라벨-필드 세로 정렬) */
+        .input-group.stack-label-group { 
+            flex-direction: column; 
+            align-items: flex-start; 
+        }
+        .input-group.stack-label-group label { 
+            width: 100%; /* 라벨 너비 100% */
+            line-height: 1.2; 
+            height: auto; 
+            margin-bottom: 5px; 
+            align-items: flex-start; 
+            padding: 0; 
+            font-size: var(--label-font-size); 
+        }
+        .input-group.stack-label-group .input-field-wrapper { 
+            width: 100%; /* 필드 너비 100% */
+            margin-left: 0; 
+        }
+
+        /* 2단계: 차종선택, 출고시기 내부 요소 가로 정렬 */
+        .flex-row-wrap {
+            display: flex;
+            gap: 10px; 
+            width: 100%;
+            flex-wrap: nowrap; /* 기본적으로는 가로 정렬 유지 */
+        }
+        .flex-row-wrap .select-group {
+            flex: 1;
+            min-width: 0;
+        }
+
         /* 일반 입력 필드 및 셀렉트 공통 스타일 */
         .input-field-wrapper input[type="text"],
         .input-field-wrapper select {
@@ -140,7 +157,7 @@
             font-weight: var(--input-text-font-weight); 
         }
         
-        /* ✅ 돋보기 모드 스타일 (포커스 시 텍스트 확대 및 패딩 조정) */
+        /* 돋보기 모드 스타일 */
         .data-input-field:focus {
             background-color: var(--input-filled-bg);
             font-size: 1.5em !important; 
@@ -155,19 +172,6 @@
             padding: 12px 10px !important;
         }
         
-        /* 라벨이 위로 가는 그룹 스타일 (차량번호만 해당) */
-        .input-group.stack-label-group { flex-direction: column; align-items: flex-start; }
-        .input-group.stack-label-group label { 
-            width: 100%; 
-            line-height: 1.2; 
-            height: auto; 
-            margin-bottom: 5px; 
-            align-items: flex-start; 
-            padding: 0; 
-            font-size: var(--label-font-size); 
-        }
-        .input-group.stack-label-group .input-field-wrapper { width: 100%; margin-left: 0; }
-        
         /* 단위 통합 입력 필드 (전화번호, 운행거리) - 중앙 정렬 보강 */
         .split-unit-wrapper { 
             display: flex; 
@@ -179,21 +183,25 @@
             height: auto; 
         }
         
-        /* 전화번호 단위 박스 */
-        .phone-unit-box { 
-            width: auto; 
-            padding: 0 8px; 
-            color: var(--car-unit-text); 
-            background-color: var(--car-unit-bg); 
+        /* 단위 박스 공통 */
+        .phone-unit-box, .mileage-unit-box {
             height: var(--label-height); 
             display: flex; 
             align-items: center; 
             justify-content: center; 
-            font-size: var(--label-font-size); 
             font-weight: 800; 
             flex-shrink: 0; 
-            border-right: 1px solid var(--input-border); 
             transition: all 0.3s; 
+            padding: 0 8px; 
+        }
+
+        /* 전화번호 단위 박스 */
+        .phone-unit-box { 
+            width: auto; 
+            color: var(--car-unit-text); 
+            background-color: var(--car-unit-bg); 
+            font-size: var(--label-font-size); 
+            border-right: 1px solid var(--input-border); 
         }
         
         /* 운행거리 단위 박스 */
@@ -202,12 +210,6 @@
             color: var(--unit-text-color); 
             background-color: var(--unit-bg-color); 
             border-left: 1px solid var(--input-border); 
-            border-right: none; 
-            height: var(--label-height); 
-            display: flex; 
-            align-items: center; 
-            justify-content: center;
-            transition: all 0.3s; 
         }
 
         /* 입력 필드 포커스 시, Wrapper 내부의 유닛 박스 높이를 확대된 input 높이에 맞게 조정 */
@@ -217,7 +219,7 @@
              padding: 12px 8px; 
         }
 
-        /* 전화번호 입력 필드 (최대 공간 확보) */
+        /* 입력 필드 (단위 박스 내부) */
         .split-unit-wrapper input { 
             width: auto; 
             flex-grow: 1; 
@@ -234,7 +236,7 @@
         .mileage-input-field { text-align: right !important; }
 
         
-        /* 2단계: 차량번호 입력란 최적화 - 중앙 정렬 보강 */
+        /* 2단계: 차량번호 입력란 최적화 */
         .car-number-split-wrapper { 
             display: flex; 
             gap: 5px; 
@@ -242,7 +244,6 @@
             width: 100%; 
             height: var(--label-height); 
         }
-        
         .car-number-split-wrapper .fixed-unit-button {
             background-color: transparent; 
             border: none; 
@@ -281,57 +282,33 @@
         #carNumPart1 { flex: 2; max-width: 60px; } 
         #carNumPart2 { flex: 3; min-width: 80px; } 
 
-        /* 2단계: 차종선택 / 출고시기 가로 정렬 (데스크톱) */
-        .input-group.side-by-side-input .input-field-wrapper { display: flex; gap: 10px; width: calc(100% - var(--label-width)); }
-        .input-group.side-by-side-input .select-group { flex: 1; min-width: 0; } 
-        .input-group.side-by-side-input .select-group .select-box { flex: 1; position: relative; }
         
-        #step2 select { font-weight: var(--input-text-font-weight); } 
-
-        /* ********************************************** */
-        /* ✅ 모바일 반응형 디자인 수정 (레이아웃 한 줄 정렬 보강) */
+        /* 모바일 반응형 디자인 (기존 CSS 대부분이 stack-label-group에 통합됨) */
         @media (max-width: var(--mobile-breakpoint)) {
-             /* 모바일에서 라벨이 위로 가는 경우 */
-             .input-group label { 
-                position: static; 
-                width: 100%; 
-                font-size: var(--label-font-size); 
-                margin-bottom: 5px; 
-                line-height: 1.2; 
-                height: auto; 
-                transform: none; 
-                padding: 0; 
-            }
-            /* 라벨이 위로 갔을 때 입력 필드 Wrapper가 전체 너비를 차지하도록 */
-            .input-field-wrapper, 
-            #step1 .input-field-wrapper, 
-            #step2 .input-field-wrapper { 
-                margin-left: 0; 
-                width: 100%; /* 너비를 100%로 설정하여 한 줄을 온전히 차지 */
-                flex-wrap: wrap; 
-            }
-            .input-group { 
+            /* 1단계는 여전히 스택형 아님 */
+            .input-group:not(.stack-label-group) { 
                 flex-direction: column; 
                 align-items: flex-start; 
             }
-
-            /* ✅ 차종선택 / 출고시기 그룹 (side-by-side-input) */
-            .input-group.side-by-side-input .input-field-wrapper { 
-                flex-direction: column; /* 세로 정렬 */
-                gap: 0; 
-                width: 100%; /* 라벨이 위로 올라갔으므로 입력 필드 그룹은 100% */
-            }
-            .input-group.side-by-side-input .select-group { 
-                display: flex; /* 내부 select 박스는 가로 정렬 유지 */
-                gap: 10px;
+            .input-group:not(.stack-label-group) label { 
                 width: 100%; 
-                margin-bottom: 15px; /* 각 select 그룹 사이에 간격 추가 */
-            } 
-            .input-group.side-by-side-input .select-group:last-child {
-                margin-bottom: 0; 
+                margin-bottom: 5px; 
+                line-height: 1.2; 
+                height: auto; 
+                padding: 0; 
+            }
+            .input-group:not(.stack-label-group) .input-field-wrapper { 
+                width: 100%; 
             }
 
-            .split-unit-wrapper { width: 100%; }
+            /* 차종 선택 및 출고 시기 내부 요소 (모바일에서 가로 정렬 깨기) */
+            .flex-row-wrap {
+                flex-wrap: wrap; 
+            }
+            .flex-row-wrap .select-group {
+                width: calc(50% - 5px); /* 두 개의 select 그룹이 가로로 50%씩 차지하도록 */
+            }
+
             .car-number-split-wrapper { flex-wrap: nowrap; gap: 5px; } 
             .car-number-split-wrapper .fixed-unit-button { width: 45px; font-size: var(--base-font-size); padding: 0 5px; flex-grow: 0; } 
             #carNumPart1 { max-width: none; flex: 2.5; } 
@@ -339,9 +316,7 @@
             #carNumPart2 { max-width: none; flex: 4; } 
             .split-unit-wrapper input { min-width: 70px; } 
         }
-        /* ********************************************** */
-
-
+        
         /* 기타 스타일 (유지) */
         .data-input-field { background-color: var(--input-default-bg); }
         .data-input-field:focus,
@@ -487,38 +462,46 @@
                         </div>
                     </div>
 
-                    <div class="input-group side-by-side-input">
+                    <div class="input-group stack-label-group">
                         <label>차종선택</label> 
                         <div class="input-field-wrapper">
-                            <div class="select-group">
-                                <div class="select-box">
-                                    <select id="manufacturerSelect" required>
-                                        <option value="" disabled selected>제조사</option> 
-                                    </select>
+                            <div class="flex-row-wrap">
+                                <div class="select-group">
+                                    <div class="select-box">
+                                        <select id="manufacturerSelect" required>
+                                            <option value="" disabled selected>제조사</option> 
+                                        </select>
+                                    </div>
                                 </div>
-                                <div class="select-box">
-                                    <select id="carModelSelect" required disabled>
-                                        <option value="" disabled selected>차종</option>
-                                    </select>
+                                <div class="select-group">
+                                    <div class="select-box">
+                                        <select id="carModelSelect" required disabled>
+                                            <option value="" disabled selected>차종</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     
-                    <div class="input-group side-by-side-input">
+                    <div class="input-group stack-label-group">
                         <label>출고시기</label>
                         <div class="input-field-wrapper">
-                            <div class="select-group">
-                                <div class="select-box">
-                                    <select id="yearSelect" name="entry.2129889627" required>
-                                        <option value="" disabled selected>년</option>
-                                    </select>
+                            <div class="flex-row-wrap">
+                                <div class="select-group">
+                                    <div class="select-box">
+                                        <select id="yearSelect" name="entry.2129889627" required>
+                                            <option value="" disabled selected>년</option>
+                                        </select>
+                                    </div>
                                 </div>
                                 
-                                <div class="select-box">
-                                    <select id="monthSelect" name="entry.1395231347" required>
-                                        <option value="" disabled selected>월</option>
-                                    </select>
+                                <div class="select-group">
+                                    <div class="select-box">
+                                        <select id="monthSelect" name="entry.1395231347" required>
+                                            <option value="" disabled selected>월</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         </div>
