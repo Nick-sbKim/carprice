@@ -33,9 +33,14 @@
             /* 테두리 색상 */
             --input-border: #90CAF9; 
 
-            /* '서울', '만KM' 단위 배경색 */
+            /* '서울', '만KM' 단위 배경색 (이미지와 유사하게 연한 파랑색) */
             --unit-bg-color: #E3F2FD; 
             --unit-text-color: #0D47A1; 
+            
+            /* 차량번호 '서울'의 배경색 */
+            --car-unit-bg: #64B5F6; 
+            /* 차량번호 '서울'의 텍스트 색상 */
+            --car-unit-text: #FFFFFF;
         }
         /* ********************************************** */
 
@@ -226,17 +231,6 @@
             white-space: nowrap; 
             line-height: 1.2; 
         }
-        
-        /* 특수 조정: 차종 선택 및 출고시기 라벨은 첫 번째 입력 박스의 중앙에 맞춤 */
-        .input-group:has(.select-group) label {
-            /* 48px 높이의 박스 중앙 (24px) + 50% 위치*/
-            top: 50%; 
-            /* height: 48px; */
-        }
-        .input-group:has(.split-unit-wrapper) label {
-            top: 50%; 
-            /* height: 48px; */
-        }
 
         /* 입력 필드 컨테이너 (정렬 시작점) */
         .input-field-wrapper {
@@ -319,18 +313,18 @@
         }
         
         /* ------------------------------------------- */
-        /* ✅ 단위 통합 입력 필드 (차량번호, 운행거리) - 하나의 박스처럼 보이도록 수정 */
+        /* ✅ 단위 통합 입력 필드 (차량번호, 운행거리) - 이미지 디자인 반영 */
         /* ------------------------------------------- */
         .split-unit-wrapper {
             display: flex;
             align-items: center;
             height: 48px;
             flex-grow: 1;
-            border: 1px solid var(--input-border); /* 전체 통합 박스 테두리 */
-            border-radius: 8px; /* 전체 통합 박스 둥글게 */
-            overflow: hidden; /* 내부 요소가 경계를 넘지 않도록 */
+            border: 1px solid var(--input-border); 
+            border-radius: 8px; 
+            overflow: hidden; 
         }
-
+        
         /* 고정 텍스트 박스 ('서울', '만 KM') */
         .fixed-unit-box {
             flex-shrink: 0;
@@ -341,46 +335,54 @@
             justify-content: center;
             font-size: 1.1em;
             font-weight: 800;
-            color: white; 
-            background-color: #42A5F5; /* 차량번호: 파란색 배경 */
             padding: 0 10px;
         }
 
-        /* 운행거리의 '만 KM' 박스 (다시 정의) */
-        .mileage-unit-box {
-            width: 70px; /* 고정 너비 */
-            color: var(--unit-text-color); 
-            background-color: var(--unit-bg-color); 
-            font-weight: 700;
+        /* 차량번호 '서울' 스타일 */
+        .car-number-unit {
+             width: 60px;
+             color: var(--car-unit-text); 
+             background-color: var(--car-unit-bg); /* 파란색 배경 */
+             padding-left: 15px;
+             padding-right: 15px; 
         }
         
-        /* 분리된 입력 필드 스타일 */
+        /* 운행거리 '만 KM' 스타일 */
+        .mileage-unit-box {
+            width: 70px; 
+            color: var(--unit-text-color); 
+            background-color: var(--unit-bg-color); /* 연한 파랑색 배경 */
+            font-weight: 700;
+            padding-left: 5px; /* 입력 필드와의 간격 조정 */
+            padding-right: 10px;
+        }
+        
+        /* 분리된 입력 필드 스타일 (통합 박스 내부) */
         .split-unit-wrapper input {
             height: 100%;
-            border: none; /* 통합 박스이므로 내부 테두리 제거 */
+            border: none; 
             border-radius: 0; 
             flex-grow: 1;
             min-width: 50px; 
             padding: var(--input-padding-vertical) 10px;
             background-color: white; 
+            
+            /* 이미지 예시처럼 폰트 스타일 조정 */
+            font-weight: 500; 
+            font-size: 1em; 
         }
         
         /* 차량번호 입력 필드 */
         .car-number-input {
             text-align: left; 
+            padding-left: 10px;
+            padding-right: 15px; 
         }
         
         /* 운행거리 입력 필드 */
         .mileage-input-field {
-            text-align: center; /* 숫자 입력은 가운데 정렬 */
-            padding-right: 5px; /* 단위와의 간격 조정 */
-        }
-        
-        /* 차량번호의 '서울' 박스 (운행거리와 구분되게 따로 설정) */
-        .car-number-unit {
-             width: 60px;
-             color: #FFF; 
-             background-color: #42A5F5; 
+            text-align: center; 
+            padding-right: 5px; 
         }
         /* ------------------------------------------- */
         /* 하단 내용 및 버튼 */
@@ -598,8 +600,8 @@
                                     id="carNumber" 
                                     name="entry.1494512143" 
                                     required 
-                                    placeholder="30아1234" 
-                                    maxlength="7"
+                                    placeholder="예시: 30아1234" 
+                                    maxlength="8" 
                                     class="car-number-input">
                             </div>
                         </div>
