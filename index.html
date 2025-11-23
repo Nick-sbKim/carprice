@@ -33,14 +33,18 @@
             /* 테두리 색상 */
             --input-border: #90CAF9; 
 
-            /* '서울', '만KM' 단위 배경색 (이미지와 유사하게 연한 파랑색) */
-            --unit-bg-color: #E3F2FD; 
-            --unit-text-color: #0D47A1; 
+            /* 단위 배경색 (운행거리: 흰색) */
+            --unit-bg-color: white; 
+            --unit-text-color: #333; 
             
             /* 차량번호 '서울'의 배경색 */
-            --car-unit-bg: #64B5F6; 
+            --car-unit-bg: #42A5F5; 
             /* 차량번호 '서울'의 텍스트 색상 */
             --car-unit-text: #FFFFFF;
+            
+            /* 통합 박스 테두리 (제거 요청 반영) */
+            --unified-input-border: 1px solid var(--input-border); 
+            --unified-input-border-none: none; 
         }
         /* ********************************************** */
 
@@ -313,18 +317,21 @@
         }
         
         /* ------------------------------------------- */
-        /* ✅ 단위 통합 입력 필드 (차량번호, 운행거리) - 이미지 디자인 반영 */
+        /* ✅ 단위 통합 입력 필드 (차량번호, 운행거리) - 디자인 반영 */
         /* ------------------------------------------- */
         .split-unit-wrapper {
             display: flex;
             align-items: center;
             height: 48px;
             flex-grow: 1;
-            border: 1px solid var(--input-border); 
+            /* ✅ 전체 통합 박스 테두리 제거 */
+            border: var(--unified-input-border-none); 
             border-radius: 8px; 
             overflow: hidden; 
+            /* 내부 필드 테두리를 살리기 위해 box-shadow 사용 */
+            box-shadow: 0 0 0 1px var(--input-border);
         }
-        
+
         /* 고정 텍스트 박스 ('서울', '만 KM') */
         .fixed-unit-box {
             flex-shrink: 0;
@@ -338,36 +345,34 @@
             padding: 0 10px;
         }
 
-        /* 차량번호 '서울' 스타일 */
+        /* ✅ 차량번호 '서울' 스타일 - 너비 축소 */
         .car-number-unit {
-             width: 60px;
+             width: 45px; /* 너비 축소 */
              color: var(--car-unit-text); 
              background-color: var(--car-unit-bg); /* 파란색 배경 */
-             padding-left: 15px;
-             padding-right: 15px; 
+             padding: 0 5px;
         }
         
-        /* 운행거리 '만 KM' 스타일 */
+        /* ✅ 운행거리 '만 KM' 스타일 - 배경색 흰색, 폰트 강조 */
         .mileage-unit-box {
-            width: 70px; 
+            width: 80px; 
             color: var(--unit-text-color); 
-            background-color: var(--unit-bg-color); /* 연한 파랑색 배경 */
-            font-weight: 700;
-            padding-left: 5px; /* 입력 필드와의 간격 조정 */
+            background-color: var(--unit-bg-color); /* 흰색 배경 */
+            font-weight: 800;
+            padding-left: 5px; 
             padding-right: 10px;
         }
         
         /* 분리된 입력 필드 스타일 (통합 박스 내부) */
         .split-unit-wrapper input {
             height: 100%;
-            border: none; 
+            border: none; /* 통합 박스 내부이므로 테두리 제거 */
             border-radius: 0; 
             flex-grow: 1;
             min-width: 50px; 
             padding: var(--input-padding-vertical) 10px;
             background-color: white; 
             
-            /* 이미지 예시처럼 폰트 스타일 조정 */
             font-weight: 500; 
             font-size: 1em; 
         }
@@ -377,6 +382,7 @@
             text-align: left; 
             padding-left: 10px;
             padding-right: 15px; 
+            color: #757575; /* 플레이스홀더 텍스트 색상 */
         }
         
         /* 운행거리 입력 필드 */
@@ -384,6 +390,7 @@
             text-align: center; 
             padding-right: 5px; 
         }
+        
         /* ------------------------------------------- */
         /* 하단 내용 및 버튼 */
         .footer-content {
@@ -476,24 +483,20 @@
                 transform: none; 
             }
             
-            .input-group:has(.select-group) label,
-            .input-group:has(.split-unit-wrapper) label {
-                 top: auto;
-            }
-            
             .input-field-wrapper {
                 margin-left: 0;
                 width: 100%;
                 flex-wrap: wrap; 
             }
             
-            .car-number-input {
-                text-align: left !important; 
-            }
-            
             /* 통합된 필드 그룹에서 모바일 너비 조정 */
             .split-unit-wrapper {
                 width: 100%;
+            }
+            
+             /* 모바일 차종/제조사 플레이스홀더 텍스트 축소 */
+             .select-group select option:first-child {
+                font-size: 0.9em; 
             }
         }
     </style>
@@ -579,7 +582,7 @@
                             <div class="select-group">
                                 <div class="select-box">
                                     <select id="manufacturerSelect" required>
-                                        <option value="" disabled selected>제조사</option>
+                                        <option value="" disabled selected>제조사</option> 
                                     </select>
                                 </div>
                                 <div class="select-box">
@@ -600,7 +603,7 @@
                                     id="carNumber" 
                                     name="entry.1494512143" 
                                     required 
-                                    placeholder="예시: 30아1234" 
+                                    placeholder="차량번호 입력" 
                                     maxlength="8" 
                                     class="car-number-input">
                             </div>
@@ -714,7 +717,8 @@
 
         manufacturerSelect.addEventListener('change', function() {
             const selectedManufacturer = this.value;
-            carModelSelect.innerHTML = '<option value="" disabled selected>차종</option>';
+            // 플레이스홀더 텍스트 변경 요청 반영: '제조사', '차종'
+            carModelSelect.innerHTML = '<option value="" disabled selected>차종</option>'; 
             carModelSelect.disabled = true;
             
             if (selectedManufacturer === "기타") {
