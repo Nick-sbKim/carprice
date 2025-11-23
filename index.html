@@ -82,7 +82,7 @@
         }
 
         /* ------------------------------------------- */
-        /* 단계별 진행바 스타일 (유지) */
+        /* 단계별 진행바 스타일 (연락정보로 수정) */
         .progress-bar-container {
             padding: 0 20px 20px;
             display: flex;
@@ -123,6 +123,11 @@
         
         .step-indicator.active .step-circle {
             background-color: var(--main-color);
+        }
+
+        .step-indicator.active .step-text {
+            color: var(--main-color);
+            font-weight: 800;
         }
 
         .step-indicator.completed .step-circle {
@@ -238,8 +243,6 @@
             height: 48px;
         }
         
-        /* ... (중략: 기타 스타일 유지) ... */
-        
         /* ********************************************** */
         /* 하단 내용 및 버튼 */
         .button-group {
@@ -248,15 +251,15 @@
             margin-top: 20px;
         }
         
-        /* ✅ 디자인 개선: 뒤로가기 버튼 스타일 (아이콘 형태) */
+        /* 뒤로가기 버튼 스타일 */
         .prev-btn {
-            width: 50px; /* 너비 축소 */
+            width: 50px; 
             padding: 15px 10px;
             background-color: #CFD8DC; 
             color: var(--text-color);
             border: none;
             border-radius: 10px;
-            font-size: 1.5em; /* 화살표 크기 키우기 */
+            font-size: 1.5em; 
             font-weight: 700;
             cursor: pointer;
             transition: background-color 0.2s;
@@ -274,7 +277,6 @@
         /* 다음/신청 버튼 (메인 버튼) */
         #nextBtn, #submitBtn {
             flex-grow: 1;
-            /* width: 70%; -> flex-grow로 대체 */
             padding: 18px 20px;
             background-color: var(--main-color); 
             color: white;
@@ -364,7 +366,7 @@
                 <div class="progress-bar-container">
                     <div class="step-indicator active" id="indicator1">
                         <div class="step-circle">1</div>
-                        <div class="step-text">개인정보</div>
+                        <div class="step-text">연락정보</div>
                     </div>
                     
                     <div class="step-indicator" id="indicator2">
@@ -385,7 +387,7 @@
             
             <div class="step active" id="step1">
                 <div class="step-content">
-                    <div class="section-title">1. 개인정보 입력</div>
+                    <div class="section-title">1. 연락정보 입력</div>
 
                     <div class="input-group">
                         <label for="name">성함</label>
