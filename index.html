@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
-    <title>내 차 시세 확인하기 (돋보기 텍스트 효과 적용)</title>
+    <title>내 차 시세 확인하기 (돋보기 텍스트 효과 및 레이아웃 안정화)</title>
     
     <style>
         /* 폰트 임포트: 나눔스퀘어 Bold 폰트 적용 */
@@ -142,25 +142,17 @@
         /* ✅ 돋보기 모드 스타일 (포커스 시 텍스트 확대 및 패딩 조정) */
         .data-input-field:focus {
             background-color: var(--input-filled-bg);
-            /* 텍스트 크기를 크게 확대 */
             font-size: 1.5em !important; 
-            /* 폰트 크기에 맞춰 상하 패딩을 늘려 안정적인 확대 효과 부여 */
             padding: 12px 10px !important; 
-            height: auto; /* 내용에 따라 높이 유동적으로 조정 */
-            /* 가독성 증진을 위해 두꺼운 폰트 적용 */
+            height: auto !important; 
             font-weight: 800 !important; 
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 포커스 강조 효과 */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
         }
         
         .split-unit-wrapper input.data-input-field:focus {
             padding: 12px 10px !important;
         }
         
-        .input-field-wrapper input[type="text"]:focus,
-        .split-unit-wrapper input:focus {
-             height: auto;
-        }
-
         /* 라벨이 위로 가는 그룹 스타일 (차량번호만 해당) */
         .input-group.stack-label-group { flex-direction: column; align-items: flex-start; }
         .input-group.stack-label-group label { 
@@ -175,7 +167,15 @@
         .input-group.stack-label-group .input-field-wrapper { width: 100%; margin-left: 0; }
         
         /* 단위 통합 입력 필드 (전화번호, 운행거리) */
-        .split-unit-wrapper { display: flex; align-items: stretch; width: 100%; border: var(--unified-input-border); border-radius: 8px; overflow: hidden; height: var(--label-height); }
+        .split-unit-wrapper { 
+            display: flex; 
+            align-items: stretch; /* 내부 요소가 Wrapper의 높이에 맞게 늘어나도록 유지 */
+            width: 100%; 
+            border: var(--unified-input-border); 
+            border-radius: 8px; 
+            overflow: hidden; 
+            /* height 제거 - 내부 요소에 따라 유동적으로 늘어나도록 함 */
+        }
         
         /* 전화번호 단위 박스 (최소 너비 적용) */
         .phone-unit-box { 
@@ -183,7 +183,7 @@
             padding: 0 8px; 
             color: var(--car-unit-text); 
             background-color: var(--car-unit-bg); 
-            height: var(--label-height); /* 기본 높이 유지 */
+            height: 100%; /* 부모(Wrapper) 높이에 맞게 늘어나도록 100% 설정 */
             display: flex; 
             align-items: center; 
             justify-content: center; 
@@ -191,15 +191,9 @@
             font-weight: 800; 
             flex-shrink: 0; 
             border-right: 1px solid var(--input-border); 
-            transition: height 0.3s;
+            transition: all 0.3s; /* 트랜지션 유지 */
         }
 
-        /* 입력 필드 포커스 시, 010- 박스 높이도 함께 확장 */
-        .split-unit-wrapper:has(input:focus) .phone-unit-box,
-        .split-unit-wrapper:has(input:focus) .mileage-unit-box {
-             height: 64px; /* 확대된 패딩에 맞게 높이 조정 (12px*2 + 폰트 1.5em) */
-        }
-        
         /* 전화번호 입력 필드 (최대 공간 확보) */
         .split-unit-wrapper input { 
             width: auto; 
@@ -215,8 +209,20 @@
         }
         
         .mileage-input-field { text-align: right !important; }
-        .split-unit-wrapper .mileage-unit-box { width: 70px; color: var(--unit-text-color); background-color: var(--unit-bg-color); border-left: 1px solid var(--input-border); border-right: none; }
-        .fixed-unit-box { height: var(--label-height); display: flex; align-items: center; } /* 기본 높이 설정 */
+        
+        /* 운행거리 단위 박스 */
+        .split-unit-wrapper .mileage-unit-box { 
+            width: 70px; 
+            color: var(--unit-text-color); 
+            background-color: var(--unit-bg-color); 
+            border-left: 1px solid var(--input-border); 
+            border-right: none; 
+            height: 100%; /* 부모(Wrapper) 높이에 맞게 늘어나도록 100% 설정 */
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            transition: all 0.3s; /* 트랜지션 유지 */
+        }
 
         
         /* 2단계: 차량번호 입력란 최적화 (유지) */
@@ -274,8 +280,6 @@
 
         /* 모바일 반응형 디자인 */
         @media (max-width: var(--mobile-breakpoint)) {
-             /* 모바일에서 전화번호는 라벨이 위로 감 - 이 경우에도 돋보기 효과는 유지됨 */
-             /* ... (기존 모바일 CSS 유지) ... */
              .input-group label { 
                 position: static; 
                 width: 100%; 
@@ -501,7 +505,7 @@
                                     inputmode="numeric" 
                                     maxlength="4"
                                     class="mileage-input-field data-input-field"> 
-                                <span class="fixed-unit-box mileage-unit-box">만 KM</span>
+                                <span class="mileage-unit-box">만 KM</span>
                             </div>
                         </div>
                     </div>
