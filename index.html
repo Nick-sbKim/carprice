@@ -138,7 +138,9 @@
         .input-field-wrapper select {
             flex-grow: 1; padding: var(--input-padding-vertical) 15px; 
             height: 48px; border: 1px solid var(--input-border); 
-            border-radius: 8px; box-sizing: border-box; font-size: 1.1em; 
+            border-radius: 8px; box-sizing: border-box; 
+            /* ✅ 차종선택 폰트 사이즈 조정 */
+            font-size: 1.0em; 
             color: var(--text-color); background-color: white; 
             font-weight: normal; -webkit-appearance: none; 
             -moz-appearance: none; appearance: none; min-width: 0;
@@ -156,7 +158,12 @@
         }
         .select-group { display: flex; flex-direction: row; gap: var(--input-gap); width: 100%; }
         .select-group .select-box { flex: 1; padding: 0; height: auto; border: none; }
-        .select-group .select-box select { width: 100%; }
+        .select-group .select-box select { 
+             width: 100%; 
+             /* ✅ 차종/제조사 폰트 사이즈 재조정 */
+             font-size: 1.0em; 
+             padding: var(--input-padding-vertical) 10px; /* 패딩도 살짝 줄여 공간 확보 */
+        }
         
         /* ------------------------------------------- */
         /* ✅ 단위 통합 입력 필드 (차량번호, 운행거리, 휴대폰) */
@@ -169,7 +176,7 @@
             background-color: white; justify-content: space-between; 
         }
 
-        /* 고정 텍스트 박스 ('서울', '만 KM', '010-') */
+        /* 고정 텍스트 박스 ('서울', '만 KM', '010 -') */
         .fixed-unit-box {
             flex-shrink: 0; line-height: 1; height: 100%; display: flex;
             align-items: center; justify-content: center; font-size: 1.1em;
@@ -188,9 +195,10 @@
             font-weight: 800; padding-left: 5px; padding-right: 10px; flex-shrink: 0; 
         }
 
-        /* ✅ '010-' 고정 단위 박스 스타일 */
+        /* ✅ '010 -' 고정 단위 박스 스타일 */
         .phone-unit-box {
-             width: 55px; color: var(--car-unit-text); background-color: var(--car-unit-bg); 
+             width: 65px; /* 너비 확장 (' -' 띄어쓰기 반영) */
+             color: var(--car-unit-text); background-color: var(--car-unit-bg); 
              padding: 0 5px; height: 100%; display: flex; align-items: center; 
              justify-content: center; font-size: 1.1em; font-weight: 800; flex-shrink: 0;
         }
@@ -214,12 +222,13 @@
             color: #757575; flex-grow: 1; 
         }
         
-        /* 운행거리 입력 필드 - 너비 확장 */
+        /* ✅ 운행거리 입력 필드 - 너비 추가 확장 */
         .mileage-input-field {
-            text-align: center; padding-right: 5px; flex-grow: 2; min-width: 100px; 
+            text-align: center; padding-right: 5px; flex-grow: 3; /* 너비를 3으로 확장 */
+            min-width: 120px; /* 최소 너비 지정 */
         }
         
-        /* ✅ 휴대폰 번호 입력 필드 */
+        /* 휴대폰 번호 입력 필드 */
         .phone-input-field {
             text-align: center; padding-left: 10px; padding-right: 10px;
         }
@@ -312,12 +321,12 @@
                         <label for="phone">휴대폰번호</label>
                         <div class="input-field-wrapper">
                             <div class="split-unit-wrapper">
-                                <span class="phone-unit-box">010-</span>
+                                <span class="phone-unit-box">010 -</span>
                                 <input type="text" 
                                     id="phone" 
                                     name="phone_display"
                                     required 
-                                    placeholder="0000-0000" 
+                                    placeholder="8자리 입력" 
                                     inputmode="numeric" 
                                     maxlength="9"
                                     class="phone-input-field">
@@ -367,6 +376,8 @@
                                     required 
                                     placeholder="30아1234" 
                                     maxlength="8" 
+                                    inputmode="text"
+                                    pattern="[0-9]*"
                                     class="car-number-input">
                             </div>
                         </div>
