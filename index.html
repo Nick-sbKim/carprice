@@ -15,8 +15,8 @@
             --input-gap: 10px;
             --input-padding-vertical: 12px; 
             --mobile-breakpoint: 600px; 
-            /* ✅ 라벨과 입력창 사이의 간격 조정: 90px */
-            --align-offset: 90px; 
+            /* ✅ 라벨과 입력창 사이의 간격 조정: 100px로 증가 */
+            --align-offset: 100px; 
             --input-margin-bottom: 25px; 
             
             /* --- 🎨 Theme Colors (Blue) --- */
@@ -91,7 +91,7 @@
             padding: 0 20px 20px;
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-start; /* 텍스트 정렬 */
         }
 
         .step-indicator {
@@ -102,22 +102,23 @@
             position: relative;
         }
 
-        /* 라인 추가를 위한 가상 요소 */
+        /* ✅ 라인 추가: 동그라미 중앙을 지나도록 top, height 조정 */
         .step-indicator:first-child::after {
             content: '';
             position: absolute;
-            top: 15px; /* 원의 중앙 */
+            /* 원의 중앙을 정확히 통과하도록 top 조정 */
+            top: 15px; 
             left: 50%;
             width: 100%;
             height: 4px;
-            background-color: #CFD8DC; /* 비활성화 색상 */
+            background-color: #CFD8DC; 
             z-index: 5;
-            transform: translateX(0); 
+            transform: translateY(-50%); /* 라인 자체를 중앙으로 */
         }
         
         /* 1단계 완료 시 라인 색상 변경 */
         .step-indicator.active:first-child::after {
-            background-color: var(--main-color); /* 활성화 색상 */
+            background-color: var(--main-color); 
         }
 
         .step-circle {
@@ -133,6 +134,7 @@
             font-size: 1.1em;
             z-index: 10;
             transition: background-color 0.3s;
+            position: relative; /* 라인을 덮기 위해 relative 유지 */
         }
 
         .step-text {
@@ -169,7 +171,6 @@
             display: block; 
         }
         
-        /* Step Content와 Footer Content의 좌우 패딩을 20px로 통일 */
         .step-content {
             padding: 20px; 
             margin: 0 20px 20px 20px; 
@@ -197,17 +198,19 @@
             flex-wrap: wrap; 
             margin-bottom: var(--input-margin-bottom); 
             position: relative; 
-            align-items: flex-start; 
+            /* ✅ 항목과 입력 박스의 높이 중앙 배열 */
+            align-items: center; 
         }
         
         /* 모든 라벨 스타일 */
         .input-group label {
             position: absolute;
             left: 0;
-            top: 14px; /* 입력 필드 중앙에 맞춤 */
+            /* ✅ 높이 중앙 정렬 */
+            top: 50%; 
             transform: translateY(-50%); 
             
-            width: calc(var(--align-offset) - 10px); /* 라벨 너비 조정 */
+            width: calc(var(--align-offset) - 10px); 
             flex-shrink: 0;
             font-size: 1.25em; 
             font-weight: 800; 
@@ -218,7 +221,6 @@
         
         /* 입력 필드 컨테이너 (정렬 시작점) */
         .input-field-wrapper {
-            /* ✅ 간격 좁히기 적용 */
             margin-left: var(--align-offset); 
             width: calc(100% - var(--align-offset)); 
             
@@ -267,7 +269,7 @@
             width: 100%;
         }
         
-        /* ✅ 단위 통합 입력 필드 (차량번호, 운행거리) - 하나의 박스처럼 보이게 */
+        /* 단위 통합 입력 필드 (차량번호, 운행거리, 휴대폰번호) */
         .unit-box {
             display: flex;
             align-items: center;
@@ -286,15 +288,14 @@
             color: var(--placeholder-color); 
             flex-shrink: 0;
             line-height: 1;
-            background-color: #ECEFF1; /* 밝은 회색 배경 */
+            background-color: #ECEFF1; 
             height: 100%;
             display: flex;
             align-items: center;
-            border-right: 1px solid var(--input-border); /* 단위와 입력 필드 사이 선 */
+            border-right: 1px solid var(--input-border); 
         }
         
         .unit-box input {
-            /* unit-box가 테두리를 가짐 */
             border: none; 
             padding: var(--input-padding-vertical) 15px; 
             height: 100%;
@@ -490,6 +491,7 @@
             <input type="hidden" id="mileageHidden" name="entry.482899888" value="">
             <input type="hidden" id="consentHidden" name="entry.609838615" value="" required>
             <input type="hidden" id="carModelHidden" name="entry.620874901" value="">
+            <input type="hidden" id="phoneHidden" name="entry.2095768754" value="">
 
             
             <div class="step active" id="step1">
@@ -504,9 +506,18 @@
                     </div>
 
                     <div class="input-group">
-                        <label for="phone">휴대폰 번호</label>
+                        <label for="phone">휴대폰번호</label>
                         <div class="input-field-wrapper">
-                            <input type="text" id="phone" name="entry.2095768754" required placeholder="숫자만 기입" inputmode="numeric" maxlength="13">
+                            <div class="unit-box">
+                                <span class="unit-text">010-</span>
+                                <input type="text" 
+                                    id="phone" 
+                                    name="phone_display"
+                                    required 
+                                    placeholder="8자리 숫자만 기입" 
+                                    inputmode="numeric" 
+                                    maxlength="9">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -640,12 +651,15 @@
         
         const yearSelect = document.getElementById('yearSelect');
         const monthSelect = document.getElementById('monthSelect');
+        
+        const phoneInput = document.getElementById('phone');
+        const phoneHidden = document.getElementById('phoneHidden');
+
 
         // *******************************************************
         // 2. 드롭다운 초기 로딩 및 로직
         // *******************************************************
 
-        // 제조사 드롭다운 채우기
         function loadManufacturers() {
             for (const manufacturer in carData) {
                 const option = document.createElement('option');
@@ -653,23 +667,18 @@
                 option.textContent = manufacturer;
                 manufacturerSelect.appendChild(option);
             }
-            // "기타" 옵션 추가
             const otherOption = document.createElement('option');
             otherOption.value = "기타";
             otherOption.textContent = "기타";
             manufacturerSelect.appendChild(otherOption);
         }
 
-        // 제조사 선택 시 차종 드롭다운 업데이트
         manufacturerSelect.addEventListener('change', function() {
             const selectedManufacturer = this.value;
-            
-            // 차종 드롭다운 초기화
             carModelSelect.innerHTML = '<option value="" disabled selected>차종</option>';
             carModelSelect.disabled = true;
             
             if (selectedManufacturer === "기타") {
-                // "기타" 선택 시 차종 드롭다운에 "기타"만 남김
                 const otherOption = document.createElement('option');
                 otherOption.value = "기타";
                 otherOption.textContent = "기타";
@@ -678,14 +687,12 @@
                 carModelSelect.value = "기타"; 
             } 
             else if (selectedManufacturer && carData[selectedManufacturer]) {
-                // 일반 제조사 선택
                 carData[selectedManufacturer].forEach(model => {
                     const option = document.createElement('option');
                     option.value = model;
                     option.textContent = model;
                     carModelSelect.appendChild(option);
                 });
-                // 차종 목록에 "기타" 추가
                 const otherOption = document.createElement('option');
                 otherOption.value = "기타";
                 otherOption.textContent = "기타";
@@ -694,16 +701,12 @@
                 carModelSelect.disabled = false;
             }
             
-            // 히든 필드 초기화 (새 제조사 선택 시)
             carModelHidden.value = '';
-            if (selectedManufacturer !== "기타") {
-                 carModelSelect.value = "";
-            } else {
+            if (selectedManufacturer === "기타") {
                  carModelHidden.value = `기타 기타`;
             }
         });
 
-        // 차종 선택 시 히든 필드 업데이트 (제조사 + 차종 결합)
         carModelSelect.addEventListener('change', function() {
             const manufacturer = manufacturerSelect.value;
             const model = this.value;
@@ -714,9 +717,7 @@
             }
         });
         
-        // 출고 년/월 드롭다운 채우기
         function loadYearMonthSelectors() {
-            // 년도 채우기 (2015년 ~ 2025년)
             const currentYear = 2025;
             for (let y = currentYear; y >= 2015; y--) {
                 const option = document.createElement('option');
@@ -724,7 +725,6 @@
                 option.textContent = y + '년';
                 yearSelect.appendChild(option);
             }
-            // 월 채우기 (1월 ~ 12월)
             for (let m = 1; m <= 12; m++) {
                 const option = document.createElement('option');
                 const monthValue = m < 10 ? '0' + m : m.toString(); 
@@ -779,6 +779,16 @@
             // 5. Forms Hidden Field에 최종 값 세팅
             mileageHidden.value = mileageValue + '만km';
             document.getElementById('consentHidden').value = '예';
+            
+            // 6. 휴대폰 번호 최종 값 세팅
+            const phoneValue = phoneInput.value.replace(/[^0-9]/g, '');
+            if (phoneValue.length !== 8) {
+                 alert('휴대폰 번호 8자리를 정확히 입력해주세요.');
+                 phoneInput.focus();
+                 event.preventDefault();
+                 return;
+            }
+            phoneHidden.value = '010-' + phoneValue.slice(0, 4) + '-' + phoneValue.slice(4);
 
         });
 
@@ -827,7 +837,7 @@
 
         function validateStep1() {
             const nameInput = document.getElementById('name');
-            const phoneInput = document.getElementById('phone');
+            const phoneValue = phoneInput.value.replace(/[^0-9]/g, '');
 
             if (!nameInput.value.trim()) {
                 alert('성함을 입력해주세요.');
@@ -835,8 +845,8 @@
                 return false;
             }
             
-            if (!phoneInput.value.trim() || phoneInput.value.replace(/-/g, '').length < 10) {
-                 alert('올바른 휴대폰 번호를 입력해주세요.');
+            if (phoneValue.length !== 8) {
+                 alert('휴대폰 번호 8자리를 정확히 입력해주세요.');
                  phoneInput.focus();
                  return false;
             }
@@ -846,20 +856,19 @@
 
 
         // -----------------------------------------------------------
-        // 5. 전화번호 형식 지정 JS 
+        // 5. 전화번호 형식 지정 JS (010-을 제외한 8자리 숫자만 허용) 
         // -----------------------------------------------------------
-        const phoneInput = document.getElementById('phone');
         phoneInput.addEventListener('input', function(e) {
             let value = e.target.value.replace(/[^0-9]/g, ''); 
+            // 8자리만 허용
+            if (value.length > 8) {
+                value = value.slice(0, 8);
+            }
             let result = '';
-            if (value.length < 4) {
-                result = value;
-            } else if (value.length < 8) {
-                result = value.slice(0, 3) + '-' + value.slice(3);
-            } else if (value.length < 11) {
-                result = value.slice(0, 3) + '-' + value.slice(3, 7) + '-' + value.slice(7);
+            if (value.length > 4) {
+                 result = value.slice(0, 4) + '-' + value.slice(4);
             } else {
-                result = value.slice(0, 3) + '-' + value.slice(3, 7) + '-' + value.slice(7, 11);
+                 result = value;
             }
             e.target.value = result;
         });
