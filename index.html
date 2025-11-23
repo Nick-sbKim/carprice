@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
-    <title>내 차 시세 확인하기 (전화번호 인라인 레이아웃)</title>
+    <title>내 차 시세 확인하기 (전화번호 입력란 최적화)</title>
     
     <style>
         /* 폰트 임포트: 나눔스퀘어 Bold 폰트 적용 */
         @import url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_two@1.0/NanumSquare.woff'); 
 
         /* ********************************************** */
-        /* ✅ 상수 정의 (항목 이름 폰트 크기 유지) */
+        /* ✅ 상수 정의 (최소화된 폰트 크기 유지) */
         :root {
             --input-gap: 5px; 
             --input-padding-vertical: 8px; 
@@ -35,7 +35,7 @@
             --input-filled-bg: white;
             
             --label-height: 40px; 
-            --phone-unit-width: 60px; 
+            /* --phone-unit-width: 60px; -> 제거 및 auto로 변경 */
             --label-width: 100px; 
             
             /* 항목 이름 폰트 크기 */
@@ -155,9 +155,37 @@
         
         /* 단위 통합 입력 필드 (전화번호, 운행거리) */
         .split-unit-wrapper { display: flex; align-items: stretch; width: 100%; height: var(--label-height); border: var(--unified-input-border); border-radius: 8px; overflow: hidden; }
-        .phone-unit-box, .fixed-unit-box { color: var(--car-unit-text); background-color: var(--car-unit-bg); padding: 0 10px; height: 100%; display: flex; align-items: center; justify-content: center; font-size: var(--base-font-size); font-weight: 800; flex-shrink: 0; border-right: 1px solid var(--input-border); }
-        .phone-unit-box { width: var(--phone-unit-width); }
-        .split-unit-wrapper input { width: auto; flex-grow: 1; height: 100%; border: none !important; border-radius: 0; padding: var(--input-padding-vertical) 10px; font-size: var(--base-font-size); outline: none; box-shadow: none; min-width: 100px; }
+        
+        /* ✅ 전화번호 단위 박스 (최소 너비 적용) */
+        .phone-unit-box { 
+            width: auto; /* 너비 최소화 */
+            padding: 0 8px; /* 패딩으로 너비 조정 */
+            color: var(--car-unit-text); 
+            background-color: var(--car-unit-bg); 
+            height: 100%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: var(--label-font-size); /* 라벨 크기와 통일 */
+            font-weight: 800; 
+            flex-shrink: 0; 
+            border-right: 1px solid var(--input-border); 
+        }
+        
+        /* ✅ 전화번호 입력 필드 (최대 공간 확보) */
+        .split-unit-wrapper input { 
+            width: auto; 
+            flex-grow: 1; /* 나머지 공간을 모두 차지 */
+            height: 100%; 
+            border: none !important; 
+            border-radius: 0; 
+            padding: var(--input-padding-vertical) 10px; 
+            font-size: var(--base-font-size); 
+            outline: none; 
+            box-shadow: none; 
+            min-width: 100px;
+        }
+        
         .mileage-input-field { text-align: right !important; }
         .split-unit-wrapper .mileage-unit-box { width: 70px; color: var(--unit-text-color); background-color: var(--unit-bg-color); border-left: 1px solid var(--input-border); border-right: none; }
         
