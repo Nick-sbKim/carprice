@@ -15,12 +15,13 @@
             --input-gap: 10px;
             --input-padding-vertical: 12px; 
             --mobile-breakpoint: 600px; 
-            --input-margin-bottom: 25px; /* 행 간격 */
+            /* ✅ 이전 요청에 따라 행 간격 조정된 값 복원 */
+            --input-margin-bottom: 25px; 
             
             /* --- 🎨 Theme Colors (Blue) --- */
             --main-color: #1976D2;     
             --light-border-color: #BBDEFB; 
-            --text-color: #333; 
+            --text-color: #333; /* 굵은 검정색 */
             --secondary-text-color: #6D4C41; 
             --label-color: #0D47A1;     
             --placeholder-color: #9E9E9E;  
@@ -141,7 +142,7 @@
             font-weight: 800;
         }
         
-        /* 1단계 성함/휴대폰은 기존 레이아웃 유지 */
+        /* 1단계 성함/휴대폰 레이아웃 복원 */
         #step1 .input-group label {
              position: absolute; left: 0; top: 12px; transform: translateY(0%); 
              width: 100px; 
@@ -152,14 +153,14 @@
              height: 48px;
         }
 
-        /* 1단계 입력 필드 컨테이너 (여백 유지) */
+        /* 1단계 입력 필드 컨테이너 복원 */
         #step1 .input-field-wrapper {
             margin-left: 100px; 
             width: calc(100% - 100px); 
             flex-grow: 1; 
         }
 
-        /* 2단계 라벨/컨테이너 위치 조정 */
+        /* 2단계 라벨/컨테이너 위치 조정 복원 */
         .input-group.car-number-vertical label {
             position: static; transform: none; width: 100%; margin-bottom: 8px; line-height: 1.2; padding: 0; font-size: 1.15em; white-space: normal; 
         }
@@ -197,15 +198,31 @@
         /* 성함, 휴대폰, 차량번호 숫자, 운행거리 입력 필드에 적용할 클래스 */
         .data-input-field {
             /* ✅ 초기 배경색: 옅은 파란색 */
-            background-color: var(--input-default-bg) !important;
-            font-weight: 700 !important;
-            color: var(--text-color) !important;
+            background-color: var(--input-default-bg);
+            /* 다른 속성은 개별 필드 스타일에서 유지/복원 */
         }
 
         /* ✅ 입력 필드가 포커스되거나(사용자가 클릭/탭) 값이 채워지면 흰색으로 변경 */
         .data-input-field:focus,
         .data-input-field:not(:placeholder-shown) {
-            background-color: var(--input-filled-bg) !important;
+            background-color: var(--input-filled-bg);
+        }
+        
+        /* ------------------------------------------- */
+        /* 필드별 굵은 검정 텍스트 스타일 복원 */
+        /* ------------------------------------------- */
+        
+        /* ✅ 성함, 휴대폰, 운행거리 입력 텍스트 스타일 복원 (굵은 검정) */
+        #name, .phone-input-field, .mileage-input-field {
+            font-weight: 700 !important;
+            color: var(--text-color) !important;
+        }
+        
+        /* ✅ 차량번호 숫자 굵게 복원 */
+        .car-number-split-wrapper input.num-part {
+            font-weight: 700 !important; 
+            color: var(--text-color) !important;
+            text-align: center !important; 
         }
         
         /* ------------------------------------------- */
@@ -225,24 +242,19 @@
             opacity: 0; 
         }
         
-        .select-group .select-box select { 
-             /* 드롭다운은 기본 흰색 배경 유지 */
-             background-color: var(--input-filled-bg);
-        }
-
-        /* 차량번호 한글 선택 부분 스타일 */
+        /* 차량번호 한글 선택 부분 스타일 복원 */
         .car-number-split-wrapper .car-hangul-box select {
              padding: 0 25px 0 10px; 
              height: 100%;
              width: 100%;
              border: none; 
              background-color: var(--input-filled-bg); /* 선택 필드는 흰색 유지 */
-             text-align: center !important; 
-             font-weight: 700 !important; 
+             text-align: center !important; /* ✅ 가운데 정렬 복원 */
+             font-weight: 700 !important; /* ✅ 굵은 검정 복원 */
              color: var(--text-color) !important;
         }
 
-        /* 차량번호 화살표 위치 재조정 */
+        /* 차량번호 화살표 위치 재조정 복원 */
         .car-hangul-box::after {
             right: 8px !important; 
             color: var(--label-color) !important; 
@@ -264,7 +276,6 @@
         .split-unit-wrapper input {
             height: 100%; border: none !important; border-radius: 0; flex-grow: 1;
             min-width: 50px; padding: var(--input-padding-vertical) 10px; 
-            font-weight: 700; 
             font-size: 1.1em; 
             text-align: left !important;
             outline: none; box-shadow: none;
@@ -292,7 +303,7 @@
             padding: 0 var(--content-padding) 25px; 
         }
         
-        /* 개인정보 동의 박스 스타일 (높이 제한 및 스크롤) */
+        /* ✅ 개인정보 동의 박스 스타일 (높이 제한 및 스크롤) 복원 */
         .consent-details {
             border: 1px solid #E0E0E0; background-color: #FAFAFA; padding: 10px 15px;
             border-radius: 8px; font-size: 0.85em; line-height: 1.6; color: #757575;
