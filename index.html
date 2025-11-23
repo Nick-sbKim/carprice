@@ -126,16 +126,16 @@
 
         /* 모든 필드 그룹 */
         .input-group {
-            display: flex !important; /* ✅ 정렬 복원 */
+            display: flex !important; 
             flex-wrap: wrap; 
             margin-bottom: var(--input-margin-bottom); 
             position: relative; 
-            align-items: center !important; /* ✅ 수직 중앙 정렬 복원 */
+            align-items: center !important; 
         }
         
         /* 모든 라벨 스타일 */
         .input-group label {
-            width: var(--label-width) !important; /* ✅ 너비 강제 고정 복원 */
+            width: var(--label-width) !important; 
             flex-shrink: 0;
             font-size: var(--base-font-size); /* 폰트 크기 최종 조정 */
             font-weight: 800; 
@@ -151,7 +151,7 @@
         /* 입력 필드 Wrapper (정렬 통일의 핵심) */
         .input-field-wrapper {
             margin-left: 0; 
-            width: calc(100% - var(--label-width)) !important; /* ✅ 너비 강제 고정 복원 */
+            width: calc(100% - var(--label-width)) !important; 
             flex-grow: 1; 
         }
         
@@ -159,7 +159,7 @@
         .input-field-wrapper input[type="text"],
         .input-field-wrapper select {
             width: 100%; 
-            padding: var(--input-padding-vertical) 15px; 
+            padding: var(--input-padding-vertical) 15px; /* 내부 여백 조정 */
             height: var(--label-height); 
             border: 1px solid var(--input-border); 
             border-radius: 8px; 
@@ -252,7 +252,7 @@
             .input-group label {
                 position: static; 
                 width: 100% !important; 
-                font-size: 1.1em; /* 모바일에서는 폰트를 살짝 키워 가독성 확보 (원래 크기 1.1em 복원) */
+                font-size: 1.1em; /* 모바일에서는 폰트를 살짝 키워 가독성 확보 */
                 margin-bottom: 5px; 
                 line-height: 1.2; 
                 height: auto;
@@ -318,7 +318,7 @@
         .consent-label { font-weight: 700; color: #555; cursor: pointer; }
         .consent-details {
             border: 1px solid #E0E0E0; background-color: #FAFAFA; padding: 10px 15px;
-            border-radius: 8px; font-size: 0.8em; /* 폰트 사이즈 조정 */
+            border-radius: 8px; font-size: 0.8em; 
             line-height: 1.6; color: #757575;
             max-height: 80px; overflow-y: auto; margin-bottom: 20px; 
         }
@@ -329,10 +329,10 @@
             flex-shrink: 0; display: flex; justify-content: center; align-items: center; line-height: 1;
         }
         #nextBtn, #submitBtn {
-            flex-grow: 1; padding: 15px 20px; /* 버튼 세로 여백 조정 */
+            flex-grow: 1; padding: 15px 20px; 
             background-color: var(--main-color); 
             color: white; border: none; border-radius: 10px; 
-            font-size: 1.2em; /* 버튼 폰트 크기 조정 */
+            font-size: 1.2em; 
             font-weight: 800; cursor: pointer; 
             box-shadow: 0 4px 10px rgba(25, 118, 210, 0.4); 
         }
