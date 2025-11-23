@@ -82,7 +82,7 @@
         }
 
         /* ------------------------------------------- */
-        /* 단계별 진행바 스타일 (연락정보로 수정) */
+        /* ✅ 단계별 진행바 스타일 (라인 추가) */
         .progress-bar-container {
             padding: 0 20px 20px;
             display: flex;
@@ -96,6 +96,24 @@
             flex-direction: column;
             align-items: center;
             position: relative;
+        }
+
+        /* ✅ 라인 추가를 위한 가상 요소 */
+        .step-indicator:first-child::after {
+            content: '';
+            position: absolute;
+            top: 15px; /* 원의 중앙 */
+            left: 50%;
+            width: 100%;
+            height: 4px;
+            background-color: #CFD8DC; /* 비활성화 색상 */
+            z-index: 5;
+            transform: translateX(0); /* 1단계 원의 오른쪽 끝에서 시작 */
+        }
+        
+        /* 1단계 완료 시 라인 색상 변경 (라인이 1단계 바로 뒤에 붙어있으므로) */
+        .step-indicator.active:first-child::after {
+            background-color: var(--main-color); /* 활성화 색상 */
         }
 
         .step-circle {
@@ -345,6 +363,13 @@
                 padding: 15px 20px;
                 font-size: 1.1em;
             }
+            
+            /* 모바일에서 라인 크기 조정 */
+             .step-indicator:first-child::after {
+                 top: 15px; 
+                 width: 100%; 
+                 height: 3px; 
+             }
         }
     </style>
 </head>
