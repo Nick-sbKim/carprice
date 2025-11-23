@@ -192,6 +192,7 @@
             border-radius: 8px; 
             overflow: hidden; 
             background-color: white; 
+            justify-content: space-between; /* 분할된 요소들이 잘 나뉘도록 정렬 */
         }
 
         /* 차량번호 분할 입력 내부 요소 */
@@ -201,7 +202,7 @@
             border: none !important; 
             border-radius: 0; 
             font-size: 1.1em;
-            text-align: center !important; /* 분할된 요소는 중앙 정렬로 가독성 확보 */
+            text-align: center !important; 
             padding: 0 5px;
             min-width: 0; 
             flex-shrink: 0;
@@ -209,18 +210,16 @@
             color: var(--text-color);
         }
         
-        /* 숫자 입력 부분 */
+        /* ✅ 숫자 입력 부분 너비 조정 (30, 1234) */
         .car-number-split-wrapper input.num-part {
-            flex-grow: 1.5; /* 너비 비율 조정 */
-            min-width: 45px; 
-            /* 차량번호 첫 번째/마지막 숫자는 키패드 유도 */
-            inputmode: numeric; 
+            flex-grow: 1.0; 
+            min-width: 35px; 
         }
 
         /* 한글 선택 부분 */
         .car-number-split-wrapper .car-hangul-box {
             position: relative;
-            flex-grow: 1; /* 너비 비율 조정 */
+            flex-grow: 0.8; 
             min-width: 40px;
             border-left: 1px solid var(--input-border); 
             border-right: 1px solid var(--input-border);
@@ -244,6 +243,12 @@
         /* ------------------------------------------- */
         /* 단위 통합 입력 필드 (휴대폰, 운행거리) */
         /* ------------------------------------------- */
+        .split-unit-wrapper {
+            display: flex; align-items: center; height: 48px; flex-grow: 1;
+            border: var(--unified-input-border); 
+            border-radius: 8px; overflow: hidden; 
+            background-color: white; justify-content: space-between; 
+        }
 
         /* ✅ '010 -' 고정 단위 박스 스타일 (너비 축소) */
         .phone-unit-box {
@@ -723,7 +728,6 @@
             
             if (part1Value.length < 2 || part2Value.length !== 4 || !hangulValue) {
                  alert('차량번호의 모든 부분을 정확히 입력하거나 선택해주세요 (숫자 2~3자리, 문자 1개, 숫자 4자리).');
-                 // 입력 필드 포커싱 로직은 복잡하여 생략하고 알림만 띄움
                  event.preventDefault();
                  return;
             }
