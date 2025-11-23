@@ -33,8 +33,9 @@
             /* 테두리 색상 */
             --input-border: #90CAF9; 
 
-            /* '서울' 단위 배경색 */
-            --seoul-unit-bg-color: #42A5F5; 
+            /* '서울', '만KM' 단위 배경색 */
+            --unit-bg-color: #E3F2FD; 
+            --unit-text-color: #0D47A1; 
         }
         /* ********************************************** */
 
@@ -90,7 +91,7 @@
         }
 
         /* ------------------------------------------- */
-        /* 단계별 진행바 스타일 (라인 포함) - ✅ 숫자 가운데 정렬 포함 */
+        /* 단계별 진행바 스타일 (복원) */
         .progress-bar-container {
             padding: 0 20px 20px;
             display: flex;
@@ -131,7 +132,6 @@
             border-radius: 50%;
             background-color: #CFD8DC; 
             color: white;
-            /* ✅ 숫자 가운데 정렬 */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -154,12 +154,19 @@
             background-color: var(--main-color);
         }
         .step-indicator.completed .step-circle {
-            background-color: #81C784; /* 완료 색상 */
+            background-color: var(--main-color); /* 1단계 완료 시 파란색 유지 */
         }
+        .step-indicator:nth-child(2).active .step-circle {
+             background-color: #64B5F6; /* 2단계 진행 중 색상 */
+        }
+
 
         .step-indicator.active .step-text {
             color: var(--main-color);
             font-weight: 800;
+        }
+        .step-indicator.completed .step-text {
+             color: var(--main-color); /* 1단계 완료 시 파란색 유지 */
         }
 
         /* ------------------------------------------- */
@@ -200,7 +207,7 @@
             flex-wrap: wrap; 
             margin-bottom: var(--input-margin-bottom); 
             position: relative; 
-            /* ✅ 행 높이 입력창 중앙 정렬 */
+            /* ✅ 모든 항목 높이 중앙 배열 */
             align-items: center; 
         }
         
@@ -257,10 +264,9 @@
             min-width: 0;
         }
         
-        /* 일반 입력 필드는 가이드 텍스트를 왼쪽에 정렬 */
-        .input-field-wrapper input[type="text"]:not(#phone_display)::placeholder,
-        .input-field-wrapper input[type="text"]:not(#phone_display) {
-             text-align: left;
+        /* ✅ 휴대폰 번호 가이드 텍스트 왼쪽 정렬 (image_ebb5ff.png 복원) */
+        #phone {
+             text-align: left !important;
         }
         
         /* 드롭다운 아이콘 (역삼각형) */
@@ -270,7 +276,7 @@
         
         .select-group select {
             padding-right: 35px; /* 아이콘 공간 확보 */
-            text-align: center; /* 셀렉트 박스 텍스트 가운데 정렬 */
+            text-align: center; 
         }
         
         .select-group .select-box::after {
@@ -281,7 +287,7 @@
             transform: translateY(-50%);
             font-size: 0.8em;
             color: var(--main-color);
-            pointer-events: none; /* 클릭해도 select가 작동하도록 */
+            pointer-events: none; 
             z-index: 10;
         }
 
@@ -305,66 +311,73 @@
         }
         
         /* ------------------------------------------- */
-        /* 단위 통합 입력 필드 (차량번호, 운행거리) */
+        /* ✅ 단위 분리 입력 필드 (차량번호, 운행거리) - image_ebb5ff.png 복원 */
         /* ------------------------------------------- */
-        .unit-box-wrapper {
+        .split-unit-wrapper {
             display: flex;
-            align-items: stretch; /* 높이를 input과 맞춤 */
-            border: 1px solid var(--input-border);
-            border-radius: 8px;
-            background-color: white;
+            align-items: center;
+            gap: 0; 
             height: 48px;
             flex-grow: 1;
-            overflow: hidden; 
         }
 
-        /* 단위 필드 내의 입력 필드 */
-        .unit-box-wrapper input {
-            border: none;
-            height: 100%;
-            border-radius: 0;
-            background-color: transparent;
-            /* 차량번호와 운행거리 모두 가이드 텍스트는 가운데 정렬 */
-            text-align: center !important; 
-        }
-        
-        /* 고정 텍스트 (서울, 만 KM) */
-        .unit-text-fixed {
+        /* 고정 텍스트 박스 ('서울', '만 KM') */
+        .fixed-unit-box {
             flex-shrink: 0;
             line-height: 1;
             height: 100%;
             display: flex;
             align-items: center;
+            justify-content: center;
             font-size: 1.1em;
             font-weight: 800;
+            color: var(--unit-text-color); 
+            background-color: var(--unit-bg-color); 
+            border: 1px solid var(--input-border);
         }
 
-        /* 차량번호 ('서울' 고정) */
-        .unit-box-wrapper.car-number .unit-text-fixed {
-            padding: 0 10px; 
-            background-color: var(--seoul-unit-bg-color); 
-            color: white; 
-            border-right: 1px solid var(--seoul-unit-bg-color); 
-        }
-        
-        /* 운행거리 ('만 KM' 고정) */
-        .unit-box-wrapper.mileage .unit-text-fixed {
-            padding: 0 10px;
-            background-color: transparent; 
-            color: var(--text-color); 
-            border-left: 1px solid var(--input-border); 
+        /* 차량번호의 '서울' 박스 */
+        .car-number-unit {
+            width: 60px; /* 고정 너비 */
             border-right: none;
+            border-top-left-radius: 8px;
+            border-bottom-left-radius: 8px;
+            color: #FFF; /* 흰색 글자 */
+            background-color: #42A5F5; /* 파란색 배경 */
+            border-color: #42A5F5;
+        }
+
+        /* 운행거리의 '만 KM' 박스 */
+        .mileage-unit-box {
+            width: 70px; /* 고정 너비 */
+            border-left: none;
+            border-top-right-radius: 8px;
+            border-bottom-right-radius: 8px;
         }
         
-        /* ------------------------------------------- */
-        /* ✅ 휴대폰 번호 입력 필드 스타일 - 가운데 정렬 */
-        /* ------------------------------------------- */
-        #phone {
-             /* 010-0000-0000 포맷을 수용할 수 있도록 넉넉하게 패딩 조정 */
-             padding-left: 15px !important; 
-             padding-right: 15px !important;
-             /* ✅ 가이드 텍스트 및 입력값 모두 가운데 정렬 */
-             text-align: center !important; 
+        /* 분리된 입력 필드 스타일 */
+        .split-unit-wrapper input {
+            height: 100%;
+            border-radius: 0; 
+            flex-grow: 1;
+            min-width: 50px; 
+            padding: var(--input-padding-vertical) 10px;
+        }
+
+        /* 차량번호 입력 필드 */
+        .car-number-input {
+            border-left: none;
+            border-top-right-radius: 8px;
+            border-bottom-right-radius: 8px;
+            text-align: left; /* 가이드 텍스트 왼쪽 정렬 (image_ebb5ff.png 복원) */
+        }
+        
+        /* 운행거리 입력 필드 */
+        .mileage-input-field {
+            border-right: none;
+            border-top-left-radius: 8px;
+            border-bottom-left-radius: 8px;
+            text-align: center; /* 숫자 입력은 가운데 정렬 */
         }
 
         /* ------------------------------------------- */
@@ -469,9 +482,9 @@
                 flex-wrap: wrap; 
             }
             
-            .unit-box-wrapper input {
-                /* 모바일에서는 정렬을 가운데로 유지 */
-                text-align: center !important; 
+            .car-number-input {
+                /* 모바일에서도 왼쪽 정렬 유지 */
+                text-align: left !important; 
             }
         }
     </style>
@@ -492,12 +505,12 @@
                 </p>
                 
                 <div class="progress-bar-container">
-                    <div class="step-indicator active" id="indicator1">
-                        <div class="step-circle">1</div>
-                        <div class="step-text">연락정보</div>
+                    <div class="step-indicator active completed" id="indicator1">
+                        <div class="step-circle" style="background-color: var(--main-color);">1</div>
+                        <div class="step-text" style="color: var(--main-color); font-weight: 800;">연락정보</div>
                     </div>
                     
-                    <div class="step-indicator" id="indicator2">
+                    <div class="step-indicator active" id="indicator2">
                         <div class="step-circle">2</div>
                         <div class="step-text">차량정보</div>
                     </div>
@@ -521,7 +534,7 @@
                     <div class="input-group">
                         <label for="name">성함</label>
                         <div class="input-field-wrapper">
-                            <input type="text" id="name" name="entry.896750204" required placeholder="이름 기재">
+                            <input type="text" id="name" name="entry.896750204" required placeholder="예시 : 홍길동">
                         </div>
                     </div>
 
@@ -572,14 +585,15 @@
                     <div class="input-group">
                         <label for="carNumber">차량번호</label>
                         <div class="input-field-wrapper">
-                            <div class="unit-box-wrapper car-number">
-                                <span class="unit-text-fixed">서울</span>
+                            <div class="split-unit-wrapper">
+                                <span class="fixed-unit-box car-number-unit">서울</span>
                                 <input type="text" 
                                     id="carNumber" 
                                     name="entry.1494512143" 
                                     required 
                                     placeholder="30아1234" 
-                                    maxlength="7">
+                                    maxlength="7"
+                                    class="car-number-input">
                             </div>
                         </div>
                     </div>
@@ -608,15 +622,16 @@
                     <div class="input-group">
                         <label for="mileageInput">운행거리</label>
                         <div class="input-field-wrapper">
-                            <div class="unit-box-wrapper mileage">
+                            <div class="split-unit-wrapper">
                                 <input type="text" 
                                     id="mileageInput" 
                                     name="mileage_display"
                                     required 
                                     placeholder="숫자입력"
                                     inputmode="numeric" 
-                                    maxlength="4">
-                                <span class="unit-text-fixed mileage-unit">만 KM</span>
+                                    maxlength="4"
+                                    class="mileage-input-field">
+                                <span class="fixed-unit-box mileage-unit-box">만 KM</span>
                             </div>
                         </div>
                     </div>
@@ -903,7 +918,12 @@
         // 페이지 로드 시 초기화
         loadManufacturers();
         loadYearMonthSelectors();
-        updateStep(1);
+        // 2단계 시작 시, 1단계 완료(completed) 상태로 시작하도록 설정 (image_c0f31c.png 형태)
+        updateStep(2); 
+        document.getElementById('indicator1').classList.add('completed');
+        document.getElementById('indicator2').classList.add('active');
+        document.getElementById('step1').classList.remove('active');
+        document.getElementById('step2').classList.add('active');
     </script>
 </body>
 </html>
