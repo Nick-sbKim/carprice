@@ -140,8 +140,8 @@
         .input-group label {
             width: var(--label-width); 
             flex-shrink: 0;
-            font-size: 1.1em; /* ✅ 폰트 크기 통일 */
-            font-weight: 800; /* ✅ 폰트 굵기 통일 */
+            font-size: 1.1em; 
+            font-weight: 800; 
             color: var(--label-color); 
             white-space: nowrap; 
             line-height: var(--label-height); 
@@ -153,7 +153,7 @@
         /* ✅ 1단계: 성함/휴대폰 레이아웃 수정 */
         /* ------------------------------------------- */
         #step1 .input-group { 
-            display: flex; align-items: center; /* 라벨과 인풋 필드를 수직 중앙 정렬 */
+            display: flex; align-items: center; 
         }
         
         #step1 .input-group label {
@@ -162,37 +162,26 @@
              font-size: 1.25em; /* 1단계 라벨은 폰트 크기 유지 */
         }
         
+        /* ✅ 1단계: 입력 필드 Wrapper (삐져나감 해결 및 2단계 정렬 기준) */
         #step1 .input-field-wrapper {
             margin-left: 0; 
-            width: calc(100% - var(--label-width)); /* 라벨 너비만큼 제외 */
+            width: calc(100% - var(--label-width)); /* ✅ 라벨 너비만큼 제외하고 나머지 100% 사용 */
             flex-grow: 1; 
         }
-        /* 휴대폰 입력 필드 내부의 입력 공간 확보 (8자리 표시 가능하도록) */
-        #step1 .split-unit-wrapper input {
-             min-width: 100px; /* 8자리를 충분히 담을 수 있도록 최소 너비 확보 */
-             flex-grow: 1;
-        }
-
-        /* ------------------------------------------- */
-        /* ✅ 2단계: 필드 정렬 및 폰트 통일 */
-        /* ------------------------------------------- */
-        #step2 .input-group { 
-            display: flex; align-items: flex-start; 
-        }
         
-        #step2 .input-group label {
-             width: var(--label-width); line-height: var(--label-height); 
-        }
+        /* ------------------------------------------- */
+        /* ✅ 2단계: 필드 정렬 통일 */
+        /* ------------------------------------------- */
         
         /* ✅ 2단계 나머지 필드 컨테이너 (정렬 통일의 핵심) */
         #step2 .input-field-wrapper {
             margin-left: 0; 
-            width: calc(100% - var(--label-width)); /* 라벨 너비만큼 제외 */
+            width: calc(100% - var(--label-width)); /* ✅ 라벨 너비만큼 제외하고 나머지 100% 사용 */
             flex-grow: 1; 
             display: flex; flex-direction: column; gap: var(--input-gap); 
         }
         
-        /* ✅ 차량번호 그룹 (타이틀이 길어서 다음 줄로 내림) */
+        /* 차량번호 그룹 (타이틀이 길어서 다음 줄로 내림) */
         #step2 .input-group.car-number-group {
              flex-direction: column; 
              align-items: flex-start;
@@ -202,7 +191,7 @@
              margin-bottom: 5px; 
              line-height: 1.2;
              height: auto;
-             font-size: 1.1em; /* ✅ 폰트 크기 통일 */
+             font-size: 1.1em; 
         }
         /* 차량번호 입력 필드 컨테이너: 한 줄 전체 차지 */
         #step2 .input-group.car-number-group .input-field-wrapper {
@@ -232,7 +221,7 @@
         .data-input-field:focus,
         .data-input-field:not(:placeholder-shown) { background-color: var(--input-filled-bg); }
         
-        /* 굵은 검정 텍스트 스타일 복원 */
+        /* 굵은 검정 텍스트 스타일 */
         #name, .phone-input-field, .mileage-input-field, .car-number-split-wrapper input,
         .select-group select, .car-hangul-box select {
             font-weight: 700 !important; color: var(--text-color) !important;
@@ -242,7 +231,7 @@
         /* 단위 통합 입력 필드 (휴대폰, 운행거리) */
         /* ------------------------------------------- */
         .split-unit-wrapper {
-             display: flex; align-items: center; width: 100%; height: var(--label-height); 
+             display: flex; align-items: stretch; width: 100%; height: var(--label-height); 
              border: var(--unified-input-border); border-radius: 8px; overflow: hidden; 
         }
         
@@ -258,14 +247,14 @@
             height: 100%; border: none !important; border-radius: 0; flex-grow: 1;
             padding: var(--input-padding-vertical) 10px; 
             font-size: 1.1em; outline: none; box-shadow: none;
-            text-align: center; 
+            text-align: left; /* 성함/휴대폰은 왼쪽 정렬 */
+            min-width: 130px; /* ✅ 휴대폰 입력창 최소 너비 확보 */
         }
-        #step1 .split-unit-wrapper input { text-align: left !important; }
 
         .split-unit-wrapper .mileage-unit-box {
             width: 70px; color: var(--unit-text-color); background-color: var(--unit-bg-color); 
             border-left: 1px solid var(--input-border); 
-            border-right: none; /* 운행거리 단위는 끝에 있으므로 오른쪽 테두리 제거 */
+            border-right: none; 
         }
         
         /* ------------------------------------------- */
@@ -281,7 +270,7 @@
         .select-group .select-box.selected::after { opacity: 0; }
         
         /* ------------------------------------------- */
-        /* 차량번호 박스 레이아웃 (서울30아1234 스타일) */
+        /* 차량번호 박스 레이아웃 */
         /* ------------------------------------------- */
         .car-number-split-wrapper { display: flex; gap: 8px; align-items: stretch; width: 100%; }
         .car-number-split-wrapper .fixed-unit-button {
@@ -335,7 +324,9 @@
              #step1 .input-group, #step2 .input-group:not(.car-number-group) { flex-direction: column; align-items: flex-start; }
              #step1 .input-group .input-field-wrapper, #step2 .input-group:not(.car-number-group) .input-field-wrapper { width: 100%; }
              
-             #step1 .input-group label { font-size: 1.1em; } /* 모바일에서 1단계 라벨 크기 축소 */
+             #step1 .input-group label { font-size: 1.1em; } 
+
+             .split-unit-wrapper input { min-width: 100px; } /* 모바일에서 최소 너비 조금 줄임 */
 
             .car-number-split-wrapper { flex-wrap: nowrap; gap: 5px; }
             .car-number-split-wrapper .fixed-unit-button { width: 50px; font-size: 0.9em; padding: 0 5px; flex-grow: 0; }
@@ -511,8 +502,8 @@
                                     placeholder="숫자입력"
                                     inputmode="numeric" 
                                     maxlength="4"
-                                    class="mileage-input-field data-input-field">
-                                <span class="fixed-unit-box mileage-unit-box">만 KM</span>
+                                    class="mileage-input-field data-input-field" 
+                                    style="text-align: right; min-width: 0;"> <span class="fixed-unit-box mileage-unit-box">만 KM</span>
                             </div>
                         </div>
                     </div>
