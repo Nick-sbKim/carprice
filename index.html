@@ -3,19 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
-    <title>내 차 시세 확인하기 (단계 안내 복구)</title>
+    <title>내 차 시세 확인하기 (항목 폰트 크기 증가)</title>
     
     <style>
         /* 폰트 임포트: 나눔스퀘어 Bold 폰트 적용 */
         @import url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_two@1.0/NanumSquare.woff'); 
 
         /* ********************************************** */
-        /* ✅ 상수 정의 (요청에 따라 폰트/여백 수정) */
+        /* ✅ 상수 정의 (항목 이름 폰트 크기 수정) */
         :root {
-            --input-gap: 5px; /* 입력란 간격 축소 */
-            --input-padding-vertical: 8px; /* 입력란 세로 여백 축소 */
+            --input-gap: 5px; 
+            --input-padding-vertical: 8px; 
             --mobile-breakpoint: 600px; 
-            --input-margin-bottom: 20px; /* 그룹 하단 여백 축소 */
+            --input-margin-bottom: 20px; 
             
             /* --- 🎨 Theme Colors --- */
             --main-color: #1976D2;     
@@ -34,18 +34,15 @@
             --input-default-bg: #E3F2FD; 
             --input-filled-bg: white;
             
-            --label-height: 40px; /* 입력 필드 높이 조정 */
-            
-            /* 휴대폰 010- 박스 크기 (고정 60px) */
+            --label-height: 40px; 
             --phone-unit-width: 60px; 
-            
-            /* 라벨 기본 너비 (100px) */
             --label-width: 100px; 
             
-            /* ✅ 폰트 크기 및 굵기 조정 */
-            --base-font-size: 1em; /* 폰트 크기 축소 */
-            --input-text-font-weight: 500; /* 입력 필드 폰트 굵기를 얇게 */
-            --label-font-weight: 700; /* 라벨 폰트 굵기 유지 */
+            /* ✅ 항목 이름 폰트 크기 증가 (1.1em로 조정) */
+            --label-font-size: 1.1em; 
+            --base-font-size: 0.95em; /* 입력 필드 폰트 크기는 조금 더 작게 유지 */
+            --input-text-font-weight: 500; 
+            --label-font-weight: 700; 
         }
         /* ********************************************** */
 
@@ -64,7 +61,7 @@
             overflow-y: auto; 
         }
 
-        /* 컨테이너 및 섹션 스타일 (생략) */
+        /* 컨테이너 및 섹션 스타일 */
         .container { background-color: rgba(255, 255, 255, 0.95); padding: 0; border-radius: 15px; width: 100%; max-width: 500px; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1); border: 2px solid var(--light-border-color); overflow: hidden; }
         .header-content { padding: 25px var(--content-padding) 10px; }
         h1 { text-align: center; margin-bottom: 15px; font-size: 1.7em; font-weight: 800; color: var(--main-color); line-height: 1.2; }
@@ -75,7 +72,7 @@
         .section-title { font-size: 1.2em; font-weight: 800; color: var(--label-color); margin-bottom: 25px; padding-bottom: 5px; border-bottom: 1px dashed #BDBDBD; }
         .input-group { display: flex; flex-wrap: wrap; margin-bottom: var(--input-margin-bottom); position: relative; align-items: center; }
         
-        /* ✅ 단계별 진행바 스타일 (복구) */
+        /* 단계별 진행바 스타일 (유지) */
         .progress-bar-container { padding: 0 var(--content-padding) 20px; display: flex; justify-content: space-between; align-items: flex-start; position: relative; }
         .step-indicator { flex: 1; display: flex; flex-direction: column; align-items: center; position: relative; z-index: 20; }
         .step-indicator:first-child::after { content: ''; position: absolute; top: 16px; left: calc(50% + 15px); width: calc(100% - 30px); height: 4px; background-color: #CFD8DC; z-index: 5; transform: translateY(-50%); }
@@ -87,11 +84,11 @@
         .step-indicator.active .step-circle { background-color: var(--main-color); }
         .step-indicator.active .step-text { color: var(--main-color); font-weight: 800; }
         
-        /* 모든 라벨 스타일 */
+        /* ✅ 모든 라벨 스타일 (폰트 크기 변경) */
         .input-group label {
             width: var(--label-width); 
             flex-shrink: 0;
-            font-size: var(--base-font-size); 
+            font-size: var(--label-font-size); /* ✅ 1.1em 적용 */
             font-weight: var(--label-font-weight); 
             color: var(--label-color); 
             white-space: nowrap; 
@@ -118,7 +115,7 @@
             border: 1px solid var(--input-border); 
             border-radius: 8px; 
             box-sizing: border-box; 
-            font-size: var(--base-font-size); 
+            font-size: var(--base-font-size); /* ✅ 0.95em 적용 (상대적으로 작게 유지) */
             font-weight: var(--input-text-font-weight); 
             color: var(--text-color); 
             -webkit-appearance: none; 
@@ -139,7 +136,15 @@
         
         /* 1단계 휴대폰번호 / 2단계 차량번호 그룹 스타일 (라벨이 위로 가는 그룹) */
         .input-group.stack-label-group { flex-direction: column; align-items: flex-start; }
-        .input-group.stack-label-group label { width: 100%; line-height: 1.2; height: auto; margin-bottom: 5px; align-items: flex-start; padding: 0; }
+        .input-group.stack-label-group label { 
+            width: 100%; 
+            line-height: 1.2; 
+            height: auto; 
+            margin-bottom: 5px; 
+            align-items: flex-start; 
+            padding: 0; 
+            font-size: var(--label-font-size); /* ✅ 폰트 크기 유지 */
+        }
         .input-group.stack-label-group .input-field-wrapper { width: 100%; margin-left: 0; }
         
         /* 단위 통합 입력 필드 (휴대폰, 운행거리) */
@@ -167,7 +172,7 @@
             color: var(--label-color); 
             width: 45px; 
             padding: 0 5px; 
-            font-size: var(--base-font-size);
+            font-size: var(--base-font-size); /* 입력 필드 폰트 크기 유지 */
             line-height: 1; 
             flex-shrink: 0;
         }
@@ -208,9 +213,18 @@
         /* 2단계 셀렉트 박스 텍스트 스타일 */
         #step2 select { font-weight: var(--input-text-font-weight); } 
 
-        /* 모바일 반응형 디자인 (생략) */
+        /* 모바일 반응형 디자인 (라벨 폰트 크기 조정) */
         @media (max-width: var(--mobile-breakpoint)) {
-            .input-group label { position: static; width: 100%; font-size: var(--base-font-size); margin-bottom: 5px; line-height: 1.2; height: auto; transform: none; padding: 0; }
+            .input-group label { 
+                position: static; 
+                width: 100%; 
+                font-size: var(--label-font-size); /* ✅ 모바일에서도 크게 */
+                margin-bottom: 5px; 
+                line-height: 1.2; 
+                height: auto; 
+                transform: none; 
+                padding: 0; 
+            }
             .input-group.stack-label-group label { width: 100%; }
              .input-field-wrapper, #step1 .input-field-wrapper, #step2 .input-field-wrapper { margin-left: 0; width: 100%; flex-wrap: wrap; }
              .input-group { flex-direction: column; align-items: flex-start; }
@@ -225,7 +239,7 @@
              .split-unit-wrapper input { min-width: 70px; } 
         }
 
-        /* 기타 스타일 (생략) */
+        /* 기타 스타일 (유지) */
         .data-input-field { background-color: var(--input-default-bg); }
         .data-input-field:focus,
         .data-input-field:not(:placeholder-shown) { background-color: var(--input-filled-bg); }
