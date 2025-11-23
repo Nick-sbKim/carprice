@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
-    <title>내 차 시세 확인하기 (레이아웃 수정)</title>
+    <title>내 차 시세 확인하기 (레이아웃 최종 수정)</title>
     
     <style>
         /* 폰트 임포트: 나눔스퀘어 Bold 폰트 적용 */
@@ -51,8 +51,11 @@
             /* ✅ 라벨 텍스트 높이 (세로 정렬 기준) */
             --label-height: 48px;
             
-            /* ✅ 휴대폰 010- 박스 크기 수정 (80px -> 60px) */
+            /* ✅ 휴대폰 010- 박스 크기 (60px) */
             --phone-unit-width: 60px; 
+            
+            /* ✅ 라벨 기본 너비 */
+            --label-width: 100px; 
         }
         /* ********************************************** */
 
@@ -135,7 +138,7 @@
         
         /* 모든 라벨 스타일 */
         .input-group label {
-            width: 100px; 
+            width: var(--label-width); 
             flex-shrink: 0;
             font-size: 1.25em; font-weight: 800; color: var(--label-color); 
             white-space: nowrap; line-height: var(--label-height); 
@@ -149,47 +152,43 @@
         /* ✅ 1단계: 성함/휴대폰 레이아웃 수정 */
         /* ------------------------------------------- */
         #step1 .input-group { 
-            /* 가로 정렬을 위한 기본 설정 */
-            display: flex; align-items: center; 
+            display: flex; align-items: center; /* 라벨과 인풋 필드를 수직 중앙 정렬 */
         }
         
-        /* 1단계 라벨 정렬 복구: width 유지, flex-shrink 0 */
         #step1 .input-group label {
-             width: 100px; line-height: var(--label-height); 
-             position: static; 
+             width: var(--label-width); 
+             line-height: var(--label-height); 
              height: auto; 
         }
         
-        /* 1단계 입력 필드 컨테이너: 나머지 공간 차지 */
         #step1 .input-field-wrapper {
             margin-left: 0; 
-            width: calc(100% - 100px); /* 100px 만큼 제외 */
+            width: calc(100% - var(--label-width)); /* 라벨 너비만큼 제외 */
             flex-grow: 1; 
         }
 
         /* ------------------------------------------- */
-        /* ✅ 2단계: 차량번호 레이아웃 수정 (다음 줄로 내리기) */
+        /* ✅ 2단계: 필드 정렬 통일 (차량번호 다음 줄로 내리기 유지) */
         /* ------------------------------------------- */
         #step2 .input-group { 
-            /* 모든 2단계 그룹은 가로 정렬 유지 */
-            display: flex; align-items: flex-start; 
+            display: flex; align-items: flex-start; /* 기본은 라벨 기준 정렬 */
         }
         
-        /* 2단계 라벨 정렬 복구: width 유지, flex-shrink 0 */
         #step2 .input-group label {
-             width: 100px; line-height: var(--label-height); 
+             width: var(--label-width); line-height: var(--label-height); 
         }
         
         /* ✅ 차량번호 그룹 (레이블을 다음 줄로 내림) */
         #step2 .input-group.car-number-group {
-             flex-direction: column; /* 세로 정렬로 변경 */
+             flex-direction: column; 
              align-items: flex-start;
         }
         #step2 .input-group.car-number-group label {
-             width: 100%; /* 라벨이 한 줄 전체 차지 */
-             margin-bottom: 5px; /* 라벨 아래 여백 */
+             width: 100%; 
+             margin-bottom: 5px; 
              line-height: 1.2;
              height: auto;
+             font-size: 1.1em; /* 타이틀 변경으로 크기 조정 */
         }
         /* 차량번호 입력 필드 컨테이너: 한 줄 전체 차지 */
         #step2 .input-group.car-number-group .input-field-wrapper {
@@ -202,7 +201,7 @@
         /* 2단계 나머지 필드 컨테이너 (차종, 출고시기, 운행거리) */
         #step2 .input-field-wrapper {
             margin-left: 0; 
-            width: calc(100% - 100px); 
+            width: calc(100% - var(--label-width)); /* 라벨 너비만큼 제외 */
             flex-grow: 1; 
             display: flex; flex-direction: column; gap: var(--input-gap); 
         }
@@ -234,23 +233,21 @@
         }
         
         /* ------------------------------------------- */
-        /* ✅ 휴대폰 단위 통합 입력 필드 수정 */
+        /* 휴대폰 단위 통합 입력 필드 */
         /* ------------------------------------------- */
         .split-unit-wrapper {
              display: flex; align-items: center; width: 100%; height: var(--label-height); 
              border: var(--unified-input-border); border-radius: 8px; overflow: hidden; 
         }
         
-        /* '010 -' 고정 단위 박스 스타일 (width 수정) */
         .phone-unit-box {
-             width: var(--phone-unit-width); /* 60px로 수정 */
+             width: var(--phone-unit-width); 
              color: var(--car-unit-text); background-color: var(--car-unit-bg); 
              padding: 0 5px; height: 100%; display: flex; align-items: center; 
              justify-content: center; font-size: 1.1em; font-weight: 800; flex-shrink: 0;
              border-right: 1px solid var(--input-border);
         }
         
-        /* 내부 입력 필드 공통 스타일 */
         .split-unit-wrapper input {
             height: 100%; border: none !important; border-radius: 0; flex-grow: 1;
             min-width: 50px; padding: var(--input-padding-vertical) 10px; 
@@ -259,7 +256,6 @@
         }
         #step1 .split-unit-wrapper input { text-align: left !important; }
 
-        /* '만 KM' 단위 박스 */
         .split-unit-wrapper .mileage-unit-box {
             width: 70px; color: var(--unit-text-color); background-color: var(--unit-bg-color); 
             border-left: 1px solid var(--input-border); padding: 0 5px; height: 100%; 
@@ -322,7 +318,7 @@
             box-shadow: 0 4px 10px rgba(25, 118, 210, 0.4); 
         }
 
-        /* 모바일 반응형 디자인 복구 */
+        /* 모바일 반응형 디자인 */
         @media (max-width: var(--mobile-breakpoint)) {
             .input-group label {
                 position: static; width: 100%; font-size: 1.1em; margin-bottom: 5px; line-height: 1.2; transform: none; padding: 0;
@@ -423,26 +419,8 @@
                  <div class="step-content">
                     <div class="section-title">2. 차량정보 입력</div>
                     
-                    <div class="input-group">
-                        <label>차종선택</label> 
-                        <div class="input-field-wrapper">
-                            <div class="select-group">
-                                <div class="select-box">
-                                    <select id="manufacturerSelect" required>
-                                        <option value="" disabled selected>제조사</option> 
-                                    </select>
-                                </div>
-                                <div class="select-box">
-                                    <select id="carModelSelect" required disabled>
-                                        <option value="" disabled selected>차종</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
                     <div class="input-group car-number-group">
-                        <label>차량번호</label>
+                        <label>차량번호 입력 (예시 : 서울30아1234)</label>
                         <div class="input-field-wrapper">
                             <div class="car-number-split-wrapper">
                                 <button type="button" class="fixed-unit-button">서울</button>
@@ -477,7 +455,24 @@
                             </div>
                         </div>
                     </div>
-                    
+
+                    <div class="input-group">
+                        <label>차종선택</label> 
+                        <div class="input-field-wrapper">
+                            <div class="select-group">
+                                <div class="select-box">
+                                    <select id="manufacturerSelect" required>
+                                        <option value="" disabled selected>제조사</option> 
+                                    </select>
+                                </div>
+                                <div class="select-box">
+                                    <select id="carModelSelect" required disabled>
+                                        <option value="" disabled selected>차종</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     
                     <div class="input-group">
                         <label>출고시기</label>
