@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
-    <title>내 차 시세 확인하기 (레이아웃 최적화)</title>
+    <title>내 차 시세 확인하기 (단계 안내 복구)</title>
     
     <style>
         /* 폰트 임포트: 나눔스퀘어 Bold 폰트 적용 */
@@ -75,6 +75,18 @@
         .section-title { font-size: 1.2em; font-weight: 800; color: var(--label-color); margin-bottom: 25px; padding-bottom: 5px; border-bottom: 1px dashed #BDBDBD; }
         .input-group { display: flex; flex-wrap: wrap; margin-bottom: var(--input-margin-bottom); position: relative; align-items: center; }
         
+        /* ✅ 단계별 진행바 스타일 (복구) */
+        .progress-bar-container { padding: 0 var(--content-padding) 20px; display: flex; justify-content: space-between; align-items: flex-start; position: relative; }
+        .step-indicator { flex: 1; display: flex; flex-direction: column; align-items: center; position: relative; z-index: 20; }
+        .step-indicator:first-child::after { content: ''; position: absolute; top: 16px; left: calc(50% + 15px); width: calc(100% - 30px); height: 4px; background-color: #CFD8DC; z-index: 5; transform: translateY(-50%); }
+        .step-indicator.active:first-child::after, .step-indicator.completed:first-child::after { background-color: var(--main-color); }
+        .step-circle { width: 32px; height: 32px; border-radius: 50%; background-color: #CFD8DC; color: white; display: flex; justify-content: center; align-items: center; font-weight: 700; font-size: 1.1em; z-index: 10; position: relative; }
+        .step-text { margin-top: 8px; font-size: 0.9em; color: #757575; font-weight: 500; white-space: nowrap; }
+        .step-indicator.completed .step-circle { background-color: var(--main-color); }
+        .step-indicator.completed .step-text { color: var(--main-color); }
+        .step-indicator.active .step-circle { background-color: var(--main-color); }
+        .step-indicator.active .step-text { color: var(--main-color); font-weight: 800; }
+        
         /* 모든 라벨 스타일 */
         .input-group label {
             width: var(--label-width); 
@@ -101,13 +113,13 @@
         .input-field-wrapper input[type="text"],
         .input-field-wrapper select {
             width: 100%; 
-            padding: var(--input-padding-vertical) 10px; /* 내부 여백 축소 */
+            padding: var(--input-padding-vertical) 10px; 
             height: var(--label-height); 
             border: 1px solid var(--input-border); 
             border-radius: 8px; 
             box-sizing: border-box; 
             font-size: var(--base-font-size); 
-            font-weight: var(--input-text-font-weight); /* ✅ 얇은 폰트 적용 */
+            font-weight: var(--input-text-font-weight); 
             color: var(--text-color); 
             -webkit-appearance: none; 
             -moz-appearance: none; 
@@ -118,19 +130,14 @@
             transition: background-color 0.3s;
         }
 
-        /* ------------------------------------------- */
-        /* ✅ 1단계: 가운데 정렬 요청 반영 */
-        /* ------------------------------------------- */
-        /* 1단계 성함/전화번호 입력 텍스트 가운데 정렬 */
+        /* 1단계: 가운데 정렬 요청 반영 */
         #step1 input[type="text"],
         #step1 .split-unit-wrapper input {
-            text-align: center !important; /* ✅ 가운데 정렬 */
-            font-weight: var(--input-text-font-weight); /* ✅ 얇은 폰트 적용 */
+            text-align: center !important; 
+            font-weight: var(--input-text-font-weight); 
         }
         
-        /* ------------------------------------------- */
         /* 1단계 휴대폰번호 / 2단계 차량번호 그룹 스타일 (라벨이 위로 가는 그룹) */
-        /* ------------------------------------------- */
         .input-group.stack-label-group { flex-direction: column; align-items: flex-start; }
         .input-group.stack-label-group label { width: 100%; line-height: 1.2; height: auto; margin-bottom: 5px; align-items: flex-start; padding: 0; }
         .input-group.stack-label-group .input-field-wrapper { width: 100%; margin-left: 0; }
@@ -143,12 +150,10 @@
         .mileage-input-field { text-align: right !important; }
         .split-unit-wrapper .mileage-unit-box { width: 70px; color: var(--unit-text-color); background-color: var(--unit-bg-color); border-left: 1px solid var(--input-border); border-right: none; }
         
-        /* ------------------------------------------- */
-        /* ✅ 2단계: 차량번호 입력란 최적화 요청 반영 */
-        /* ------------------------------------------- */
+        /* 2단계: 차량번호 입력란 최적화 요청 반영 */
         .car-number-split-wrapper { 
             display: flex; 
-            gap: 5px; /* ✅ 입력란 간격 축소 */
+            gap: 5px; 
             align-items: stretch; 
             width: 100%; 
             height: var(--label-height); 
@@ -156,12 +161,12 @@
         
         /* '서울' 버튼 스타일 조정 */
         .car-number-split-wrapper .fixed-unit-button {
-            background-color: transparent; /* ✅ 배경 제거 */
-            border: none; /* ✅ 테두리 제거 */
-            font-weight: 700; /* ✅ 글자 굵게 유지 */
-            color: var(--label-color); /* 폰트 색상 */
-            width: 45px; /* ✅ 너비 축소 */
-            padding: 0 5px; /* 내부 여백 최소화 */
+            background-color: transparent; 
+            border: none; 
+            font-weight: 700; 
+            color: var(--label-color); 
+            width: 45px; 
+            padding: 0 5px; 
             font-size: var(--base-font-size);
             line-height: 1; 
             flex-shrink: 0;
@@ -170,9 +175,9 @@
         /* 차량번호 숫자 입력란 */
         .car-number-split-wrapper input.num-part {
              font-size: var(--base-font-size); 
-             padding: var(--input-padding-vertical) 5px; /* ✅ 내부 여백 최소화 */
+             padding: var(--input-padding-vertical) 5px; 
              text-align: center; 
-             font-weight: var(--input-text-font-weight); /* ✅ 얇은 폰트 적용 */
+             font-weight: var(--input-text-font-weight); 
         }
         
         /* 한글 선택 박스 */
@@ -183,43 +188,37 @@
         } 
         .car-number-split-wrapper .car-hangul-box select { 
             font-size: var(--base-font-size) !important; 
-            padding-left: 5px; /* ✅ 내부 여백 최소화 */
+            padding-left: 5px; 
             text-align: center;
-            font-weight: var(--input-text-font-weight); /* ✅ 얇은 폰트 적용 */
+            font-weight: var(--input-text-font-weight); 
         } 
         
         /* 한글 선택 박스 드롭다운 아이콘 위치 조정 */
-        .car-hangul-box::after { right: 5px; } /* ✅ 아이콘 위치 조정 */
+        .car-hangul-box::after { right: 5px; } 
         
         #carNumPart1 { flex: 2; max-width: 60px; } 
         #carNumPart2 { flex: 3; min-width: 80px; } 
 
-        /* ------------------------------------------- */
         /* 2단계: 차종선택 / 출고시기 가로 정렬 (1행에 2개의 셀렉트 박스 세트) */
-        /* ------------------------------------------- */
         .input-field-wrapper .select-group { display: flex; width: 100%; gap: 10px; } 
         .input-group.side-by-side-input .input-field-wrapper { display: flex; gap: 10px; width: calc(100% - var(--label-width)); }
         .input-group.side-by-side-input .select-group { flex: 1; min-width: 0; } 
         .input-group.side-by-side-input .select-group .select-box { flex: 1; position: relative; }
         
         /* 2단계 셀렉트 박스 텍스트 스타일 */
-        #step2 select { font-weight: var(--input-text-font-weight); } /* ✅ 얇은 폰트 적용 */
+        #step2 select { font-weight: var(--input-text-font-weight); } 
 
-        /* ------------------------------------------- */
         /* 모바일 반응형 디자인 (생략) */
-        /* ------------------------------------------- */
         @media (max-width: var(--mobile-breakpoint)) {
             .input-group label { position: static; width: 100%; font-size: var(--base-font-size); margin-bottom: 5px; line-height: 1.2; height: auto; transform: none; padding: 0; }
             .input-group.stack-label-group label { width: 100%; }
-             .input-field-wrapper, 
-             #step1 .input-field-wrapper, 
-             #step2 .input-field-wrapper { margin-left: 0; width: 100%; flex-wrap: wrap; }
+             .input-field-wrapper, #step1 .input-field-wrapper, #step2 .input-field-wrapper { margin-left: 0; width: 100%; flex-wrap: wrap; }
              .input-group { flex-direction: column; align-items: flex-start; }
              .input-group.side-by-side-input .input-field-wrapper { flex-direction: column; gap: 0; }
              .input-group.side-by-side-input .select-group { margin-bottom: 15px; } 
              .split-unit-wrapper { width: 100%; }
-             .car-number-split-wrapper { flex-wrap: nowrap; gap: 5px; } /* ✅ 모바일 간격 축소 */
-             .car-number-split-wrapper .fixed-unit-button { width: 45px; font-size: var(--base-font-size); padding: 0 5px; flex-grow: 0; } /* ✅ 모바일 너비/여백 축소 */
+             .car-number-split-wrapper { flex-wrap: nowrap; gap: 5px; } 
+             .car-number-split-wrapper .fixed-unit-button { width: 45px; font-size: var(--base-font-size); padding: 0 5px; flex-grow: 0; } 
              #carNumPart1 { max-width: none; flex: 2.5; } 
              .car-number-split-wrapper .car-hangul-box { max-width: none; flex: 2; }
              #carNumPart2 { max-width: none; flex: 4; } 
@@ -231,7 +230,6 @@
         .data-input-field:focus,
         .data-input-field:not(:placeholder-shown) { background-color: var(--input-filled-bg); }
         
-        /* ✅ 모든 입력 필드 텍스트 폰트 굵기 조정 */
         #name, .phone-input-field, .mileage-input-field, .car-number-split-wrapper input,
         .select-group select, .car-hangul-box select {
             font-weight: var(--input-text-font-weight); 
@@ -265,6 +263,7 @@
             <div class="header-content">
                 <h1>내 차 시세 확인하기</h1>
                 <p class="description">2단계만 완료하시면 견적 요청이 완료됩니다.</p>
+                
                 <div class="progress-bar-container">
                     <div class="step-indicator active" id="indicator1">
                         <div class="step-circle">1</div>
