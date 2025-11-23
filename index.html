@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
-    <title>내 차 시세 확인하기 (레이아웃 최종 안정화)</title>
+    <title>내 차 시세 확인하기 (단계 안내 복구 및 최종 디자인)</title>
     
     <style>
         /* 폰트 임포트: 나눔스퀘어 Bold 폰트 적용 */
@@ -70,15 +70,74 @@
         .description { text-align: center; font-size: 0.9em; color: var(--secondary-text-color); margin-bottom: 25px; padding: 0 5px; font-weight: 500; line-height: 1.6; }
         .step { display: none; }
         .step.active { display: block; }
-        /* 운행거리까지 통일성을 위해 input-margin-bottom을 제거하고 step-content에 아래쪽 패딩을 추가했습니다. */
         .step-content { padding: 20px var(--content-padding); margin: 0 var(--content-padding) 20px var(--content-padding); border-radius: 10px; border: 1px solid var(--input-border); background-color: #F8F8F8; } 
         .section-title { font-size: 1.2em; font-weight: 800; color: var(--label-color); margin-bottom: 25px; padding-bottom: 5px; border-bottom: 1px dashed #BDBDBD; }
         
+        /* ----------------------------------- */
+        /* ✅ 단계 안내 바 스타일 (복구) */
+        /* ----------------------------------- */
+        .progress-bar-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            margin-bottom: 30px;
+            padding: 0 20px;
+        }
+        .progress-bar-container::before {
+            content: '';
+            position: absolute;
+            top: 15px; 
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: calc(100% - 80px); 
+            height: 4px;
+            background-color: var(--light-border-color); 
+            z-index: 0;
+        }
+        .step-indicator {
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            color: var(--secondary-text-color);
+            font-size: 0.9em;
+            font-weight: 600;
+        }
+        .step-circle {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #EEEEEE;
+            color: #757575;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 5px;
+            font-weight: 800;
+            border: 2px solid #BDBDBD;
+            transition: all 0.3s;
+        }
+        .step-indicator.active .step-circle {
+            background-color: var(--main-color);
+            color: white;
+            border-color: var(--main-color);
+            box-shadow: 0 0 0 5px rgba(25, 118, 210, 0.2);
+        }
+        .step-indicator.active .step-text {
+            color: var(--main-color);
+        }
+        .step-indicator.completed .step-circle {
+            background-color: #E0E0E0;
+            color: white;
+            border-color: #E0E0E0;
+        }
+        /* ----------------------------------- */
+
         /* 기본 인풋 그룹 (데스크톱: 라벨-필드 가로 정렬) */
         .input-group { 
             display: flex; 
             flex-wrap: wrap; 
-            margin-bottom: var(--input-margin-bottom); /* 모든 항목에 동일 적용 */
+            margin-bottom: var(--input-margin-bottom); 
             position: relative; 
             align-items: center; 
         }
@@ -107,17 +166,17 @@
             align-items: flex-start; 
         }
         .input-group.stack-label-group label { 
-            width: 100%; /* 라벨 너비 100% */
+            width: 100%; 
             line-height: 1.2; 
             height: auto; 
             margin-bottom: 5px; 
-            align-items: center; /* ✅ 수직 정렬 */
-            text-align: center; /* ✅ 텍스트 가운데 정렬 */
+            align-items: center; /* 수직 정렬 */
+            text-align: center; /* 텍스트 가운데 정렬 */
             padding: 0; 
             font-size: var(--label-font-size); 
         }
         .input-group.stack-label-group .input-field-wrapper { 
-            width: 100%; /* 필드 너비 100% */
+            width: 100%; 
             margin-left: 0; 
         }
 
@@ -145,9 +204,12 @@
             font-size: var(--base-font-size); 
             font-weight: var(--input-text-font-weight); 
             color: var(--text-color); 
+            
+            /* ✅ 드롭다운 아이콘 숨기기 및 배경색 설정 */
             -webkit-appearance: none; 
             -moz-appearance: none; 
             appearance: none; 
+            
             min-width: 0;
             text-align: left; 
             background-color: var(--input-default-bg); 
@@ -166,15 +228,7 @@
              background-color: var(--input-filled-bg) !important; 
         }
 
-
-        /* 1단계: 가운데 정렬 적용 */
-        #step1 input[type="text"],
-        #step1 .split-unit-wrapper input {
-            text-align: center !important; 
-            font-weight: var(--input-text-font-weight); 
-        }
-        
-        /* 돋보기 모드 스타일 */
+        /* 돋보기 모드 스타일 (유지) */
         .data-input-field:focus {
             font-size: 1.5em !important; 
             padding: 12px 10px !important; 
@@ -184,67 +238,18 @@
             line-height: 1.2em !important; 
         }
         
-        .split-unit-wrapper input.data-input-field:focus {
-            padding: 12px 10px !important;
-        }
-        
-        /* 단위 통합 입력 필드 (전화번호, 운행거리) - 중앙 정렬 보강 */
-        .split-unit-wrapper { 
-            display: flex; 
-            align-items: center; 
-            width: 100%; 
-            border: var(--unified-input-border); 
-            border-radius: 8px; 
-            overflow: hidden; 
-            height: auto; 
-        }
-        
-        /* 단위 박스 공통 */
-        .phone-unit-box, .mileage-unit-box {
-            height: var(--label-height); 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            font-weight: 800; 
-            flex-shrink: 0; 
-            transition: all 0.3s; 
-            padding: 0 8px; 
-        }
-        .phone-unit-box { 
-            width: auto; 
-            color: var(--car-unit-text); 
-            background-color: var(--car-unit-bg); 
-            font-size: var(--label-font-size); 
-            border-right: 1px solid var(--input-border); 
-        }
-        .split-unit-wrapper .mileage-unit-box { 
-            width: 70px; 
-            color: var(--unit-text-color); 
-            background-color: var(--unit-bg-color); 
-            border-left: 1px solid var(--input-border); 
-        }
+        /* 단위 통합 입력 필드 (전화번호, 운행거리) - 스타일 유지 (중략) */
+        .split-unit-wrapper { display: flex; align-items: center; width: 100%; border: var(--unified-input-border); border-radius: 8px; overflow: hidden; height: auto; }
+        .phone-unit-box, .mileage-unit-box { height: var(--label-height); display: flex; align-items: center; justify-content: center; font-weight: 800; flex-shrink: 0; transition: all 0.3s; padding: 0 8px; }
+        .phone-unit-box { width: auto; color: var(--car-unit-text); background-color: var(--car-unit-bg); font-size: var(--label-font-size); border-right: 1px solid var(--input-border); }
+        .split-unit-wrapper .mileage-unit-box { width: 70px; color: var(--unit-text-color); background-color: var(--unit-bg-color); border-left: 1px solid var(--input-border); }
         .split-unit-wrapper:has(input:focus) .phone-unit-box,
-        .split-unit-wrapper:has(input:focus) .mileage-unit-box {
-             height: auto; 
-             padding: 12px 8px; 
-        }
-        .split-unit-wrapper input { 
-            width: auto; 
-            flex-grow: 1; 
-            height: 100%; 
-            border: none !important; 
-            border-radius: 0; 
-            padding: var(--input-padding-vertical) 10px; 
-            font-size: var(--base-font-size); 
-            outline: none; 
-            box-shadow: none; 
-            min-width: 100px;
-        }
-        
+        .split-unit-wrapper:has(input:focus) .mileage-unit-box { height: auto; padding: 12px 8px; }
+        .split-unit-wrapper input { width: auto; flex-grow: 1; height: 100%; border: none !important; border-radius: 0; padding: var(--input-padding-vertical) 10px; font-size: var(--base-font-size); outline: none; box-shadow: none; min-width: 100px; }
         .mileage-input-field { text-align: right !important; }
 
         
-        /* 2단계: 차량번호 입력란 최적화 */
+        /* 2단계: 차량번호 입력란 최적화 (중략) */
         .car-number-split-wrapper { 
             display: flex; 
             gap: 5px; 
@@ -252,16 +257,21 @@
             width: 100%; 
             height: var(--label-height); 
         }
-        .car-number-split-wrapper .fixed-unit-button {
-            background-color: transparent; 
+        .car-number-split-wrapper .fixed-unit-button { 
+            background-color: var(--car-unit-bg); 
+            color: var(--car-unit-text); 
             border: none; 
+            border-radius: 8px; 
             font-weight: 700; 
-            color: var(--label-color); 
             width: 45px; 
+            height: 100%;
             padding: 0 5px; 
             font-size: var(--base-font-size); 
             line-height: 1.2em; 
             flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .car-number-split-wrapper input.num-part {
              font-size: var(--base-font-size); 
@@ -271,47 +281,47 @@
              line-height: 1.2em; 
         }
         
-        .car-number-split-wrapper .car-hangul-box { 
+        /* ✅ Select Box에 드롭다운 아이콘 추가 (가상 요소) */
+        .select-group .select-box,
+        .car-hangul-box { 
             position: relative; 
-            flex: 2; 
-            min-width: 50px; 
-        } 
-        .car-number-split-wrapper .car-hangul-box select { 
-            font-size: var(--base-font-size) !important; 
-            padding-left: 5px; 
-            text-align: center;
-            font-weight: var(--input-text-font-weight); 
-            line-height: 1.2em; 
-        } 
+        }
+        .select-group .select-box::after,
+        .car-hangul-box::after {
+            content: '▼'; 
+            position: absolute; 
+            top: 50%; 
+            right: 10px; 
+            transform: translateY(-50%); 
+            font-size: 0.8em; 
+            color: var(--main-color); /* 메인 컬러 사용 */
+            pointer-events: none; 
+            z-index: 10; 
+        }
+        /* 차량번호 문자 선택 박스는 더 작게 조정 */
+        .car-hangul-box::after {
+            right: 5px;
+            color: var(--label-color);
+        }
         
-        .car-hangul-box::after { right: 5px; } 
-        
+        /* 선택 완료 시 아이콘 숨기기 (선택적) */
+        .select-group .select-box.selected::after,
+        .car-hangul-box.selected::after { 
+            opacity: 0; 
+        }
+
         #carNumPart1 { flex: 2; max-width: 60px; } 
         #carNumPart2 { flex: 3; min-width: 80px; } 
+        .car-number-split-wrapper .car-hangul-box { flex: 2; min-width: 50px; } 
 
         
-        /* 모바일 반응형 디자인 */
+        /* 모바일 반응형 디자인 (유지) */
         @media (max-width: var(--mobile-breakpoint)) {
-            .input-group:not(.stack-label-group) { 
-                flex-direction: column; 
-                align-items: flex-start; 
-            }
-            .input-group:not(.stack-label-group) label { 
-                width: 100%; 
-                margin-bottom: 5px; 
-                line-height: 1.2; 
-                height: auto; 
-                padding: 0; 
-            }
-            .input-group:not(.stack-label-group) .input-field-wrapper { 
-                width: 100%; 
-            }
-            .flex-row-wrap {
-                flex-wrap: wrap; 
-            }
-            .flex-row-wrap .select-group {
-                width: calc(50% - 5px); 
-            }
+            .input-group:not(.stack-label-group) { flex-direction: column; align-items: flex-start; }
+            .input-group:not(.stack-label-group) label { width: 100%; margin-bottom: 5px; line-height: 1.2; height: auto; padding: 0; }
+            .input-group:not(.stack-label-group) .input-field-wrapper { width: 100%; }
+            .flex-row-wrap { flex-wrap: wrap; }
+            .flex-row-wrap .select-group { width: calc(50% - 5px); }
             .car-number-split-wrapper { flex-wrap: nowrap; gap: 5px; } 
             .car-number-split-wrapper .fixed-unit-button { width: 45px; font-size: var(--base-font-size); padding: 0 5px; flex-grow: 0; } 
             #carNumPart1 { max-width: none; flex: 2.5; } 
@@ -321,11 +331,6 @@
         }
         
         /* 기타 스타일 (유지) */
-        .select-group .select-box::after { content: '▼'; position: absolute; top: 50%; right: 10px; transform: translateY(-50%); font-size: 0.8em; color: var(--main-color); pointer-events: none; z-index: 10; }
-        .select-group .select-box.selected::after { opacity: 0; }
-        .car-hangul-box::after { content: '▼'; position: absolute; top: 50%; right: 5px; transform: translateY(-50%); font-size: 0.8em; color: var(--label-color); pointer-events: none; z-index: 10; }
-        .car-number-split-wrapper .car-hangul-box.selected::after { opacity: 0; }
-
         .footer-content { padding: 0 var(--content-padding) 25px; }
         .consent-group { display: flex; align-items: center; margin-bottom: 10px; font-size: 0.9em; }
         .consent-group input[type="checkbox"] { width: 18px; height: 18px; margin-right: 10px; flex-shrink: 0; }
