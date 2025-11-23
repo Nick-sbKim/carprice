@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
-    <title>내 차 시세 확인하기</title>
+    <title>내 차 시세 확인하기 (2단계)</title>
     
     <style>
         /* 폰트 임포트: 나눔스퀘어 Bold 폰트 적용 */
@@ -89,28 +89,104 @@
             line-height: 1.6; 
         }
 
-        /* ********************************************** */
-        /* 섹션 스타일 */
-        .section-wrapper {
-            padding: 0 20px; 
-        }
-        
-        .personal-info-bg {
-            background-color: var(--personal-info-bg);
-            border-top: 1px solid var(--personal-info-border);
-            border-bottom: 1px solid var(--personal-info-border);
-            padding: 20px 0; 
-            margin-bottom: 20px; 
+        /* ------------------------------------------- */
+        /* ✅ 단계별 진행바 스타일 */
+        .progress-bar-container {
+            padding: 0 20px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .car-info-bg {
-            background-color: var(--car-info-bg);
-            border-top: 1px solid var(--car-info-border);
-            border-bottom: 1px solid var(--car-info-border);
-            padding: 20px 0; 
-            margin-bottom: 20px;
+        .step-indicator {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        .step-circle {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #CFD8DC; /* Gray */
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 700;
+            font-size: 1.1em;
+            z-index: 10;
+            transition: background-color 0.3s;
+        }
+
+        .step-text {
+            margin-top: 8px;
+            font-size: 0.9em;
+            color: #757575; /* Gray text */
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .step-indicator.active .step-circle {
+            background-color: var(--main-color);
+        }
+
+        .step-indicator.active .step-text {
+            color: var(--main-color);
+            font-weight: 800;
+        }
+
+        .step-indicator:first-child::before,
+        .step-indicator:last-child::after {
+            content: none;
+        }
+
+        .step-indicator:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            top: 14px;
+            left: 50%;
+            width: 100%;
+            height: 2px;
+            background-color: #CFD8DC;
+            z-index: 5;
+            transition: background-color 0.3s;
+        }
+
+        .step-indicator.active + .step-indicator::before { 
+             background-color: var(--main-color);
         }
         
+        /* 현재 단계 이전의 선 색상 변경 */
+        .step-indicator.completed + .step-indicator::before {
+            background-color: var(--main-color);
+        }
+
+        .step-indicator.completed .step-circle {
+            background-color: #81C784; /* Green check */
+        }
+        
+        .step-indicator.completed:not(:last-child)::after {
+            background-color: var(--main-color);
+        }
+
+        /* ------------------------------------------- */
+
+
+        /* ********************************************** */
+        /* ✅ 단계별 섹션 스타일 */
+        .step {
+            display: none; 
+            padding: 0 20px; 
+        }
+
+        .step.active {
+            display: block; 
+        }
+        
+        /* 섹션 스타일 */
         .section-title {
             font-size: 1.3em;
             font-weight: 800;
@@ -119,8 +195,25 @@
             padding-bottom: 5px;
             border-bottom: 2px dashed var(--light-border-color);
         }
-        /* ********************************************** */
         
+        /* 1단계 스타일 */
+        #step1 .step-content {
+            background-color: var(--personal-info-bg);
+            border: 1px solid var(--personal-info-border);
+            padding: 20px; 
+            border-radius: 10px;
+            margin-bottom: 20px; 
+        }
+
+        /* 2단계 스타일 */
+        #step2 .step-content {
+            background-color: var(--car-info-bg);
+            border: 1px solid var(--car-info-border);
+            padding: 20px; 
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
         /* 모든 필드 그룹 */
         .input-group {
             display: flex;
@@ -130,8 +223,7 @@
             align-items: center; 
         }
         /* 마지막 그룹 마진 제거 */
-        .personal-info-bg .input-group:last-of-type,
-        .car-info-bg .input-group:last-of-type {
+        .step-content .input-group:last-of-type {
             margin-bottom: 0;
         }
         
@@ -163,8 +255,9 @@
             flex-grow: 1; 
         }
         
-        /* 일반 입력 필드 스타일 */
-        .input-field-wrapper input[type="text"] {
+        /* 일반 입력 필드 & Select 스타일 */
+        .input-field-wrapper input[type="text"],
+        .input-field-wrapper select {
             flex-grow: 1;
             padding: var(--input-padding-vertical) 15px; 
             height: 48px; 
@@ -179,11 +272,23 @@
             -moz-appearance: none;
             appearance: none;
             min-width: 0;
-            
-            /* 모든 입력 필드 텍스트를 가운데 정렬 */
             text-align: center;
         }
 
+        /* Select 태그 스타일 */
+        .input-field-wrapper select {
+            background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%231976D2%22%20d%3D%22M287%2069.4L146.2%20205.9%205.4%2069.4c-1.3-1.3-3.9-1.3-5.2%200l-5.2%205.2c-1.3%201.3-1.3%203.9%200%205.2l151%20151c1.3%201.3%203.9%201.3%205.2%200l151-151c1.3-1.3%201.3-3.9%200-5.2l-5.2-5.2c-1.3-1.3-3.9-1.3-5.2%200z%22%2F%3E%3C%2Fsvg%3E');
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 10px;
+            padding-right: 35px; 
+            cursor: pointer;
+        }
+        /* 드롭다운의 옵션 텍스트는 좌측 정렬 */
+        .input-field-wrapper select option {
+            text-align: left; 
+        }
+        
         /* 이름과 전화번호는 왼쪽 정렬 유지 */
         #name, #phone {
              text-align: left;
@@ -201,8 +306,8 @@
         }
         
         /* ------------------------------------------- */
-        /* 단위 고정 박스 스타일 (차량번호, 출고 연월, 운행거리) */
-        .unit-box {
+        /* 단위 고정 박스 스타일 (차량번호, 출고 연월, 운행거리, 차종 제조사 드롭다운) */
+        .unit-box, .select-box {
             padding: var(--input-padding-vertical) 15px; 
             height: 48px; 
             border: 1px solid var(--light-border-color); 
@@ -216,47 +321,18 @@
             min-width: 0; 
         }
         
-        /* 단위 텍스트 (서울, 년, 월, 만km) 스타일 */
-        .unit-box .unit-text {
-            font-weight: 800; 
-            color: var(--main-color); 
-            white-space: nowrap; 
-            font-size: 1em; 
-            line-height: 1; 
-            padding-left: 10px; /* 입력 필드와의 간격 */
-            flex-shrink: 0; 
-        }
-
-        /* 단위 박스 내 입력 필드 공통 스타일 */
-        .unit-box input {
-            border: none !important;
-            background: transparent !important;
-            outline: none !important;
-            padding: 0 !important;
-            flex-grow: 1; 
-            font-size: 1.1em; 
-            font-weight: normal; 
-            min-width: 0; 
-            height: auto !important; 
-        }
-        
-        /* 차량번호 입력 필드 */
-        .car-number-box {
-            display: flex;
-            align-items: center;
-            padding-right: 15px;
-            padding-left: 15px;
-        }
-        .car-number-box .unit-text {
-            padding-left: 0;
-            padding-right: 10px;
-        }
-
-        /* 연월 입력 박스 */
-        .input-field-wrapper .unit-box {
+        /* 2분할 레이아웃 적용 */
+        .input-field-wrapper .unit-box,
+        .input-field-wrapper .select-box {
             width: calc(50% - (var(--input-gap) / 2));
-            display: flex;
-            justify-content: space-between;
+            padding: 0; 
+            height: auto;
+            border: none;
+        }
+
+        .input-field-wrapper .select-box select {
+            width: 100%;
+            height: 48px;
         }
         /* ------------------------------------------- */
 
@@ -267,12 +343,59 @@
              padding: 0 20px 25px; 
         }
 
+        /* ✅ 버튼 그룹 컨테이너 */
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        /* 뒤로가기 버튼 */
+        .prev-btn {
+            width: 30%;
+            padding: 15px 10px;
+            background-color: #CFD8DC; 
+            color: var(--text-color);
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            flex-shrink: 0;
+        }
+
+        .prev-btn:hover {
+            background-color: #B0BEC5;
+        }
+
+        /* 다음/신청 버튼 (메인 버튼) */
+        #nextBtn, #submitBtn {
+            flex-grow: 1;
+            width: 70%;
+            padding: 18px 20px;
+            background-color: var(--main-color); 
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.3em;
+            font-weight: 800;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            box-shadow: 0 4px 10px rgba(25, 118, 210, 0.4); 
+        }
+        
+        #nextBtn:hover, #submitBtn:hover {
+            background-color: #1565C0; 
+        }
+        
+        /* ... 개인정보 동의 UI (이전 코드 유지) ... */
         .consent-group {
             display: flex;
             align-items: center;
             margin-top: 25px; 
             margin-bottom: 10px; 
-            background-color: #E3F2FD; /* Light Blue background */
+            background-color: #E3F2FD; 
             padding: 10px; 
             border-radius: 8px; 
             border: 1px solid var(--light-border-color);
@@ -319,7 +442,6 @@
             font-weight: 900;
         }
 
-
         .consent-details {
             border: 1px solid var(--light-border-color);
             background-color: #fcfcfc;
@@ -338,25 +460,6 @@
             line-height: 1.5;
         }
         
-        /* 최종 신청 버튼 */
-        #submitBtn {
-            width: 100%;
-            padding: 18px 20px;
-            background-color: var(--main-color); /* Blue */
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 1.3em;
-            font-weight: 800;
-            cursor: pointer;
-            transition: background-color 0.2s;
-            box-shadow: 0 4px 10px rgba(25, 118, 210, 0.4); /* Blue shadow */
-        }
-        
-        #submitBtn:hover {
-            background-color: #1565C0; /* Darker Blue on hover */
-        }
-
         /* ********************************************** */
         /* 모바일 반응형 디자인 */
         @media (max-width: var(--mobile-breakpoint)) {
@@ -383,16 +486,18 @@
             }
             
             .input-field-wrapper input[type="text"],
-            .unit-box {
+            .unit-box, .select-box {
                 height: auto;
                 min-height: 48px;
             }
             
-            .input-field-wrapper .unit-box {
+            /* 모바일에서 50% 폭 유지 */
+            .input-field-wrapper .unit-box,
+            .input-field-wrapper .select-box {
                 width: calc(50% - (var(--input-gap) / 2)); 
             }
             
-            #submitBtn {
+            #nextBtn, #submitBtn {
                 padding: 15px 20px;
                 font-size: 1.1em;
             }
@@ -403,9 +508,30 @@
     <div class="container">
         
         <form id="carForm" 
-              action="https://docs.google.com/forms/d/e/1FAIpQLSfHHHXpLgoUhg1O_DphY_tQ5016MVsKeCHqGYR-GGEfJZrc-w/formResponse" 
+              action="https://docs.google.com/forms/d/e/1FAIpQLSeaBxL6RsEyZPNJIq68So4jlbJCwg3OXehMmtn8Da_8N_wrHA/formResponse" 
               method="POST" 
               target="_blank"> 
+            
+            <div class="header-content">
+                <h1>내 차 시세 확인하기</h1>
+                
+                <p class="description">
+                    2단계만 완료하시면 견적 요청이 완료됩니다.
+                </p>
+                
+                <div class="progress-bar-container">
+                    <div class="step-indicator active" id="indicator1">
+                        <div class="step-circle">1</div>
+                        <div class="step-text">개인정보</div>
+                    </div>
+                    
+                    <div class="step-indicator" id="indicator2">
+                        <div class="step-circle">2</div>
+                        <div class="step-text">차량정보</div>
+                    </div>
+                </div>
+                
+            </div>
             
             <input type="hidden" name="fvv" value="1">
             <input type="hidden" name="pageHistory" value="0">
@@ -413,20 +539,14 @@
             <input type="hidden" name="submissionTimestamp" value="-1">
             
             <input type="hidden" id="mileageHidden" name="entry.482899888" value="">
-            
             <input type="hidden" id="consentHidden" name="entry.609838615" value="" required>
             
-            <div class="header-content">
-                <h1>내 차 시세 확인하기</h1>
-                
-                <p class="description">
-                    차량정보를 입력하시면, 차량평가 후 안내드립니다.
-                </p>
-            </div>
+            <input type="hidden" id="carModelHidden" name="entry.620874901" value="">
+
             
-            <div class="personal-info-bg">
-                <div class="section-wrapper">
-                    <div class="section-title">개인정보 입력</div>
+            <div class="step active" id="step1">
+                <div class="step-content">
+                    <div class="section-title">1. 개인정보 입력</div>
 
                     <div class="input-group">
                         <label for="name">성함</label>
@@ -441,14 +561,39 @@
                             <input type="text" id="phone" name="entry.2095768754" required placeholder="숫자만 기입" inputmode="numeric" maxlength="13">
                         </div>
                     </div>
-                    
+                </div>
+                
+                <div class="footer-content">
+                    <div class="button-group">
+                        <button type="button" id="nextBtn" onclick="nextStep(1)">다음 단계로</button>
+                    </div>
                 </div>
             </div>
             
-            <div class="car-info-bg">
-                <div class="section-wrapper">
-                    <div class="section-title">차량정보 입력</div>
+            
+            <div class="step" id="step2">
+                 <div class="step-content">
+                    <div class="section-title">2. 차량정보 입력</div>
                     
+                    <div class="input-group">
+                        <label for="manufacturerSelect">차종 선택</label>
+                        <div class="input-field-wrapper">
+                            
+                            <div class="select-box">
+                                <select id="manufacturerSelect" required>
+                                    <option value="" disabled selected>제조사</option>
+                                </select>
+                            </div>
+                            
+                            <div class="select-box">
+                                <select id="carModelSelect" required disabled>
+                                    <option value="" disabled selected>차종</option>
+                                </select>
+                            </div>
+
+                        </div>
+                    </div>
+
                     <div class="input-group">
                         <label for="carNumber">차량번호</label>
                         <div class="input-field-wrapper">
@@ -464,16 +609,7 @@
                         </div>
                     </div>
                     
-                    <div class="input-group"> 
-                        <label for="carModelInput">차종</label>
-                        <div class="input-field-wrapper">
-                             <input type="text" 
-                                id="carModelInput" 
-                                name="entry.620874901" 
-                                required 
-                                placeholder="예시 : 쏘나타">
-                        </div>
-                    </div>
+                    
                     
                     <div class="input-group">
                         <label>출고시기</label>
@@ -484,8 +620,7 @@
                                     name="entry.2129889627" 
                                     class="year-input"
                                     required 
-                                    placeholder="예시 : 2022"
-                                    inputmode="numeric" 
+                                    placeholder="2022" inputmode="numeric" 
                                     maxlength="4">
                                 <span class="unit-text">년</span>
                             </div>
@@ -496,8 +631,7 @@
                                     name="entry.1395231347" 
                                     class="month-input"
                                     required 
-                                    placeholder="예시 : 10"
-                                    inputmode="numeric"
+                                    placeholder="10" inputmode="numeric"
                                     maxlength="2">
                                 <span class="unit-text">월</span>
                             </div>
@@ -521,57 +655,124 @@
                     </div>
                     
                 </div>
-            </div>
-
-            <div class="footer-content">
-                <div class="consent-group">
-                    <input type="checkbox" id="consent" required>
-                    <label for="consent" class="consent-label">개인정보 수집 및 이용에 동의합니다.</label>
-                </div>
                 
-                <div class="consent-details">
-                    <p><strong>[개인정보 수집 및 이용 동의 상세 내용]</strong></p>
-                    <p>1. 수집 항목: 성함, 휴대폰 번호, 차량번호, 차종, 출고 연도, 출고 월, 운행거리</p>
-                    <p>2. 수집 목적: 차량 시세 확인 및 판매/매입 상담 진행</p>
-                    <p>3. 보유 및 이용 기간: 동의일로부터 3년 (상담 종료 후 지체 없이 파기)</p>
-                    <p>4. 동의 거부 시 불이익: 상기 개인정보 수집 및 이용에 동의하지 않을 경우, 시세 신청 및 상담이 제한될 수 있습니다.</p>
-                </div>
+                <div class="footer-content">
+                    <div class="consent-group">
+                        <input type="checkbox" id="consent" required>
+                        <label for="consent" class="consent-label">개인정보 수집 및 이용에 동의합니다.</label>
+                    </div>
+                    
+                    <div class="consent-details">
+                        <p><strong>[개인정보 수집 및 이용 동의 상세 내용]</strong></p>
+                        <p>1. 수집 항목: 성함, 휴대폰 번호, 차량번호, 차종, 출고 연도, 출고 월, 운행거리</p>
+                        <p>2. 수집 목적: 차량 시세 확인 및 판매/매입 상담 진행</p>
+                        <p>3. 보유 및 이용 기간: 동의일로부터 3년 (상담 종료 후 지체 없이 파기)</p>
+                        <p>4. 동의 거부 시 불이익: 상기 개인정보 수집 및 이용에 동의하지 않을 경우, 시세 신청 및 상담이 제한될 수 있습니다.</p>
+                    </div>
 
-                <button type="submit" id="submitBtn">신청하기</button>
+                    <div class="button-group">
+                         <button type="button" class="prev-btn" onclick="prevStep(2)">이전</button>
+                         <button type="submit" id="submitBtn">신청하기</button>
+                    </div>
+                </div>
             </div>
         </form>
     </div>
 
     <script>
-        // -----------------------------------------------------------
-        // 1. 개인정보 동의 필드 업데이트 (체크박스 값 -> '예')
-        // -----------------------------------------------------------
-        const consentCheckbox = document.getElementById('consent');
-        const consentHidden = document.getElementById('consentHidden');
+        // *******************************************************
+        // ✅ 1. 데이터 정의 (제조사 & 차종) - 요청하신 리스트로 업데이트
+        // *******************************************************
+        const carData = {
+            "현대": ["쏘나타", "그랜저", "아이오닉 5", "아이오닉 6", "G90", "G80", "스타리아"],
+            "기아": ["K5", "K7", "K8", "K9", "스포티지", "카니발", "EV4", "EV6", "니로 전기차", "니로 플러스"],
+            "KGM(쌍용)": ["토레스 LPG", "토레스 전기차", "토레스 바이퓨엘"],
+            "삼성(르노)": ["SM6", "QM6", "XM3"]
+        };
 
-        // Forms에서 동의를 '예'라고 인식하도록 값을 설정
-        consentCheckbox.addEventListener('change', function() {
-            // Forms 원본 코드에서 '예' 라디오 버튼의 data-value가 "예"임을 확인했으므로, 이 값을 그대로 사용합니다.
-            consentHidden.value = this.checked ? '예' : ''; 
-        });
+        let currentStep = 1;
+        const totalSteps = 2;
         
-        // -----------------------------------------------------------
-        // 2. 폼 제출 및 유효성 검사 JS 
-        // -----------------------------------------------------------
+        const manufacturerSelect = document.getElementById('manufacturerSelect');
+        const carModelSelect = document.getElementById('carModelSelect');
+        const carModelHidden = document.getElementById('carModelHidden'); // entry.620874901
+
+        // *******************************************************
+        // ✅ 2. 차종 드롭다운 동적 로딩 함수
+        // *******************************************************
+
+        // 제조사 드롭다운 채우기
+        function loadManufacturers() {
+            for (const manufacturer in carData) {
+                const option = document.createElement('option');
+                option.value = manufacturer;
+                option.textContent = manufacturer;
+                manufacturerSelect.appendChild(option);
+            }
+        }
+
+        // 제조사 선택 시 차종 드롭다운 업데이트
+        manufacturerSelect.addEventListener('change', function() {
+            const selectedManufacturer = this.value;
+            
+            // 차종 드롭다운 초기화
+            carModelSelect.innerHTML = '<option value="" disabled selected>차종</option>';
+            carModelSelect.disabled = true;
+            
+            if (selectedManufacturer && carData[selectedManufacturer]) {
+                carData[selectedManufacturer].forEach(model => {
+                    const option = document.createElement('option');
+                    option.value = model;
+                    option.textContent = model;
+                    carModelSelect.appendChild(option);
+                });
+                carModelSelect.disabled = false;
+            }
+            
+            // 히든 필드 초기화 (새 제조사 선택 시)
+            carModelHidden.value = '';
+        });
+
+        // 차종 선택 시 히든 필드 업데이트 (제조사 + 차종 결합)
+        carModelSelect.addEventListener('change', function() {
+            const manufacturer = manufacturerSelect.value;
+            const model = this.value;
+            if (manufacturer && model) {
+                // Forms에 제출할 최종 포맷: "제조사 차종"
+                carModelHidden.value = `${manufacturer} ${model}`;
+            } else {
+                 carModelHidden.value = '';
+            }
+        });
+
+
+        // *******************************************************
+        // ✅ 3. 폼 제출 및 유효성 검사 JS (수정 없음)
+        // *******************************************************
+        
         document.getElementById('carForm').addEventListener('submit', function(event) {
             
-            // 개인정보 동의 체크 여부 확인
+            // 2단계 유효성 검사 (마지막 단계)
+            const consentCheckbox = document.getElementById('consent');
+            const mileageDisplay = document.getElementById('mileageInput');
+            const mileageValue = mileageDisplay.value.trim();
+            const mileageHidden = document.getElementById('mileageHidden');
+            
+            // 1. 개인정보 동의 체크 여부
             if (!consentCheckbox.checked) {
                 alert('개인정보 수집 및 이용에 동의해야 시세 확인 신청이 가능합니다.');
                 event.preventDefault();
                 return;
             }
             
-            // 운행거리 통합 및 유효성 검사
-            const mileageDisplay = document.getElementById('mileageInput');
-            const mileageValue = mileageDisplay.value.trim();
-            const mileageHidden = document.getElementById('mileageHidden');
-            
+            // 2. 차종 선택 확인 (히든 필드 값 확인)
+            if (!carModelHidden.value) {
+                alert('제조사 및 차종을 모두 선택해주세요.');
+                event.preventDefault();
+                return;
+            }
+
+            // 3. 운행거리 입력 확인
             if (!mileageValue) {
                  alert('운행거리를 입력해주세요.');
                  mileageDisplay.focus();
@@ -579,20 +780,86 @@
                  return;
             }
             
-            // 입력된 운행거리 값에 '만km'를 붙여서 Hidden Field에 최종 세팅
+            // 4. Forms Hidden Field에 최종 값 세팅
             mileageHidden.value = mileageValue + '만km';
-            
-            // Forms 서버가 데이터 전송을 확실하게 처리하도록 event.preventDefault()를 호출하지 않고 폼을 전송합니다.
+            document.getElementById('consentHidden').value = '예';
+
+            // 폼 제출 (event.preventDefault() 없이 진행)
         });
 
         // -----------------------------------------------------------
-        // 3. 전화번호 형식 지정 JS
+        // ✅ 4. 단계 이동 함수 (이전 코드 유지)
+        // -----------------------------------------------------------
+        function updateStep(step) {
+            currentStep = step;
+            
+            for (let i = 1; i <= totalSteps; i++) {
+                const stepElement = document.getElementById(`step${i}`);
+                const indicatorElement = document.getElementById(`indicator${i}`);
+                
+                if (i === currentStep) {
+                    stepElement.classList.add('active');
+                    indicatorElement.classList.add('active');
+                    indicatorElement.classList.remove('completed');
+                } else {
+                    stepElement.classList.remove('active');
+                    indicatorElement.classList.remove('active');
+                    
+                    if (i < currentStep) {
+                        indicatorElement.classList.add('completed');
+                    } else {
+                        indicatorElement.classList.remove('completed');
+                    }
+                }
+            }
+            document.querySelector('.container').scrollTop = 0;
+            window.scrollTo(0, 0); 
+        }
+
+        function nextStep(step) {
+            if (step === 1) {
+                if (validateStep1()) {
+                    updateStep(2);
+                }
+            }
+        }
+        
+        function prevStep(step) {
+            if (step === 2) {
+                updateStep(1);
+            }
+        }
+
+        // -----------------------------------------------------------
+        // ✅ 5. 1단계 유효성 검사 함수 (이전 코드 유지)
+        // -----------------------------------------------------------
+        function validateStep1() {
+            const nameInput = document.getElementById('name');
+            const phoneInput = document.getElementById('phone');
+
+            if (!nameInput.value.trim()) {
+                alert('성함을 입력해주세요.');
+                nameInput.focus();
+                return false;
+            }
+            
+            if (!phoneInput.value.trim() || phoneInput.value.replace(/-/g, '').length < 10) {
+                 alert('올바른 휴대폰 번호를 입력해주세요.');
+                 phoneInput.focus();
+                 return false;
+            }
+
+            return true;
+        }
+
+
+        // -----------------------------------------------------------
+        // ✅ 6. 전화번호 형식 지정 JS (이전 코드 유지)
         // -----------------------------------------------------------
         const phoneInput = document.getElementById('phone');
         phoneInput.addEventListener('input', function(e) {
             let value = e.target.value.replace(/[^0-9]/g, ''); 
             let result = '';
-            // 000-0000-0000 형식으로 자동 포맷팅
             if (value.length < 4) {
                 result = value;
             } else if (value.length < 8) {
@@ -604,6 +871,10 @@
             }
             e.target.value = result;
         });
+        
+        // 페이지 로드 시 초기화
+        loadManufacturers();
+        updateStep(1);
 
     </script>
 </body>
