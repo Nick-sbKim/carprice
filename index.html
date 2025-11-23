@@ -180,33 +180,70 @@
         }
         
         /* ------------------------------------------- */
-        /* ✅ 단위 통합 입력 필드 (차량번호, 운행거리, 휴대폰) */
+        /* ✅ 차량번호 분할 입력 Wrapper */
         /* ------------------------------------------- */
-        .split-unit-wrapper {
-            display: flex; align-items: center; height: 48px; flex-grow: 1;
+        .car-number-split-wrapper {
+            display: flex; 
+            align-items: center; 
+            height: 48px; 
+            flex-grow: 1;
+            /* 통합 박스 테두리 */
             border: var(--unified-input-border); 
-            border-radius: 8px; overflow: hidden; 
-            background-color: white; justify-content: space-between; 
+            border-radius: 8px; 
+            overflow: hidden; 
+            background-color: white; 
         }
 
-        /* 고정 텍스트 박스 ('서울', '만 KM', '010 -') */
-        .fixed-unit-box {
-            flex-shrink: 0; line-height: 1; height: 100%; display: flex;
-            align-items: center; justify-content: center; font-size: 1.1em;
-            font-weight: 800; padding: 0 10px;
+        /* 차량번호 분할 입력 내부 요소 */
+        .car-number-split-wrapper input,
+        .car-number-split-wrapper select {
+            height: 100%; 
+            border: none !important; 
+            border-radius: 0; 
+            font-size: 1.1em;
+            text-align: center !important; /* 분할된 요소는 중앙 정렬로 가독성 확보 */
+            padding: 0 5px;
+            min-width: 0; 
+            flex-shrink: 0;
+            background-color: white;
+            color: var(--text-color);
+        }
+        
+        /* 숫자 입력 부분 */
+        .car-number-split-wrapper input.num-part {
+            flex-grow: 1.5; /* 너비 비율 조정 */
+            min-width: 45px; 
+            /* 차량번호 첫 번째/마지막 숫자는 키패드 유도 */
+            inputmode: numeric; 
         }
 
-        /* 차량번호 '서울' 스타일 */
+        /* 한글 선택 부분 */
+        .car-number-split-wrapper .car-hangul-box {
+            position: relative;
+            flex-grow: 1; /* 너비 비율 조정 */
+            min-width: 40px;
+            border-left: 1px solid var(--input-border); 
+            border-right: 1px solid var(--input-border);
+        }
+        
+        .car-number-split-wrapper .car-hangul-box select {
+             padding: 0 18px 0 5px;
+        }
+
+        /* 차량번호 화살표 위치 재조정 */
+        .car-hangul-box::after {
+            right: 5px !important; 
+        }
+        
+        /* 지역 고정 유닛 (기존 스타일 유지) */
         .car-number-unit {
              width: 45px; color: var(--car-unit-text); background-color: var(--car-unit-bg); 
              padding: 0 5px;
         }
         
-        /* 운행거리 '만 KM' 스타일 */
-        .mileage-unit-box {
-            width: 80px; color: var(--unit-text-color); background-color: var(--unit-bg-color); 
-            font-weight: 800; padding-left: 5px; padding-right: 10px; flex-shrink: 0; 
-        }
+        /* ------------------------------------------- */
+        /* 단위 통합 입력 필드 (휴대폰, 운행거리) */
+        /* ------------------------------------------- */
 
         /* ✅ '010 -' 고정 단위 박스 스타일 (너비 축소) */
         .phone-unit-box {
@@ -231,12 +268,6 @@
         }
         .split-unit-wrapper input:focus {
             outline: none; box-shadow: none; 
-        }
-        
-        /* 차량번호 입력 필드 (좌측 정렬 유지) */
-        .car-number-input {
-            text-align: left; padding-left: 10px; padding-right: 15px; 
-            color: #757575; flex-grow: 1; 
         }
         
         /* 운행거리 입력 필드 (좌측 정렬 유지) */
@@ -320,6 +351,7 @@
             <input type="hidden" id="consentHidden" name="entry.609838615" value="" required>
             <input type="hidden" id="carModelHidden" name="entry.620874901" value="">
             <input type="hidden" id="phoneHidden" name="entry.2095768754" value="">
+            <input type="hidden" id="carNumberHidden" name="entry.1494512143" value="">
 
             
             <div class="step active" id="step1">
@@ -382,19 +414,38 @@
                     </div>
 
                     <div class="input-group">
-                        <label for="carNumber">차량번호</label>
+                        <label for="carNumPart1">차량번호</label>
                         <div class="input-field-wrapper">
-                            <div class="split-unit-wrapper">
+                            <div class="car-number-split-wrapper">
                                 <span class="fixed-unit-box car-number-unit">서울</span>
+                                
                                 <input type="text" 
-                                    id="carNumber" 
-                                    name="entry.1494512143" 
+                                    id="carNumPart1" 
+                                    name="car_num_part1_display"
                                     required 
-                                    placeholder="30아1234" 
-                                    maxlength="8" 
-                                    inputmode="text"
-                                    pattern="[0-9]*"
-                                    class="car-number-input">
+                                    placeholder="30" 
+                                    maxlength="3" 
+                                    inputmode="numeric" 
+                                    class="num-part">
+
+                                <div class="select-box car-hangul-box">
+                                    <select id="carHangulSelect" required>
+                                        <option value="" disabled selected>문자</option>
+                                        <option value="아">아</option>
+                                        <option value="바">바</option>
+                                        <option value="사">사</option>
+                                        <option value="자">자</option>
+                                    </select>
+                                </div>
+                                
+                                <input type="text" 
+                                    id="carNumPart2" 
+                                    name="car_num_part2_display"
+                                    required 
+                                    placeholder="1234" 
+                                    maxlength="4" 
+                                    inputmode="numeric" 
+                                    class="num-part">
                             </div>
                         </div>
                     </div>
@@ -486,23 +537,12 @@
         const phoneInput = document.getElementById('phone');
         const phoneHidden = document.getElementById('phoneHidden');
 
+        // ✅ 차량번호 분할 입력 필드 변수 추가
+        const carNumPart1 = document.getElementById('carNumPart1');
+        const carNumPart2 = document.getElementById('carNumPart2');
+        const carHangulSelect = document.getElementById('carHangulSelect');
+        const carNumberHidden = document.getElementById('carNumberHidden');
 
-        // *******************************************************
-        // 2. 드롭다운 초기 로딩 및 로직
-        // *******************************************************
-
-        function loadManufacturers() {
-            for (const manufacturer in carData) {
-                const option = document.createElement('option');
-                option.value = manufacturer;
-                option.textContent = manufacturer;
-                manufacturerSelect.appendChild(option);
-            }
-            const otherOption = document.createElement('option');
-            otherOption.value = "기타";
-            otherOption.textContent = "기타";
-            manufacturerSelect.appendChild(otherOption);
-        }
 
         // *******************************************************
         // 7. 드롭다운 표식 제어 함수 추가
@@ -519,6 +559,23 @@
                 // 선택된 값이 없거나 유효하지 않은 경우 클래스를 제거 (화살표 표시)
                 selectBox.classList.remove('selected');
             }
+        }
+        
+        // *******************************************************
+        // 2. 드롭다운 초기 로딩 및 로직
+        // *******************************************************
+
+        function loadManufacturers() {
+            for (const manufacturer in carData) {
+                const option = document.createElement('option');
+                option.value = manufacturer;
+                option.textContent = manufacturer;
+                manufacturerSelect.appendChild(option);
+            }
+            const otherOption = document.createElement('option');
+            otherOption.value = "기타";
+            otherOption.textContent = "기타";
+            manufacturerSelect.appendChild(otherOption);
         }
 
         manufacturerSelect.addEventListener('change', function() {
@@ -554,9 +611,8 @@
                  carModelHidden.value = `${selectedManufacturer}`;
             }
 
-            // ✅ 화살표 제어 추가
             toggleSelectArrow(this);
-            toggleSelectArrow(carModelSelect); // 차종이 리셋되었을 때 화살표 표시
+            toggleSelectArrow(carModelSelect); 
         });
 
         carModelSelect.addEventListener('change', function() {
@@ -570,7 +626,6 @@
                  carModelHidden.value = '';
             }
 
-            // ✅ 화살표 제어 추가
             toggleSelectArrow(this);
         });
         
@@ -593,12 +648,15 @@
         }
         
         yearSelect.addEventListener('change', function() {
-            // ✅ 화살표 제어 추가
             toggleSelectArrow(this);
         });
 
         monthSelect.addEventListener('change', function() {
-            // ✅ 화살표 제어 추가
+            toggleSelectArrow(this);
+        });
+        
+        // ✅ 차량번호 한글 선택 시 화살표 제어
+        carHangulSelect.addEventListener('change', function() {
             toggleSelectArrow(this);
         });
 
@@ -656,8 +714,21 @@
                  event.preventDefault();
                  return;
             }
-            // Hidden Field에 '010-xxxx-xxxx' 형태로 저장
             phoneHidden.value = '010-' + phoneValue.slice(0, 4) + '-' + phoneValue.slice(4);
+
+            // 7. ✅ 차량번호 최종 값 세팅 (추가)
+            const part1Value = carNumPart1.value.trim();
+            const part2Value = carNumPart2.value.trim();
+            const hangulValue = carHangulSelect.value;
+            
+            if (part1Value.length < 2 || part2Value.length !== 4 || !hangulValue) {
+                 alert('차량번호의 모든 부분을 정확히 입력하거나 선택해주세요 (숫자 2~3자리, 문자 1개, 숫자 4자리).');
+                 // 입력 필드 포커싱 로직은 복잡하여 생략하고 알림만 띄움
+                 event.preventDefault();
+                 return;
+            }
+            
+            carNumberHidden.value = `서울${part1Value}${hangulValue}${part2Value}`;
         });
 
         // -----------------------------------------------------------
@@ -705,7 +776,6 @@
 
         function validateStep1() {
             const nameInput = document.getElementById('name');
-            // 휴대폰 번호는 8자리가 모두 입력되었는지 확인
             const phoneValue = phoneInput.value.replace(/[^0-9]/g, '');
 
             if (!nameInput.value.trim()) {
@@ -714,7 +784,6 @@
                 return false;
             }
             
-            // 8자리 숫자가 정확히 입력되었는지 확인 (010-을 제외한 나머지 8자리)
             if (phoneValue.length !== 8) {
                  alert('휴대폰 번호 뒷 8자리를 정확히 입력해주세요.');
                  phoneInput.focus();
@@ -730,17 +799,14 @@
         // -----------------------------------------------------------
         
         phoneInput.addEventListener('input', function(e) {
-            // 입력 값에서 숫자만 추출
             let value = e.target.value.replace(/[^0-9]/g, ''); 
             
-            // 8자리 초과 입력 방지
             if (value.length > 8) {
                 value = value.slice(0, 8);
             }
             
             let result = '';
             
-            // 4-4 포맷 적용 (0000-0000)
             if (value.length <= 4) {
                  result = value;
             } else {
