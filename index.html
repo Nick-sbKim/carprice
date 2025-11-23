@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
-    <title>내 차 시세 확인하기 (돋보기 텍스트 효과 및 레이아웃 안정화)</title>
+    <title>내 차 시세 확인하기 (레이아웃 안정화 완료)</title>
     
     <style>
         /* 폰트 임포트: 나눔스퀘어 Bold 폰트 적용 */
@@ -130,6 +130,7 @@
             text-align: left; 
             background-color: var(--input-filled-bg); 
             transition: background-color 0.3s, font-size 0.3s, padding 0.3s; /* 트랜지션 추가 */
+            line-height: var(--label-height); /* 기본 텍스트 세로 정렬 */
         }
 
         /* 1단계: 가운데 정렬 적용 */
@@ -147,6 +148,7 @@
             height: auto !important; 
             font-weight: 800 !important; 
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
+            line-height: 1.2em !important; /* 확대된 폰트 크기에 맞는 line-height */
         }
         
         .split-unit-wrapper input.data-input-field:focus {
@@ -166,15 +168,15 @@
         }
         .input-group.stack-label-group .input-field-wrapper { width: 100%; margin-left: 0; }
         
-        /* 단위 통합 입력 필드 (전화번호, 운행거리) */
+        /* 단위 통합 입력 필드 (전화번호, 운행거리) - 중앙 정렬 보강 */
         .split-unit-wrapper { 
             display: flex; 
-            align-items: stretch; /* 내부 요소가 Wrapper의 높이에 맞게 늘어나도록 유지 */
+            align-items: center; /* 내부 요소가 세로 중앙에 오도록 center로 명확히 지정 */
             width: 100%; 
             border: var(--unified-input-border); 
             border-radius: 8px; 
             overflow: hidden; 
-            /* height 제거 - 내부 요소에 따라 유동적으로 늘어나도록 함 */
+            height: auto; /* 내용에 따라 높이 유동적으로 설정 */
         }
         
         /* 전화번호 단위 박스 (최소 너비 적용) */
@@ -183,7 +185,7 @@
             padding: 0 8px; 
             color: var(--car-unit-text); 
             background-color: var(--car-unit-bg); 
-            height: 100%; /* 부모(Wrapper) 높이에 맞게 늘어나도록 100% 설정 */
+            height: var(--label-height); /* 기본 높이 고정 */
             display: flex; 
             align-items: center; 
             justify-content: center; 
@@ -191,7 +193,31 @@
             font-weight: 800; 
             flex-shrink: 0; 
             border-right: 1px solid var(--input-border); 
-            transition: all 0.3s; /* 트랜지션 유지 */
+            transition: all 0.3s; 
+        }
+        
+        /* 운행거리 단위 박스 */
+        .split-unit-wrapper .mileage-unit-box { 
+            width: 70px; 
+            color: var(--unit-text-color); 
+            background-color: var(--unit-bg-color); 
+            border-left: 1px solid var(--input-border); 
+            border-right: none; 
+            height: var(--label-height); /* 기본 높이 고정 */
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            transition: all 0.3s; 
+        }
+
+        /* 입력 필드 포커스 시, Wrapper 내부의 유닛 박스 높이를 확대된 input 높이에 맞게 조정 */
+        /* NOTE: input:focus 시 height: auto로 변경되어 Wrapper가 늘어나지만, 
+           단위 박스의 height를 var(--label-height)로 고정했으므로, 
+           돋보기 효과 시 같이 늘어나도록 height를 auto로 변경합니다. */
+        .split-unit-wrapper:has(input:focus) .phone-unit-box,
+        .split-unit-wrapper:has(input:focus) .mileage-unit-box {
+             height: auto; 
+             padding: 12px 8px; /* input 포커스 패딩 12px에 맞게 조정 */
         }
 
         /* 전화번호 입력 필드 (최대 공간 확보) */
@@ -209,27 +235,13 @@
         }
         
         .mileage-input-field { text-align: right !important; }
-        
-        /* 운행거리 단위 박스 */
-        .split-unit-wrapper .mileage-unit-box { 
-            width: 70px; 
-            color: var(--unit-text-color); 
-            background-color: var(--unit-bg-color); 
-            border-left: 1px solid var(--input-border); 
-            border-right: none; 
-            height: 100%; /* 부모(Wrapper) 높이에 맞게 늘어나도록 100% 설정 */
-            display: flex; 
-            align-items: center; 
-            justify-content: center;
-            transition: all 0.3s; /* 트랜지션 유지 */
-        }
 
         
-        /* 2단계: 차량번호 입력란 최적화 (유지) */
+        /* 2단계: 차량번호 입력란 최적화 - 중앙 정렬 보강 */
         .car-number-split-wrapper { 
             display: flex; 
             gap: 5px; 
-            align-items: stretch; 
+            align-items: center; /* 내부 요소가 세로 중앙 정렬되도록 수정 */
             width: 100%; 
             height: var(--label-height); 
         }
@@ -242,7 +254,7 @@
             width: 45px; 
             padding: 0 5px; 
             font-size: var(--base-font-size); 
-            line-height: 1; 
+            line-height: 1.2em; /* 텍스트 세로 정렬 보강 */
             flex-shrink: 0;
         }
 
@@ -251,6 +263,7 @@
              padding: var(--input-padding-vertical) 5px; 
              text-align: center; 
              font-weight: var(--input-text-font-weight); 
+             line-height: 1.2em; /* 텍스트 세로 정렬 보강 */
         }
         
         .car-number-split-wrapper .car-hangul-box { 
@@ -263,6 +276,7 @@
             padding-left: 5px; 
             text-align: center;
             font-weight: var(--input-text-font-weight); 
+            line-height: 1.2em; /* 텍스트 세로 정렬 보강 */
         } 
         
         .car-hangul-box::after { right: 5px; } 
@@ -271,7 +285,6 @@
         #carNumPart2 { flex: 3; min-width: 80px; } 
 
         /* 2단계: 차종선택 / 출고시기 가로 정렬 (유지) */
-        .input-field-wrapper .select-group { display: flex; width: 100%; gap: 10px; } 
         .input-group.side-by-side-input .input-field-wrapper { display: flex; gap: 10px; width: calc(100% - var(--label-width)); }
         .input-group.side-by-side-input .select-group { flex: 1; min-width: 0; } 
         .input-group.side-by-side-input .select-group .select-box { flex: 1; position: relative; }
@@ -280,6 +293,7 @@
 
         /* 모바일 반응형 디자인 */
         @media (max-width: var(--mobile-breakpoint)) {
+             /* 모바일에서 라벨이 위로 가는 경우 */
              .input-group label { 
                 position: static; 
                 width: 100%; 
