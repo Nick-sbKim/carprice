@@ -188,7 +188,7 @@
         }
         /* ----------------------------------- */
 
-        /* ✅ 완료/포커스 시 배경색: 흰색 (input, select 모두 적용) */
+        /* 완료/포커스 시 배경색: 흰색 (input, select 모두 적용) */
         .data-input-field:focus,
         .data-input-field.completed,
         .select-field.completed { 
@@ -568,7 +568,7 @@
     
     <iframe name="hidden_iframe" id="hidden_iframe" 
             style="display:none;" 
-            onload="if(submitted) { window.location='YOUR_THANK_YOU_PAGE_URL'; }"></iframe> 
+            onload="if(submitted) { window.location='https://carprice.licen.co.kr/thankyou.html'; }"></iframe> 
 
 
     <script>
@@ -624,7 +624,7 @@
                     isCompleted = element.value.trim() !== '';
                 }
             } else if (element.tagName === 'SELECT') {
-                // ✅ Select 요소의 완료 검사 로직 강화
+                // Select 요소의 완료 검사 로직
                 isCompleted = element.value !== '' && element.options.length > 0 && !element.options[element.selectedIndex].disabled;
             }
 
@@ -903,12 +903,12 @@
         // Select 필드
         const selectFields = document.querySelectorAll('.select-field');
         selectFields.forEach(select => {
-            // ✅ change 이벤트 발생 시 배경색을 업데이트합니다.
+            // change 이벤트 발생 시 배경색을 업데이트합니다.
             select.addEventListener('change', function() {
                 checkCompletion(this); 
                 toggleSelectArrow(this); // 선택 완료 시 화살표 숨기기
             });
-            // ✅ focus/blur 시 배경색 업데이트 (UX 개선)
+            // focus/blur 시 배경색 업데이트 (UX 개선)
             select.addEventListener('focus', function() {
                 this.classList.add('completed');
             });
