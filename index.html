@@ -12,7 +12,7 @@
         /* === 공통 스타일 (Step 1 & 2) === */
         /* ======================================= */
         body {
-            /* **⭐⭐ 모든 글꼴을 'NanumSquareEB'로 통일 ⭐⭐** */
+            /* ⭐⭐ 모든 글꼴을 'NanumSquareEB'로 통일 ⭐⭐ */
             font-family: 'NanumSquareEB', sans-serif;
             background-color: #f0f4f9;
             display: flex;
@@ -306,7 +306,7 @@
                         <div class="price-input-group">
                             <span>1억</span>
                             <input type="number" id="price_input" class="input-box-style focus-zoom" placeholder="숫자입력" required
-                                onfocus="handleFocus(this)" onblur="handleBlur(this)">
+                                onfocus="handleFocus(this)" onblur="handleBlur(this)" onkeydown="handleEnter(event)">
                             <span class="unit-text">만원</span>
                         </div>
                     </div>
@@ -332,7 +332,7 @@
                     <div class="form-group">
                         <label class="label-text" for="name">성함</label>
                         <input type="text" id="name" name="entry.839758910" class="input-box-style focus-zoom" placeholder="성함 입력" required
-                            onfocus="handleFocus(this)" onblur="handleBlur(this)">
+                            onfocus="handleFocus(this)" onblur="handleBlur(this)" onkeydown="handleEnter(event)">
                     </div>
 
                     <div class="form-group">
@@ -344,7 +344,7 @@
                                 pattern="\d{4}-?\d{4}" 
                                 required
                                 oninput="formatPhoneNumber(this)"
-                                onfocus="handleFocus(this)" onblur="handleBlur(this)">
+                                onfocus="handleFocus(this)" onblur="handleBlur(this)" onkeydown="handleEnter(event)">
                             <input type="hidden" id="phone_full" name="entry.514804681">
                         </div>
                     </div>
@@ -356,10 +356,10 @@
                             
                             <input type="number" id="car-num-2" class="input-box-style focus-zoom" placeholder="2자" maxlength="2"
                                 oninput="limitInputLength(this, 2)"
-                                onfocus="handleFocus(this)" onblur="handleBlur(this)">
+                                onfocus="handleFocus(this)" onblur="handleBlur(this)" onkeydown="handleEnter(event)">
                             
                             <select id="car-hangul" class="input-box-style focus-zoom"
-                                onfocus="handleFocus(this)" onblur="handleBlur(this)">
+                                onfocus="handleFocus(this)" onblur="handleBlur(this)" onkeydown="handleEnter(event)">
                                 <option value="">선택</option>
                                 <option>아</option>
                                 <option>바</option>
@@ -369,7 +369,7 @@
                             
                             <input type="number" id="car-num-4" class="input-box-style focus-zoom" placeholder="4자" maxlength="4"
                                 oninput="limitInputLength(this, 4)"
-                                onfocus="handleFocus(this)" onblur="handleBlur(this)">
+                                onfocus="handleFocus(this)" onblur="handleBlur(this)" onkeydown="handleEnter(event)">
                             
                             <input type="hidden" id="car-number-full" name="entry.311694843" required>
                         </div>
@@ -415,6 +415,48 @@
             element.classList.remove('zoom-text');
         }
 
+        // **⭐⭐ 엔터 키 입력 처리 및 다음 필드로 포커스 이동 ⭐⭐**
+        function handleEnter(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault(); // 기본 폼 제출 방지
+                
+                // 현재 포커스된 요소
+                const currentElement = document.activeElement;
+                
+                // 현재 요소가 유효한지 확인하고 blur 처리하여 값 확정
+                if (currentElement) {
+                    currentElement.blur(); 
+                }
+
+                // 다음 포커스 가능한 요소 찾기
+                const formElements = document.querySelectorAll('input, select, button');
+                let foundNext = false;
+
+                for (let i = 0; i < formElements.length; i++) {
+                    if (formElements[i] === currentElement) {
+                        // 현재 요소 다음부터 찾기 시작
+                        for (let j = i + 1; j < formElements.length; j++) {
+                            const nextElement = formElements[j];
+                            // 다음 요소가 입력 가능하고 숨겨지지 않았는지 확인
+                            if (nextElement.offsetParent !== null && !nextElement.disabled) {
+                                nextElement.focus();
+                                foundNext = true;
+                                break;
+                            }
+                        }
+                        break;
+                    }
+                }
+
+                // 희망가 입력란에서 엔터 시, 바로 다음 단계 버튼으로 포커스 이동 (만약 다음 필드 검색에 실패했다면)
+                if (currentElement.id === 'price_input' && !foundNext) {
+                    document.querySelector('#step1 .submit-btn').focus();
+                }
+
+                return false;
+            }
+        }
+        
         // 차량번호 입력 길이 제한 함수 (type="number" 오류 해결)
         function limitInputLength(element, limit) {
             if (element.value.length > limit) {
@@ -465,9 +507,7 @@
         
         // 제출 후 땡큐 페이지로 리디렉션
         function redirectToThankYou() {
-            // 제출 플래그 초기화
             submitted = false; 
-            // 실제 thank you 페이지 경로로 변경 필요
             window.location.href = "thankyou.html";
         }
 
@@ -514,12 +554,8 @@
             // 4. 모든 검증 통과 시
             submitted = true; // 제출 플래그 설정
             
-            // 폼 제출 진행 (Google Forms로 데이터 전송)
-            
             return true;
         }
     </script>
 </body>
 </html>
-
-
